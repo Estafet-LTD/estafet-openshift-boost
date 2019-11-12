@@ -1,0 +1,15 @@
+[submodule "estafet-openshift-boost-console-api-app"]
+	path = estafet-openshift-boost-console-api-app
+	url = https://github.com/Estafet-LTD/estafet-openshift-boost-console-api-app.git
+[submodule "estafet-openshift-boost-console-api-build"]
+	path = estafet-openshift-boost-console-api-build
+	url = https://github.com/Estafet-LTD/estafet-openshift-boost-console-api-build.git
+[submodule "estafet-openshift-boost-console-api-prod"]
+	path = estafet-openshift-boost-console-api-prod
+	url = https://github.com/Estafet-LTD/estafet-openshift-boost-console-api-prod.git
+[submodule "estafet-openshift-boost-console-api-test"]
+	path = estafet-openshift-boost-console-api-test
+	url = https://github.com/Estafet-LTD/estafet-openshift-boost-console-api-test.git
+[submodule "estafet-openshift-boost-console-ui"]
+	path = estafet-openshift-boost-console-ui
+	url = https://github.com/Estafet-LTD/estafet-openshift-boost-console-ui.git

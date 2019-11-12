@@ -1,4 +1,8 @@
-target/
+/.classpath
+/.project
+/.settings/
+/target/
+/.springBeans
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
