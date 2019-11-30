@@ -9,4 +9,4 @@
     - include: roles/namespace-setup.yml
     - include: roles/jaeger-setup.yml
     - include: roles/imagestream-setup.yml  
-    - include: roles/microservices-setup.yml
+    - include: roles/create-boost-console-app.yml
