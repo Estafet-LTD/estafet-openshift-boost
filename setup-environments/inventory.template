@@ -12,5 +12,8 @@ openshift=192.168.99.100:8443
 username=developer 
 password=developer
 
+# the name of the product/application
+product=microservices-scrum
+
 # Uncomment the following line to adjust the SCC (not using CDK3/minishift)
 adjust_scc=false

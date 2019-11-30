@@ -1,0 +1,34 @@
+---
+- name: Set to default if not defined
+  set_fact: templates_project="openshift"
+  when: templates_project is undefined
+
+- name: Install the JBoss A-MQ Message Broker
+  shell: "oc process amq63-basic -n {{ templates_project }} -p IMAGE_STREAM_NAMESPACE={{ templates_project }} -p MQ_USERNAME=amq -p MQ_PASSWORD=amq | oc create -f -"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - a-mq        
+
+- name: Remove the readiness probe as some OS implements with ipv4 only stop this from working correctly
+  shell: "oc set probe dc/broker-amq --readiness --remove"
+  when: "{{ remove_amq_readiness }}"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - a-mq     
+
+- name: Wait for the a-mq to become available
+  shell : "oc rollout status dc/broker-amq"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - a-mq   
+   
+- include: "{{ variables }}/amq-vars.yml"
