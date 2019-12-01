@@ -1,0 +1,37 @@
+---
+# Define the name and description of the OpenShift project
+- set_fact: build_project="{{ product }}-build"
+
+- include_role: 
+    name: namespace-setup
+  vars:
+    project: "{{ build_project }}"
+    project_description: "Build: {{ product_description }}"
+
+- include_role: 
+    name: namespace-role-setup
+  vars:
+    project: "{{ build_project }}"
+    role: edit
+
+- include_role: 
+    name: amq-setup
+  vars:
+    project: "{{ build_project }}"
+    templates_project: openshift
+
+- include_role: 
+    name: external-db
+  vars:
+    project: "{{ build_project }}"    
+
+- include_role: 
+    name: wiremock-setup
+  vars:
+    project: "{{ build_project }}"
+    
+- include_role: 
+    name: add-jenkins-role
+  vars:
+    project: "{{ build_project }}"
+    cicd_project: "{{ cicd_project }}"

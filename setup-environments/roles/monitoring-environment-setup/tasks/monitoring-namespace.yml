@@ -1,0 +1,35 @@
+---
+- set_fact: monitoring_project="{{ product }}-monitoring"
+
+- include_role: 
+    name: namespace-setup
+  vars:
+    project: "{{ monitoring_project }}"
+    project_description: "Monitoring: {{ product_description }}"
+
+- include_role: 
+    name: namespace-role-setup
+  vars:
+    project: "{{ monitoring_project }}"
+    role: view
+
+- include_role: 
+    name: amq-setup
+  vars:
+    project: "{{ test_project }}"
+    templates_project: openshift
+
+- include_role: 
+    name: jaeger-setup
+  vars:
+    project: "{{ monitoring_project }}"   
+
+- include_role: 
+    name: pgadmin-setup
+  vars:
+    project: "{{ monitoring_project }}"   
+
+- include_role: 
+    name: boost-console-setup
+  vars:
+    project: "{{ monitoring_project }}" 

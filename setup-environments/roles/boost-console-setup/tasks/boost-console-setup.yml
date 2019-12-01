@@ -1,0 +1,16 @@
+---
+- name: Create the boost console applications
+  include_role: 
+    name: create-boost-console-app
+  vars:
+    repo: "{{ item.repo }}"
+    microservice: "{{ item.name }}"
+    cpu_min: "{{ item.cpu_min }}"
+    cpu_max: "{{ item.cpu_max }}"
+    memory_min: "{{ item.memory_min }}"
+    memory_max: "{{ item.memory_max }}"   
+    expose: "{{ item.expose }}" 
+  with_items: "{{ microservices_boost_projects }}"
+  tags:
+    - openshift
+    

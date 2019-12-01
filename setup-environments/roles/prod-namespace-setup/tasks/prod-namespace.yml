@@ -1,0 +1,35 @@
+---
+- set_fact: prod_project="{{ product }}-prod"
+
+- include_role: 
+    name: namespace-setup
+  vars:
+    project: "{{ prod_project }}"
+    project_description: "Prod: {{ product_description }}"
+
+- include_role: 
+    name: namespace-role-setup
+  vars:
+    project: "{{ prod_project }}"
+    role: view
+
+- include_role: 
+    name: external-db
+  vars:
+    project: "{{ prod_project }}"    
+    
+- include_role: 
+    name: add-jenkins-role
+  vars:
+    project: "{{ prod_project }}"
+    cicd_project: "{{ cicd_project }}"
+
+- name: Create a routes to expose the application
+  shell: "oc process -f templates/prod-route.yml -p MICROSERVICE_NAME={{ item.name }} | oc apply -f -"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  when: {{ item.expose }}
+  with_items: "{{ microservices }}"
+  tags:
+    - openshift  

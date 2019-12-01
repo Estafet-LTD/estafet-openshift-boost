@@ -1,0 +1,21 @@
+--- 
+- set_fact: mq_project="{{ product }}-mq-{{ colour }}"
+
+- include_role: 
+    name: namespace-setup
+  vars:
+    project: "{{ mq_project }}"
+    project_description: "MQ {{ colour }}: {{ product_description }}"
+
+- include_role: 
+    name: namespace-role-setup
+  vars:
+    project: "{{ mq_project }}"
+    role: view
+
+- include_role: 
+    name: amq-setup
+  vars:
+    project: "{{ mq_project }}"
+    templates_project: openshift
+
