@@ -34,4 +34,3 @@
     name: add-jenkins-role
   vars:
     project: "{{ test_project }}"
-    cicd_project: "{{ cicd_project }}"
