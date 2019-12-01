@@ -69,6 +69,7 @@
   vars:
     colour: blue
       
-- include_role: prod-namespace-setup
+- include_role: 
+    name: prod-namespace-setup
 
   
