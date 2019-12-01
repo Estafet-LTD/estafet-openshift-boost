@@ -1,0 +1,11 @@
+---
+- name: Create Environments for Entire Software Development Lifecycle
+  hosts: local
+  vars_files:
+    - variables/cloud-environments-vars.yml"  
+    - variables/microservices-vars.yml
+    - variables/libraries-vars.yml"
+    - "{{ variables}}/boost-console-microservices-vars.yml"    
+  tasks:  
+    - include: roles/init.yml    
+    - include: "{{ roles }}/cloud-environments-setup.yml"    
