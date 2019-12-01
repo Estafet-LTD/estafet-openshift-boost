@@ -44,6 +44,8 @@
   tags:
     - openshift
 
+- set_fact: templates={{ workdir }}/estafet-openshift-boost/setup-environments/templates
+
 - include_role: 
     name : nexus-setup
 
