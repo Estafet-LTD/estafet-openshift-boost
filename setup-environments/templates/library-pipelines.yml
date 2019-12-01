@@ -13,6 +13,9 @@ parameters:
 - description: Defines the git repository uri within which the library resides
   name: LIBRARY_REPO_URI
   required: true      
+- description: Defines the product that this pipeline is related to
+  name: PRODUCT
+  required: true   
 objects:
 - apiVersion: v1
   kind: BuildConfig
@@ -22,6 +25,7 @@ objects:
       app: pipeline
       name: "build-${LIBRARY_NAME}"
       type: build
+      product: ${PRODUCT}
     name: "build-${LIBRARY_NAME}"
   spec:
     output: {}
@@ -57,6 +61,7 @@ objects:
       app: pipeline
       name: "release-${LIBRARY_NAME}"
       type: release
+      product: ${PRODUCT}
     name: "release-${LIBRARY_NAME}"
   spec:
     output: {}

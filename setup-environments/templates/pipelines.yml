@@ -18,7 +18,10 @@ parameters:
   required: true    
 - description: Defines the git repository uri within which the microservice resides
   name: REPO_URI
-  required: true       
+  required: true    
+- description: Defines the product that this pipeline is related to
+  name: PRODUCT
+  required: true 
 objects:
 - apiVersion: v1
   kind: BuildConfig
@@ -27,6 +30,7 @@ objects:
     labels:
       app: pipeline
       name: promote-all-to-prod
+      product: ${PRODUCT}
     name: promote-all-to-prod
   spec:
     output: {}
@@ -49,6 +53,7 @@ objects:
     labels:
       app: pipeline
       name: promote-to-live
+      product: ${PRODUCT}
     name: promote-to-live
   spec:
     output: {}
@@ -71,6 +76,7 @@ objects:
     labels:
       app: pipeline
       name: qa-test
+      product: ${PRODUCT}
     name: qa-test
   spec:
     output: {}
@@ -103,6 +109,7 @@ objects:
     labels:
       app: pipeline
       name: prod-test
+      product: ${PRODUCT}
     name: prod-test
   spec:
     output: {}
@@ -135,6 +142,7 @@ objects:
     labels:
       app: pipeline
       name: build-all
+      product: ${PRODUCT}
     name: build-all
   spec:
     output: {}
@@ -157,6 +165,7 @@ objects:
     labels:
       app: pipeline
       name: release-all
+      product: ${PRODUCT}
     name: release-all
   spec:
     output: {}
@@ -179,6 +188,7 @@ objects:
     labels:
       app: pipeline
       name: create-environment
+      product: ${PRODUCT}
     name: create-environment
   spec:
     output: {}

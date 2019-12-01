@@ -13,6 +13,9 @@ parameters:
 - description: Defines the git repository uri within which the microservice resides
   name: MICROSERVICE_REPO_URI
   required: true    
+- description: Defines the product that this pipeline is related to
+  name: PRODUCT
+  required: true   
 objects:
 - apiVersion: v1
   kind: BuildConfig
@@ -22,6 +25,7 @@ objects:
       app: pipeline
       name: "build-${MICROSERVICE_NAME}"
       type: build
+      product: ${PRODUCT}
     name: "build-${MICROSERVICE_NAME}"
   spec:
     output: {}
@@ -55,6 +59,7 @@ objects:
       app: pipeline
       name: "release-${MICROSERVICE_NAME}"
       type: release
+      product: ${PRODUCT}
     name: "release-${MICROSERVICE_NAME}"
   spec:
     output: {}
@@ -81,6 +86,7 @@ objects:
       app: pipeline
       name: "promote-to-prod-${MICROSERVICE_NAME}"
       type: promote
+      product: ${PRODUCT}
     name: "promote-to-prod-${MICROSERVICE_NAME}"
   spec:
     output: {}
@@ -107,6 +113,7 @@ objects:
       app: pipeline
       name: "microservice-${MICROSERVICE_NAME}"
       type: microservice-pipeline
+      product: ${PRODUCT}
     name: "microservice-${MICROSERVICE_NAME}"
   spec:
     output: {}
