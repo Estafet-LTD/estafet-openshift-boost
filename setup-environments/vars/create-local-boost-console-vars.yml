@@ -1,9 +1,0 @@
----
-# the Absolute path where you want to checkout the sourcecode
-workdir: "{{ ansible_env.HOME }}/.estafet"
-
-# Define the name of the OpenShift project
-project: boost-console
-
-# Project Description
-project_description: "Openshift Boost Console"

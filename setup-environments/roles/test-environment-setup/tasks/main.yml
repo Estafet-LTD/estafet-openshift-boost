@@ -6,6 +6,7 @@
   vars:
     project: "{{ test_project }}"
     project_description: "Test: {{ product_description }}"
+    cloud_environment: true
 
 - include_role: 
     name: namespace-role-setup
