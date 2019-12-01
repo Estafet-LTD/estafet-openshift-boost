@@ -136,7 +136,7 @@ under the License.
 		<mirror>
 			<id>Nexus</id>
 			<name>Nexus Public Mirror</name>
-			<url>http://nexus.cicd.svc:8081/nexus/content/groups/public/</url>
+			<url>http://nexus.nexus.svc:8081/nexus/content/groups/public/</url>
 			<mirrorOf>central</mirrorOf>
 		</mirror>
 	</mirrors>

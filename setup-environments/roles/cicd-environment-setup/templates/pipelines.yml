@@ -15,10 +15,10 @@ parameters:
   required: true  
 - description: Defines the admin password
   name: ADMIN_PASSWORD
-  required: true  
+  required: true    
 - description: Defines the git repository uri within which the microservice resides
   name: REPO_URI
-  required: true     
+  required: true       
 objects:
 - apiVersion: v1
   kind: BuildConfig
@@ -35,7 +35,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/${REPO_URI}"
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
     strategy:
       jenkinsPipelineStrategy:
         jenkinsfilePath: setup-environments/pipelines/promote-all-to-prod-pipeline.groovy
@@ -57,7 +57,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/${REPO_URI}"
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
     strategy:
       jenkinsPipelineStrategy:
         jenkinsfilePath: setup-environments/pipelines/promote-passive-to-live.groovy
@@ -165,7 +165,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/${REPO_URI}"
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
     strategy:
       jenkinsPipelineStrategy:
         jenkinsfilePath: setup-environments/pipelines/release-all-pipeline.groovy
@@ -187,7 +187,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/${REPO_URI}"
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
     strategy:
       jenkinsPipelineStrategy:
         env:

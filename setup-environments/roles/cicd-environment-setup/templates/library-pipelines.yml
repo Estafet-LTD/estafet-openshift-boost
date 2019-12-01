@@ -9,10 +9,10 @@ parameters:
   required: true
 - description: Defines name of the library
   name: LIBRARY_NAME
-  required: true
+  required: true    
 - description: Defines the git repository uri within which the library resides
   name: LIBRARY_REPO_URI
-  required: true    
+  required: true      
 objects:
 - apiVersion: v1
   kind: BuildConfig
@@ -30,7 +30,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/${LIBRARY_REPO_URI}"
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
     strategy:
       jenkinsPipelineStrategy:
         env:
@@ -65,7 +65,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/${LIBRARY_REPO_URI}"
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
     strategy:
       jenkinsPipelineStrategy:
         env:

@@ -45,6 +45,9 @@
     - openshift
 
 - include_role: 
+    name : nexus-setup
+
+- include_role: 
     name : cicd-environment-setup
         
 - include_role: 

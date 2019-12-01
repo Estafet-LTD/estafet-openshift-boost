@@ -17,12 +17,12 @@ node('maven') {
 
 	properties([
 	  parameters([
-	     string(name: 'GITHUB'), string(name: 'REPO'),
+	     string(name: 'GITHUB'),
 	  ])
 	])
 
 	stage("checkout") {
-		git branch: "master", url: "https://${username()}:${password()}@github.com/${params.GITHUB}/${params.REPO}"
+		git branch: "master", url: "https://${username()}:${password()}@github.com/${params.GITHUB}/estafet-openshift-boost"
 	}
 	
 	stage("increment version") {
