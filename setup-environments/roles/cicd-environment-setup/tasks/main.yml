@@ -34,7 +34,7 @@
     - jenkins  
     
 - name: Create build, release and promotion pipelines for each of the microservices
-  shell: "oc process -f {{ templates }}/microservice-pipelines.yml -p GITHUB={{ github }} -p MICROSERVICE_NAME={{ item.name }} -p MICROSERVICE_REPO_URI={{ item.repo }} -p PRODUCT={{ product}} | oc create -f -"
+  shell: "oc process -f {{ template }}/microservice-pipelines.yml -p GITHUB={{ github }} -p MICROSERVICE_NAME={{ item.name }} -p MICROSERVICE_REPO_URI={{ item.repo }} -p PRODUCT={{ product}} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
@@ -43,7 +43,7 @@
     - openshift       
 
 - name: Create build and release pipelines for the libraries
-  shell: "oc process -f {{ templates }}/library-pipelines.yml -p GITHUB={{ github }} -p LIBRARY_NAME={{ item.name }} -p LIBRARY_REPO_URI={{ item.repo }} -p PRODUCT={{ product }} | oc create -f -"
+  shell: "oc process -f {{ template }}/library-pipelines.yml -p GITHUB={{ github }} -p LIBRARY_NAME={{ item.name }} -p LIBRARY_REPO_URI={{ item.repo }} -p PRODUCT={{ product }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
@@ -52,7 +52,7 @@
     - openshift  
 
 - name: Create general pipelines 
-  shell: "oc process -f {{ templates }}/pipelines.yml -p GITHUB={{ github }} -p MASTER_HOST={{ openshift }} -p ADMIN_USER={{ username }} -p ADMIN_PASSWORD={{ password }} -p PRODUCT={{ product }} | oc create -f -"
+  shell: "oc process -f {{ template }}/pipelines.yml -p GITHUB={{ github }} -p MASTER_HOST={{ openshift }} -p ADMIN_USER={{ username }} -p ADMIN_PASSWORD={{ password }} -p PRODUCT={{ product }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
