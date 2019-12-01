@@ -1,6 +1,6 @@
 ---
 - name: Create the pgadmin4
-  shell: "oc process -n -f {{ inventory_dir }}/templates/pgadmin4.yml | oc create -f -"
+  shell: "oc process -f {{ templates }}/pgadmin4.yml | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
