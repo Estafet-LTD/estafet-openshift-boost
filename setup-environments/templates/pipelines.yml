@@ -42,6 +42,9 @@ objects:
         uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
     strategy:
       jenkinsPipelineStrategy:
+        env:
+          - name: PRODUCT
+            value: ${PRODUCT}        
         jenkinsfilePath: setup-environments/pipelines/promote-all-to-prod-pipeline.groovy
       type: JenkinsPipeline
   status:
@@ -65,6 +68,9 @@ objects:
         uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
     strategy:
       jenkinsPipelineStrategy:
+        env:
+          - name: PRODUCT
+            value: ${PRODUCT}          
         jenkinsfilePath: setup-environments/pipelines/promote-passive-to-live.groovy
       type: JenkinsPipeline
   status:
@@ -151,9 +157,12 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/${REPO_URI}"
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
     strategy:
       jenkinsPipelineStrategy:
+        env:
+          - name: PRODUCT
+            value: ${PRODUCT}           
         jenkinsfilePath: setup-environments/pipelines/build-all-pipeline.groovy
       type: JenkinsPipeline
   status:
@@ -177,6 +186,9 @@ objects:
         uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
     strategy:
       jenkinsPipelineStrategy:
+        env:
+          - name: PRODUCT
+            value: ${PRODUCT}        
         jenkinsfilePath: setup-environments/pipelines/release-all-pipeline.groovy
       type: JenkinsPipeline
   status:

@@ -22,10 +22,16 @@ def getTestStatus(json) {
 
 node {
 	
+	properties([
+	  parameters([
+	     string(name: 'PRODUCT'),
+	  ])
+	])	
+	
 	def testStatus
 	
 	stage ("determine the status of the test environment") {
-		sh "oc get dc --selector product=microservices-scrum -n test -o json > test.json"
+		sh "oc get dc --selector product=${params.PRODUCT} -n ${params.PRODUCT}-test -o json > test.json"
 		def test = readFile('test.json')
 		testStatus = getTestStatus(test)
 		println "the target deployment is $testStatus"
@@ -33,12 +39,12 @@ node {
 	
 	stage ('deploy each microservice to prod') {
 		if (testStatus.equals("true")) {
-			sh "oc get is -n test --selector product=microservices-scrum -o json > images.output"
+			sh "oc get is -n ${params.PRODUCT}-test --selector product=${params.PRODUCT} -o json > images.output"
 			def images = readFile('images.output')
 			def microservices = getMicroServices(images)
 			microservices.each { microservice ->
-				openshiftBuild namespace: "cicd", buildConfig: "promote-to-prod-${microservice}", waitTime: "300000"
-				openshiftVerifyBuild namespace: "cicd", buildConfig: "promote-to-prod-${microservice}", waitTime: "300000" 
+				openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-to-prod-${microservice}", waitTime: "300000"
+				openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-to-prod-${microservice}", waitTime: "300000" 
 		  }		
 		}  else {
 			error("Cannot deploy microservices to production as the test environment has not been passed testing")

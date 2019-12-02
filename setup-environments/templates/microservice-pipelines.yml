@@ -40,6 +40,8 @@ objects:
         env:
           - name: GITHUB
             value: ${GITHUB}
+          - name: PRODUCT
+            value: ${PRODUCT}            
         jenkinsfilePath: openshift/pipelines/build-pipeline.groovy
       type: JenkinsPipeline
     triggers:
@@ -74,6 +76,8 @@ objects:
         env:
           - name: GITHUB
             value: ${GITHUB}      
+          - name: PRODUCT
+            value: ${PRODUCT}                    
         jenkinsfilePath: openshift/pipelines/release-pipeline.groovy
       type: JenkinsPipeline
   status:
@@ -101,6 +105,8 @@ objects:
         env:
           - name: GITHUB
             value: ${GITHUB}      
+          - name: PRODUCT
+            value: ${PRODUCT}                    
         jenkinsfilePath: openshift/pipelines/promote-to-prod-pipeline.groovy
       type: JenkinsPipeline
   status:
@@ -128,6 +134,8 @@ objects:
         env:
           - name: GITHUB
             value: ${GITHUB}
+          - name: PRODUCT
+            value: ${PRODUCT}                    
           - name: PROJECT
             value: null
         jenkinsfilePath: openshift/pipelines/microservice-pipeline.groovy

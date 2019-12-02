@@ -53,7 +53,7 @@ node {
 	  ])
 	])
 	
-	stage("checkout estafet-microservices-scrum") {
+	stage("checkout project") {
 		checkout([$class: 'GitSCM', 
 							branches: [[name: '*/master']], 
         			doGenerateSubmoduleConfigurations: false, 
