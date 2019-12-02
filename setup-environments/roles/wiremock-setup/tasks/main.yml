@@ -1,6 +1,6 @@
 ---
 - name: Build and Deploy wiremock 
-  shell: "oc new-app rodolpheche/wiremock~https://github.com/rodolpheche/wiremock-docker.git --strategy=docker"
+  shell: "oc new-app rodolpheche/wiremock~https://github.com/rodolpheche/wiremock-docker.git#{{ tag }} --strategy=docker"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"

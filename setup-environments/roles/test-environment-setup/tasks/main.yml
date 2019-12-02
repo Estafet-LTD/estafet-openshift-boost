@@ -7,13 +7,13 @@
     project: "{{ test_project }}"
     project_description: "Test: {{ product_description }}"
     cloud_environment: true
+    next: "{{ product }}-prod"
 
 - include_role: 
     name: namespace-role-setup
   vars:
     project: "{{ test_project }}"
     role: edit
-    next: "{{ product }}-prod"
 
 - include_role: 
     name: amq-setup

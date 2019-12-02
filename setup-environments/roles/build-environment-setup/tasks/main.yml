@@ -8,13 +8,13 @@
     project: "{{ build_project }}"
     project_description: "Build: {{ product_description }}"
     cloud_environment: true
+    next: "{{ product }}-test"
 
 - include_role: 
     name: namespace-role-setup
   vars:
     project: "{{ build_project }}"
     role: edit
-    next: "{{ product }}-test"
 
 - include_role: 
     name: amq-setup
@@ -31,6 +31,7 @@
     name: wiremock-setup
   vars:
     project: "{{ build_project }}"
+    tag: 2.25.1
     
 - include_role: 
     name: add-jenkins-role

@@ -12,7 +12,7 @@
   tags:
     - openshift  
 
-- name: Label the namespace as ({{ project }})
+- name: Label the namespace as {{ project }} with next
   shell: 'oc label namespace {{ project }} test-passed=false product={{ product }} next={{ next }} --overwrite=true'
   when: next is defined
   register: command_result
@@ -21,7 +21,7 @@
   tags:
     - openshift
 
-- name: Label the namespace as ({{ project }})
+- name: Label the namespace as ({{ project }}) without next
   shell: 'oc label namespace {{ project }} test-passed=false product={{ product }} --overwrite=true'
   when: next is undefined
   register: command_result
