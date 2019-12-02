@@ -21,7 +21,7 @@
   tags:
     - openshift
     
-- name: Add the next label to namespace ({{ project }})
+- name: Add the next ({{ next }}) label to namespace ({{ project }})
   shell: 'oc label namespace {{ project }} next={{ next }} --overwrite=true'
   when: next is defined
   register: command_result
