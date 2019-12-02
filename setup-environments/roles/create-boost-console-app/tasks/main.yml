@@ -5,6 +5,7 @@
 - name: Check if microservice ({{ microservice }}) exists
   shell: 'oc get dc {{ microservice }}'
   register: command_result
+  ignore_errors: true
 
 - name: set flag for deployment
   set_fact: microservice_exists=false
