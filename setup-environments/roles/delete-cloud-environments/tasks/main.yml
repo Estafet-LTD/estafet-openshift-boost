@@ -1,0 +1,60 @@
+---
+- name: Verify if openshift is set
+  fail:
+    msg: "[OpenShift host] is not defined. Please edit inventory"
+  when: openshift is undefined
+
+- name: Verify if openshift admin user is set
+  fail:
+    msg: "[Admin user] is not defined. Please edit inventory"
+  when: username is undefined
+
+- name: Verify if openshift admin password is set
+  fail:
+    msg: "[Admin password] is not defined. Please edit inventory"
+  when: password is undefined
+
+- name: Verify if product variable is set
+  fail:
+    msg: "[Product] is not defined. Please edit playbook"
+  when: product is undefined
+
+- name: Login in OpenShift as {{ username }}
+  shell: "oc login --insecure-skip-tls-verify=true -u {{ username }} -p {{ password }} {{ openshift }}"
+  tags:
+    - openshift
+
+- include_role: 
+    name : delete-namespace
+  vars:
+    project: "{{ product }}-cicd"
+
+- include_role: 
+    name : delete-namespace
+  vars:
+    project: "{{ product }}-build"
+    
+- include_role: 
+    name : delete-namespace
+  vars:
+    project: "{{ product }}-test"
+    
+- include_role: 
+    name : delete-namespace
+  vars:
+    project: "{{ product }}-mq-blue"        
+
+- include_role: 
+    name : delete-namespace
+  vars:
+    project: "{{ product }}-mq-green"
+
+- include_role: 
+    name : delete-namespace
+  vars:
+    project: "{{ product }}-prod"
+
+- include_role: 
+    name : delete-namespace
+  vars:
+    project: "{{ product }}-monitoring"
