@@ -14,10 +14,18 @@
 
 - name: Label the namespace as ({{ project }})
   shell: 'oc label namespace {{ project }} test-passed=false product={{ product }} next={{ next }} --overwrite=true'
-  when: "{{ cloud_environment }}"
+  when: next is defined
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
   tags:
     - openshift
 
+- name: Label the namespace as ({{ project }})
+  shell: 'oc label namespace {{ project }} test-passed=false product={{ product }} --overwrite=true'
+  when: next is undefined
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
