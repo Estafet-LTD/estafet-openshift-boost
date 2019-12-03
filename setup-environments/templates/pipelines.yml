@@ -209,7 +209,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        uri: "https://github.com/${GITHUB}/${REPO_URI}"
     strategy:
       jenkinsPipelineStrategy:
         env:
