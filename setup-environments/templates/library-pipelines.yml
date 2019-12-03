@@ -24,7 +24,7 @@ objects:
     labels:
       app: pipeline
       name: "build-${LIBRARY_NAME}"
-      type: build
+      type: build-library
       product: ${PRODUCT}
     name: "build-${LIBRARY_NAME}"
   spec:
@@ -60,7 +60,7 @@ objects:
     labels:
       app: pipeline
       name: "release-${LIBRARY_NAME}"
-      type: release
+      type: release-library
       product: ${PRODUCT}
     name: "release-${LIBRARY_NAME}"
   spec:
