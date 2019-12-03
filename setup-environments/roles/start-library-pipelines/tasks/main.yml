@@ -1,0 +1,19 @@
+---
+- set_fact: cicd_project="{{ product }}-cicd"
+
+- include_role: 
+    name : init
+
+- name: Verify if type is set
+  fail:
+    msg: "[type] is not defined. Please edit playbook with either 'build' or 'release'"
+  when: type is undefined
+
+- name: Execute build pipelines for the libraries
+  shell: "oc start-build {{ type }}-{{ item.name }} -n {{ cicd_project }} --wait" 
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  with_items: "{{ libraries }}"
+  tags:
+    - openshift  
