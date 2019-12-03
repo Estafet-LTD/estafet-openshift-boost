@@ -1,0 +1,47 @@
+---
+- name: Verify if openshift is set
+  fail:
+    msg: "[OpenShift host] is not defined. Please edit inventory"
+  when: openshift is undefined
+
+- name: Verify if openshift admin user is set
+  fail:
+    msg: "[Admin user] is not defined. Please edit inventory"
+  when: username is undefined
+
+- name: Verify if openshift admin password is set
+  fail:
+    msg: "[Admin password] is not defined. Please edit inventory"
+  when: password is undefined
+
+- name: Verify if product variable is set
+  fail:
+    msg: "[Product] is not defined. Please edit playbook"
+  when: product is undefined
+
+- name: Verify if product variable is set
+  fail:
+    msg: "[Product Description] is not defined. Please edit playbook"
+  when: product_description is undefined
+
+- name: Verify if the microservices have been defined
+  fail:
+    msg: "[Microservices Definitions] are not set. Please edit microservices-vars.yml"
+  when: microservices is undefined
+
+- name: Verify if the libraries have been defined
+  fail:
+    msg: "[Library Definitions] are not set. Please edit libraries-vars.yml"
+  when: libraries is undefined
+
+- name: Verify that the database host has been defined
+  fail:
+    msg: "[Database host] is not set. Please edit inventory"
+  when: database is undefined
+
+- name: Login in OpenShift as {{ username }}
+  shell: "oc login --insecure-skip-tls-verify=true -u {{ username }} -p {{ password }} {{ openshift }}"
+  tags:
+    - openshift
+
+- set_fact: templates={{ workdir }}/estafet-openshift-boost/setup-environments/templates

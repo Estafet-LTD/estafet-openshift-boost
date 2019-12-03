@@ -2,6 +2,9 @@
 - set_fact: test_project="{{ product }}-test"
 
 - include_role: 
+    name : init
+
+- include_role: 
     name: namespace-setup
   vars:
     project: "{{ test_project }}"

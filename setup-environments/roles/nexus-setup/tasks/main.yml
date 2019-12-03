@@ -3,6 +3,9 @@
 - set_fact: nexus_project="nexus"
 
 - include_role: 
+    name : init
+
+- include_role: 
     name: namespace-setup
   vars:
     project: "{{ nexus_project }}"

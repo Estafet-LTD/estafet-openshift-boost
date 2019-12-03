@@ -2,6 +2,9 @@
 - set_fact: monitoring_project="{{ product }}-monitoring"
 
 - include_role: 
+    name : init
+
+- include_role: 
     name: namespace-setup
   vars:
     project: "{{ monitoring_project }}"

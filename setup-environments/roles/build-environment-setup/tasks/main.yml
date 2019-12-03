@@ -3,6 +3,9 @@
 - set_fact: build_project="{{ product }}-build"
 
 - include_role: 
+    name : init
+
+- include_role: 
     name: namespace-setup
   vars:
     project: "{{ build_project }}"
