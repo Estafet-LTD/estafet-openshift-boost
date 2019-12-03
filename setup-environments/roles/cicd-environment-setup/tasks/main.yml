@@ -3,6 +3,9 @@
 - set_fact: cicd_project="{{ product }}-cicd"
 
 - include_role: 
+    name : init
+
+- include_role: 
     name: namespace-setup
   vars:
     project: "{{ cicd_project }}"
