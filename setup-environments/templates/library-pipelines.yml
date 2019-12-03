@@ -39,9 +39,7 @@ objects:
       jenkinsPipelineStrategy:
         env:
           - name: GITHUB
-            value: ${GITHUB}
-          - name: PRODUCT
-            value: ${PRODUCT}                    
+            value: ${GITHUB}                   
           - name: REPO
             value: ${LIBRARY_REPO_URI}            
         jenkinsfilePath: setup-environments/pipelines/build-library-pipeline.groovy
@@ -77,9 +75,7 @@ objects:
       jenkinsPipelineStrategy:
         env:
           - name: GITHUB
-            value: ${GITHUB}  
-          - name: PRODUCT
-            value: ${PRODUCT}                    
+            value: ${GITHUB}             
           - name: REPO
             value: ${LIBRARY_REPO_URI}                       
         jenkinsfilePath: setup-environments/pipelines/release-library-pipeline.groovy
