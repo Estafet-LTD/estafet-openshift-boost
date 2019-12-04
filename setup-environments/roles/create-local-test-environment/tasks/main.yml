@@ -1,0 +1,43 @@
+---
+- include_role: 
+    name : init
+  vars:
+    database: something
+
+- set_fact: project="{{ product }}-test"
+
+- include_role: 
+    name: namespace-setup
+  vars:
+    project: "{{ project }}"
+    project_description: "Test Local: {{ product_description }}"
+    cloud_environment: false
+
+- include_role: 
+    name: jaeger-setup
+  vars:
+    project: "{{ project }}"   
+
+- include_role: 
+    name: imagestream-setup
+  vars:
+    project: "{{ project }}"
+
+- include_role: 
+    name: amq-setup
+  vars:
+    templates_project: "{{ project }}"
+
+- include_role: 
+    name: postgresql-setup
+  vars:
+    project: "{{ project }}"
+
+  tasks:  
+    - include: roles/init.yml
+    - include: roles/namespace-setup.yml
+    - include: roles/jaeger-setup.yml
+    - include: roles/imagestream-setup.yml
+    - include: roles/amq-setup.yml templates_project={{ project }}
+    - include: roles/create-db.yml    
+    - include: roles/microservices-setup.yml

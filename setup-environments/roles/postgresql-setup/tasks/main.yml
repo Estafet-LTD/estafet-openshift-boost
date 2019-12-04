@@ -1,0 +1,38 @@
+---
+- name: Install the PostgreSQL server
+  shell : "oc new-app postgresql-persistent --name postgresql -p POSTGRESQL_USER=postgres -p POSTGRESQL_PASSWORD=welcome1"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - postgres   
+
+- name: Wait for the postgresql server to become available
+  shell : "oc rollout status dc/postgresql"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - postgres   
+
+- name: Read the database pod list
+  shell: "oc get pods --selector app=postgresql -o json"
+  register: list_of_db_pods
+    
+- name: Get the name of the PostgreSQL Pod
+  set_fact: db_pod="{{list_of_db_pods.stdout|from_json|json_query('items[0].metadata.name')}}"
+
+- name: Create the microservice databases on PostgreSQL Pod
+  shell: 'oc exec -n {{ project }} {{db_pod}} -- /bin/sh -i -c "createdb {{ project }}-{{ item.name }}"'
+  when: "{{ item.db }}"
+  with_items: "{{ microservices_scrum_projects }}"  
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - postgresql
+
+    
