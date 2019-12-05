@@ -12,7 +12,7 @@
   when: "'NotFound' in command_result.stderr"
   
 - name: Deploy the microservice for ({{ microservice }})
-  shell: "oc new-app redhat-openjdk18-openshift:1.4~https://github.com/{{ github }}/{{ repo }}.git --name={{ microservice }} --build-env-var MAVEN_MIRROR_URL='http://nexus.nexus.svc:8081/nexus/content/groups/public' -e OPENSHIFT_HOST_PORT={{ openshift_internal }} -e OPENSHIFT_USER={{ username }} -e OPENSHIFT_PASSWORD={{ password }} {{ service_envs }} -e PRODUCT_LABEL={{ product }} -l product={{ product }}"
+  shell: "oc new-app redhat-openjdk18-openshift:1.4~https://github.com/{{ github }}/{{ repo }}.git --name={{ microservice }} --build-env MAVEN_MIRROR_URL='http://nexus.nexus.svc:8081/nexus/content/groups/public' -e OPENSHIFT_HOST_PORT={{ openshift_internal }} -e OPENSHIFT_USER={{ username }} -e OPENSHIFT_PASSWORD={{ password }} {{ service_envs }} -e PRODUCT_LABEL={{ product }} -l product={{ product }}"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
