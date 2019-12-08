@@ -51,9 +51,10 @@ node("maven") {
 	stage("checkout project") {
 		checkout([$class: 'GitSCM', 
 							branches: [[name: '*/master']], 
-        			doGenerateSubmoduleConfigurations: false, 
-        			extensions: [[$class: 'RelativeTargetDirectory', 
-            	relativeTargetDir: ${params.REPO}]], 
+							disableSubmodules: false,
+              parentCredentials: true,
+        			recursiveSubmodules: true,
+        			extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: ${params.REPO}]], 
         			submoduleCfg: [], 
         			userRemoteConfigs: [[url: "https://github.com/${params.GITHUB}/${params.REPO}.git"]]])
 	}	
@@ -81,19 +82,20 @@ node("maven") {
 	
 	stage ("create the database endpoint") {
 		def database = getDatabaseEndPoint()
-		sh "oc process -n $project -f estafet-microservices-scrum/setup-environments/templates/database-service.yml -p DB_HOST=$database | oc apply -f -"
+		sh "oc process -f estafet-microservices-scrum/setup-environments/templates/database-service.yml -p DB_HOST=$database | oc apply -f -"
 	}
 	
 	stage ('create each microservice') {
 		def microservices = readYaml file: "${params.REPO}/setup-environments/vars/microservices-vars.yml"
+		def serviceEnvs = "-e JAEGER_SAMPLER_TYPE=const -e JAEGER_SAMPLER_PARAM=1 -e JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger-agent.${project}.svc:5778 -e JAEGER_AGENT_HOST=jaeger-agent.${project}.svc"
 		microservices.each { microservice ->
 			if ( microservice.db) {
 				withMaven(mavenSettingsConfig: 'microservices-scrum') {
 	      	sh "mvn clean package -P prepare-db -Dmaven.test.skip=true -Dproject=${project}"
 	    	} 
-				sh "oc new-app redhat-openjdk18-openshift:1.4~https://github.com/${params.GITHUB}/${params.REPO} --name=${microservice.name} -e ${microservice.db_url_env}=jdbc:postgresql://postgresql.${project}.svc:5432/{{ project }}-{{ microservice }} -e {{ db_user_env }}=postgres -e {{ db_db_env }}=welcome1 -e JBOSS_A_MQ_BROKER_URL={{ amq_url }} -e JBOSS_A_MQ_BROKER_USER={{ broker_pod_user }} -e JBOSS_A_MQ_BROKER_PASSWORD={{ broker_pod_password }} {{ service_envs }}"				
+				sh "oc new-app redhat-openjdk18-openshift:1.4~https://github.com/${params.GITHUB}/${params.REPO} --name=${microservice.name} -e ${microservice.db_url_env}=jdbc:postgresql://postgresql.${project}.svc:5432/{{ project }}-{{ microservice }} -e {{ db_user_env }}=postgres -e {{ db_db_env }}=welcome1 -e JBOSS_A_MQ_BROKER_URL={{ amq_url }} -e JBOSS_A_MQ_BROKER_USER={{ broker_pod_user }} -e JBOSS_A_MQ_BROKER_PASSWORD={{ broker_pod_password }} ${serviceEnvs}"				
 			} else {
-				sh "oc new-app redhat-openjdk18-openshift:1.4~https://github.com/${params.GITHUB}/${params.REPO} --name=${microservice.name} {{ service_envs }}"
+				sh "oc new-app redhat-openjdk18-openshift:1.4~https://github.com/${params.GITHUB}/${params.REPO} --name=${microservice.name} ${serviceEnvs}"
 			}
 			sh "oc set probe dc/${microservice.name} --readiness --initial-delay-seconds=30 --timeout-seconds=1 --get-url=http://:8080/api"
 			openshiftVerifyDeployment namespace: project, depCfg: microservice.name, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000" 
