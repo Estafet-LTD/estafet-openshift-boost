@@ -1,4 +1,7 @@
 ---
+- include_role: 
+    name : init
+
 - name: Verify if the internal openshift host is set
   fail:
     msg: "[Internal OpenShift host] is not defined. Please edit inventory"
