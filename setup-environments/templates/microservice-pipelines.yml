@@ -34,15 +34,19 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/${MICROSERVICE_REPO_URI}"
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
     strategy:
       jenkinsPipelineStrategy:
         env:
           - name: GITHUB
             value: ${GITHUB}
           - name: PRODUCT
-            value: ${PRODUCT}            
-        jenkinsfilePath: openshift/pipelines/build-pipeline.groovy
+            value: ${PRODUCT}
+          - name: REPO
+            value: ${MICROSERVICE_REPO_URI}
+          - name: MICROSERVICE
+            value: ${MICROSERVICE_NAME}                                    
+        jenkinsfilePath: setup-environments/pipelines/build-pipeline.groovy
       type: JenkinsPipeline
     triggers:
     - github:
