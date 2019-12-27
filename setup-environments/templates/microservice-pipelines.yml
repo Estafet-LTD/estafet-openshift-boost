@@ -81,8 +81,12 @@ objects:
           - name: GITHUB
             value: ${GITHUB}      
           - name: PRODUCT
-            value: ${PRODUCT}                    
-        jenkinsfilePath: openshift/pipelines/release-pipeline.groovy
+            value: ${PRODUCT}     
+          - name: REPO
+            value: ${MICROSERVICE_REPO_URI}
+          - name: MICROSERVICE
+            value: ${MICROSERVICE_NAME}                              
+        jenkinsfilePath: setup-environments/pipelines/release-pipeline.groovy
       type: JenkinsPipeline
   status:
     lastVersion: 0

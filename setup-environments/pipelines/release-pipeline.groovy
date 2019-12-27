@@ -39,18 +39,22 @@ node('maven') {
 
 	properties([
 	  parameters([
-	     string(name: 'GITHUB'), string(name: 'PRODUCT'),
+	     string(name: 'GITHUB'), string(name: 'PRODUCT'), string(name: 'REPO'), string(name: 'MICROSERVICE'),
 	  ])
 	])
 
 	def project = "${params.PRODUCT}-test"
-	def microservice = "project-burndown"
+	def microservice = params.MICROSERVICE	
 
 	def developmentVersion
 	def releaseVersion
 
 	stage("checkout") {
-		git branch: "master", url: "https://${username()}:${password()}@github.com/${params.GITHUB}/estafet-microservices-scrum-api-project-burndown"
+		git branch: "master", url: "https://${username()}:${password()}@github.com/${params.GITHUB}/${params.REPO}"
+	}
+
+	stage("read the pipeline definition") {
+		pipelines = readYaml file: "openshift/pipelines/pipelines.yml"
 	}
 
 	stage ("verify build image") {
@@ -64,11 +68,13 @@ node('maven') {
 		}
 	}
 	
-	stage("prepare the database") {
-		withMaven(mavenSettingsConfig: 'microservices-scrum') {
-	      sh "mvn clean package -P prepare-db -Dmaven.test.skip=true -Dproject=${project}"
-	    } 
-	}	
+	if (pipelines.release.db[0]) {
+		stage("prepare the database") {
+			withMaven(mavenSettingsConfig: 'microservices-scrum') {
+		      sh "mvn clean package -P prepare-db -Dmaven.test.skip=true -Dproject=${project}"
+		    } 
+		}	
+	}
 	
 	stage("increment version") {
 		def pom = readFile('pom.xml');
