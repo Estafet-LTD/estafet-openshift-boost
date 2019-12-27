@@ -37,6 +37,7 @@ node("maven") {
 		tests = pipelines.build.tests
 		println "db - ${db}"
 		println "mq - ${mq}"
+		println "pipelines.build.wiremock - ${pipelines.build.wiremock}"
 		println "wiremock - ${wiremock}"
 		println "promote - ${promote}"
 		println "tests - ${tests}"
