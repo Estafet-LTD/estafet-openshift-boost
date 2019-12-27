@@ -27,15 +27,14 @@ node("maven") {
 		pipelines = readYaml file: "openshift/pipelines/pipelines.yml"
 	}
 
-	stage("update wiremock") {
-		when {
-			expression { pipelines.build.wiremock }
-		}
-		def files = findFiles(glob: 'src/integration-test/resources/*.json')
-		files.each { file -> 
-			def json = readFile(file.path)
-			def response = httpRequest url: "http://wiremock-docker.${project}.svc:8080/__admin/mappings/new", httpMode: "POST", validResponseCodes: "201", requestBody: json
-		}
+	if (pipelines.build.wiremock) {
+		stage("update wiremock") {
+			def files = findFiles(glob: 'src/integration-test/resources/*.json')
+			files.each { file -> 
+				def json = readFile(file.path)
+				def response = httpRequest url: "http://wiremock-docker.${project}.svc:8080/__admin/mappings/new", httpMode: "POST", validResponseCodes: "201", requestBody: json
+			}
+		}		
 	}
 
 	stage("unit tests") {
