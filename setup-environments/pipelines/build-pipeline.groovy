@@ -16,6 +16,11 @@ node("maven") {
 	def microservice = params.MICROSERVICE	
 	def version
 	def pipelines
+	boolean db
+	boolean mq
+	boolean wiremock
+	boolean promote
+	boolean tests
 
 	currentBuild.description = "Build a container from the source, then execute unit and container integration tests before promoting the container as a release candidate for acceptance testing."
 
@@ -25,14 +30,19 @@ node("maven") {
 	
 	stage("read the pipeline definition") {
 		pipelines = readYaml file: "openshift/pipelines/pipelines.yml"
-		println "db - ${pipelines.build.db}"
-		println "mq - ${pipelines.build.mq}"
-		println "wiremock - ${pipelines.build.wiremock}"
-		println "promote - ${pipelines.build.promote}"
-		println "tests - ${pipelines.build.tests}"
+		db = pipelines.build.db
+		mq = pipelines.build.mq
+		wiremock = pipelines.build.wiremock
+		promote = pipelines.build.promote
+		tests = pipelines.build.tests
+		println "db - ${db}"
+		println "mq - ${mq}"
+		println "wiremock - ${wiremock}"
+		println "promote - ${promote}"
+		println "tests - ${tests}"
 	}
 
-	if (pipelines.build.wiremock) {
+	if (wiremock) {
 		stage("update wiremock") {
 			def files = findFiles(glob: 'src/integration-test/resources/*.json')
 			files.each { file -> 
@@ -42,7 +52,7 @@ node("maven") {
 		}		
 	}
 
-	if (pipelines.build.tests) {
+	if (tests) {
 		stage("unit tests") {
 			withMaven(mavenSettingsConfig: 'microservices-scrum') {
 		     sh "mvn clean test"
@@ -50,7 +60,7 @@ node("maven") {
 		}		
 	}
 	
-	if (pipelines.build.db) {
+	if (db) {
 		stage("prepare the database") {
 			withMaven(mavenSettingsConfig: 'microservices-scrum') {
 				sh "mvn clean package -P prepare-db -Dmaven.test.skip=true -Dproject=${project}"
@@ -58,7 +68,7 @@ node("maven") {
 		}		
 	}
 	
-	if (pipelines.build.mq) {
+	if (mq) {
 		stage("reset a-mq to purge topics") {
 			openshiftDeploy namespace: project, depCfg: "broker-amq"
 			openshiftVerifyDeployment namespace: project, depCfg: "broker-amq", replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000"    	
@@ -82,8 +92,6 @@ node("maven") {
 
 	stage("create deployment config") {
 		sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} -p DOCKER_NAMESPACE=${project} -p DOCKER_IMAGE_LABEL=${version} -p PRODUCT=${params.PRODUCT} | oc apply -f -"
-		boolean wiremock = pipelines.build.wiremock
-		println "wiremock $wiremock"
 		if (wiremock) {
 			def envVars = ""
 			pipelines.build.wiremock_environment_variables[0].each {
@@ -100,13 +108,13 @@ node("maven") {
 		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000" 
 	}
 
-	if (pipelines.build.tests) {
+	if (tests) {
 		stage("execute the container tests") {
 			withMaven(mavenSettingsConfig: 'microservices-scrum') {
 				try {
 					sh "mvn clean verify -P integration-test"
 				} finally {
-					if (pipelines.build.mq) {
+					if (mq) {
 						sh "oc set env dc/${microservice} JBOSS_A_MQ_BROKER_URL=tcp://localhost:61616 -n ${project}"	
 					}
 				}
@@ -114,7 +122,7 @@ node("maven") {
 		}		
 	}
 
-	if (pipelines.build.promote) {
+	if (promote) {
 		stage("deploy snapshots") {
 			withMaven(mavenSettingsConfig: 'microservices-scrum') {
 		 		sh "mvn clean deploy -Dmaven.test.skip=true"
@@ -122,7 +130,7 @@ node("maven") {
 		}			
 	}
 	
-	if (pipelines.build.promote) {
+	if (promote) {
 		stage("promote the image") {
 			openshiftTag namespace: project, srcStream: microservice, srcTag: version, destinationNamespace: "${params.PRODUCT}-cicd", destinationStream: microservice, destinationTag: version
 		}		
