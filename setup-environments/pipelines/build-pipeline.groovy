@@ -29,7 +29,9 @@ node("maven") {
 
 	stage("update wiremock") {
 		when {
-			expression { pipelines.build.wiremock }
+			expression { 
+				return pipelines.build.wiremock;
+			}
 		}
 		steps {
 			def files = findFiles(glob: 'src/integration-test/resources/*.json')
@@ -42,7 +44,9 @@ node("maven") {
 
 	stage("unit tests") {
 		when {
-    	expression { pipelines.build.tests }
+    	expression { 
+    		return pipelines.build.tests; 
+    	}
     }
 		steps {
 			withMaven(mavenSettingsConfig: 'microservices-scrum') {
@@ -53,7 +57,9 @@ node("maven") {
 	
 	stage("prepare the database") {
 		when {
-    	expression { pipelines.build.db }
+    	expression { 
+    		return pipelines.build.db; 
+    	}
     }
     steps {
 			withMaven(mavenSettingsConfig: 'microservices-scrum') {
@@ -64,7 +70,9 @@ node("maven") {
 	
 	stage("reset a-mq to purge topics") {
 		when {
-    	expression { pipelines.build.mq }
+    	expression { 
+    		return pipelines.build.mq; 
+    	}
     }		
     steps {
 			openshiftDeploy namespace: project, depCfg: "broker-amq"
@@ -107,7 +115,9 @@ node("maven") {
 
 	stage("execute the container tests") {
 		when {
-    	expression { pipelines.build.tests }
+    	expression { 
+    		return pipelines.build.tests; 
+    	}
     }
     steps {
 			withMaven(mavenSettingsConfig: 'microservices-scrum') {
@@ -124,7 +134,9 @@ node("maven") {
 
 	stage("deploy snapshots") {
 		when {
-    	expression { pipelines.build.promote }
+    	expression { 
+    		return pipelines.build.promote; 
+    	}
     }		
     steps {
 			withMaven(mavenSettingsConfig: 'microservices-scrum') {
@@ -135,7 +147,9 @@ node("maven") {
 	
 	stage("promote the image") {
 		when {
-    	expression { pipelines.build.promote }
+    	expression { 
+    		return pipelines.build.promote; 
+    	}
     }			
     steps {	
     	openshiftTag namespace: project, srcStream: microservice, srcTag: version, destinationNamespace: "${params.PRODUCT}-cicd", destinationStream: microservice, destinationTag: version
