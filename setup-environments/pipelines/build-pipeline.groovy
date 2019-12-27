@@ -37,40 +37,27 @@ node("maven") {
 		}		
 	}
 
-	stage("unit tests") {
-		when {
-    	expression { pipelines.build.tests }
-    }
-		steps {
+	if (pipelines.build.tests) {
+		stage("unit tests") {
 			withMaven(mavenSettingsConfig: 'microservices-scrum') {
-	      sh "mvn clean test"
-	  	} 
-		}
+		     sh "mvn clean test"
+		  } 
+		}		
 	}
 	
-	stage("prepare the database") {
-		when {
-    	expression { 
-    		return pipelines.build.db; 
-    	}
-    }
-    steps {
+	if (pipelines.build.db) {
+		stage("prepare the database") {
 			withMaven(mavenSettingsConfig: 'microservices-scrum') {
-		      sh "mvn clean package -P prepare-db -Dmaven.test.skip=true -Dproject=${project}"
-		  }     	
-    }
+				sh "mvn clean package -P prepare-db -Dmaven.test.skip=true -Dproject=${project}"
+			}     	
+		}		
 	}
 	
-	stage("reset a-mq to purge topics") {
-		when {
-    	expression { 
-    		return pipelines.build.mq; 
-    	}
-    }		
-    steps {
+	if (pipelines.build.mq) {
+		stage("reset a-mq to purge topics") {
 			openshiftDeploy namespace: project, depCfg: "broker-amq"
 			openshiftVerifyDeployment namespace: project, depCfg: "broker-amq", replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000"    	
-    }
+		}		
 	}
 	
 	stage("reset the promoted image stream") {
@@ -106,47 +93,32 @@ node("maven") {
 		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000" 
 	}
 
-	stage("execute the container tests") {
-		when {
-    	expression { 
-    		return pipelines.build.tests; 
-    	}
-    }
-    steps {
+	if (pipelines.build.tests) {
+		stage("execute the container tests") {
 			withMaven(mavenSettingsConfig: 'microservices-scrum') {
-					try {
-						sh "mvn clean verify -P integration-test"
-					} finally {
-						if (pipelines.build.mq) {
-							sh "oc set env dc/${microservice} JBOSS_A_MQ_BROKER_URL=tcp://localhost:61616 -n ${project}"	
-						}
+				try {
+					sh "mvn clean verify -P integration-test"
+				} finally {
+					if (pipelines.build.mq) {
+						sh "oc set env dc/${microservice} JBOSS_A_MQ_BROKER_URL=tcp://localhost:61616 -n ${project}"	
 					}
-			}    	
-    }		
+				}
+			}    		
+		}		
 	}
 
-	stage("deploy snapshots") {
-		when {
-    	expression { 
-    		return pipelines.build.promote; 
-    	}
-    }		
-    steps {
+	if (pipelines.build.promote) {
+		stage("deploy snapshots") {
 			withMaven(mavenSettingsConfig: 'microservices-scrum') {
-	 			sh "mvn clean deploy -Dmaven.test.skip=true"
+		 		sh "mvn clean deploy -Dmaven.test.skip=true"
 			}    	
-    } 
-	}	
+		}			
+	}
 	
-	stage("promote the image") {
-		when {
-    	expression { 
-    		return pipelines.build.promote; 
-    	}
-    }			
-    steps {	
-    	openshiftTag namespace: project, srcStream: microservice, srcTag: version, destinationNamespace: "${params.PRODUCT}-cicd", destinationStream: microservice, destinationTag: version
-    }
+	if (pipelines.build.promote) {
+		stage("promote the image") {
+			openshiftTag namespace: project, srcStream: microservice, srcTag: version, destinationNamespace: "${params.PRODUCT}-cicd", destinationStream: microservice, destinationTag: version
+		}		
 	}
 
 }
