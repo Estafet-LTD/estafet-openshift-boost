@@ -25,6 +25,11 @@ node("maven") {
 	
 	stage("read the pipeline definition") {
 		pipelines = readYaml file: "openshift/pipelines/pipelines.yml"
+		println "db - ${pipelines.build.db}"
+		println "mq - ${pipelines.build.mq}"
+		println "wiremock - ${pipelines.build.wiremock}"
+		println "promote - ${pipelines.build.promote}"
+		println "tests - ${pipelines.build.tests}"
 	}
 
 	if (pipelines.build.wiremock) {
