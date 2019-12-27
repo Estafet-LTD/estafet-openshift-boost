@@ -15,12 +15,14 @@ node("maven") {
 	def project = "${params.PRODUCT}-build"
 	def microservice = params.MICROSERVICE	
 	def version
+	def pipelines
 
 	currentBuild.description = "Build a container from the source, then execute unit and container integration tests before promoting the container as a release candidate for acceptance testing."
 
 	stage("checkout") {
 		git branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
 	}
+	
 	stage("read the pipeline definition") {
 		pipelines = readYaml file: "openshift/pipelines/pipelines.yml"
 	}
