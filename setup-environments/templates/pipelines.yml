@@ -91,13 +91,17 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/${REPO_URI}-qa"
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
     strategy:
       jenkinsPipelineStrategy:
         env:
           - name: GITHUB
-            value: ${GITHUB}                  
-        jenkinsfilePath: openshift/pipelines/qa-tests-pipeline.groovy
+            value: ${GITHUB}           
+          - name: PRODUCT
+            value: ${PRODUCT}     
+          - name: REPO
+            value: ${REPO_URI}                                    
+        jenkinsfilePath: setup-environments/pipelines/qa-tests-pipeline.groovy
       type: JenkinsPipeline
     triggers:
     - github:
