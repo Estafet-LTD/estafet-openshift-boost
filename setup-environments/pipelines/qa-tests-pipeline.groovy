@@ -19,7 +19,7 @@ node('maven') {
 	def project = "${params.PRODUCT}-test"
 
 	stage("checkout") {
-		git branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
+		git branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}-qa"
 	}
 
 	stage("initialise test flags") {
