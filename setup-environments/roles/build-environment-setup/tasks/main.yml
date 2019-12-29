@@ -40,3 +40,4 @@
     name: add-jenkins-role
   vars:
     project: "{{ build_project }}"
+    role: edit

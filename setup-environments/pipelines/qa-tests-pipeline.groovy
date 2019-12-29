@@ -1,13 +1,3 @@
-@NonCPS
-def getDeploymentConfigs(json) {
-	def items = new groovy.json.JsonSlurper().parseText(json).items
-	def dcs = []
-	for (int i = 0; i < items.size(); i++) {
-		dcs << items[i]['metadata']['name']
-	}
-	return dcs
-}
-
 node('maven') {
 
 	properties([
@@ -22,14 +12,8 @@ node('maven') {
 		git branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}-qa"
 	}
 
-	stage("initialise test flags") {
-		sh "oc get dc --selector product=${params.PRODUCT} -n ${project} -o json > microservices.json"	
-		def microservices = readFile('microservices.json')
-		def dcs = getDeploymentConfigs(microservices)
-		println dcs
-		dcs.each { dc ->
-				sh "oc patch dc/${dc} -p '{\"metadata\":{\"labels\":{\"testStatus\":\"untested\"}}}' -n ${project}"
-		}
+	stage("reset test flags for ${project}") {
+		sh "oc label namespace ${project} test-passed=false --overwrite=true"	
 	}
 
 	stage("cucumber tests") {
@@ -45,13 +29,7 @@ node('maven') {
 	stage("flag this environment") {
 		if (currentBuild.currentResult == 'SUCCESS') {
 			println "The tests passed successfully"
-			sh "oc get dc --selector product=microservices-scrum -n ${project} -o json > microservices.json"	
-			def microservices = readFile('microservices.json')
-			def dcs = getDeploymentConfigs(microservices)
-			println dcs
-			dcs.each { dc ->
-					sh "oc patch dc/${dc} -p '{\"metadata\":{\"labels\":{\"testStatus\":\"passed\"}}}' -n ${project}"
-			}		
+			sh "oc label namespace ${project} test-passed=true --overwrite=true"	
 		}
 	}
 	

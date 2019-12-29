@@ -38,3 +38,4 @@
     name: add-jenkins-role
   vars:
     project: "{{ test_project }}"
+    role: admin

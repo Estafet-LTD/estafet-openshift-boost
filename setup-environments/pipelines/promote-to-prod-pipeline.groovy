@@ -37,14 +37,7 @@ def getLatestVersion(project, microservice) {
 
 @NonCPS
 def getTestStatus(json) {
-	def items = new groovy.json.JsonSlurper().parseText(json).items
-	for (int i = 0; i < items.size(); i++) {
-		def testStatus = items[i]['metadata']['labels']['testStatus']
-		if (testStatus.equals("untested") || testStatus.equals("failed")) {
-			return "false"
-		}
-	}
-	return "true"
+	return new groovy.json.JsonSlurper().parseText(json).metadata.name
 }
 
 node("maven") {
@@ -63,7 +56,7 @@ node("maven") {
 	def pipelines
 	
 	stage("determine the environment to deploy to") {
-		sh "oc get routes -l product=ms-scrum -o json -n ${project} > routeList.json"
+		sh "oc get routes -l product=${params.PRODUCT} -o json -n ${project} > routeList.json"
 		def routeList = readFile('routeList.json')
 		def routeName = getRouteName(routeList)
 		sh "oc get route ${routeName} -o json -n ${project} > route.json"
@@ -73,11 +66,11 @@ node("maven") {
 	}
 	
 	stage ("determine the status of the target environment") {
-		sh "oc get dc --selector product=${params.PRODUCT} -n ${params.PRODUCT}-test -o json > test.json"
+		sh "oc get project ${params.PRODUCT}-test -o json > test.json"
 		def test = readFile('test.json')
 		testStatus = getTestStatus(test)
 		println "the target environment test status is $testStatus"
-		if (testStatus.equals("false")) error("Cannot promote $env microservices live as they have not been passed tested")
+		if (testStatus.equals("false")) error("Cannot promote $env microservices to staging as they have not passed tested")
 	}		
 	
 	stage("determine which image is to be deployed") {
@@ -93,6 +86,10 @@ node("maven") {
 
 	stage("read the pipeline definition") {
 		pipelines = readYaml file: "openshift/pipelines/pipelines.yml"
+	}	
+	
+	stage("reset test flag for ${project}") {
+		sh "oc label namespace ${project} test-passed=false --overwrite=true"	
 	}	
 	
 	if (pipelines.promote.db[0]) {
@@ -116,11 +113,6 @@ node("maven") {
 		openshiftDeploy namespace: project, depCfg: "${env}${microservice}",  waitTime: "3000000"
 		openshiftVerifyDeployment namespace: project, depCfg: "${env}${microservice}", replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000" 
 	}
-	
-	stage("flag this microservice as untested") {
-		println "The tests passed successfully"
-		sh "oc patch dc/${env}${microservice} -p '{\"metadata\":{\"labels\":{\"testStatus\":\"untested\"}}}' -n ${project}"		
-	}	
 
 }
 
