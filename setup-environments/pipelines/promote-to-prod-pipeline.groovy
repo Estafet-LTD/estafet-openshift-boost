@@ -10,9 +10,14 @@ def getVersions(json) {
 
 @NonCPS
 def getPassive(json) {
-	def matcher = new groovy.json.JsonSlurper().parseText(json).spec.to.name =~ /(green|blue)(basic\-ui)/
+	def matcher = new groovy.json.JsonSlurper().parseText(json).spec.to.name =~ /(green|blue)(.+)/
 	String namespace = matcher[0][1]
 	return namespace.equals("green") ? "blue" : "green" 
+}
+
+@NonCPS
+def getRouteName(json) {
+	return new groovy.json.JsonSlurper().parseText(json).items[0].metadata.name
 }
 
 def recentVersion( versions ) {
@@ -58,7 +63,10 @@ node("maven") {
 	def pipelines
 	
 	stage("determine the environment to deploy to") {
-		sh "oc get route basic-ui -o json -n ${project} > route.json"
+		sh "oc get routes -l product=ms-scrum -o json -n ${project} > routeList.json"
+		def routeList = readFile('routeList.json')
+		def routeName = getRouteName(routeList)
+		sh "oc get route ${routeName} -o json -n ${project} > route.json"
 		def route = readFile('route.json')
 		env = getPassive(route)
 		println "the target environment is $env"
