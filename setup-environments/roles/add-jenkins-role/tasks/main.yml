@@ -8,12 +8,11 @@
     - openshift
     - jenkins   
 
-- name: Create build, release and promotion pipelines for each of the microservices
+- name: Create the admin annotator
   shell: "oc apply -f {{ objects }}/admin-annotator.yaml"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
-  with_items: "{{ microservices }}"
   tags:
     - openshift  
  

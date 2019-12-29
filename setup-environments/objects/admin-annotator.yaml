@@ -553,12 +553,12 @@ rules:
   - update
   - watch
 - apiGroups:
- - ""
- attributeRestrictions: null
- resources:
- - namespaces
- - namespaces/status
- verbs:
- - patch
- - edit
+  - ""
+  attributeRestrictions: null
+  resources:
+  - namespaces
+  - namespaces/status
+  verbs:
+  - patch
+  - edit
 
