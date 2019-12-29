@@ -26,7 +26,7 @@
     name: add-jenkins-role
   vars:
     project: "{{ prod_project }}"
-    role: admin
+    role: edit
 
 - name: Create a routes to expose the application
   shell: "oc process -f {{ templates }}/prod-route.yml -p MICROSERVICE_NAME={{ item.name }} -p PRODUCT={{ product}} | oc apply -f -"
