@@ -10,14 +10,7 @@ def getMicroServices(json) {
 
 @NonCPS
 def getTestStatus(json) {
-	def items = new groovy.json.JsonSlurper().parseText(json).items
-	for (int i = 0; i < items.size(); i++) {
-		def testStatus = items[i]['metadata']['labels']['testStatus']
-		if (testStatus.equals("untested") || testStatus.equals("failed")) {
-			return "false"
-		}
-	}
-	return "true"
+	return new groovy.json.JsonSlurper().parseText(json).metadata.name
 }
 
 node {
@@ -31,7 +24,7 @@ node {
 	def testStatus
 	
 	stage ("determine the status of the test environment") {
-		sh "oc get dc --selector product=${params.PRODUCT} -n ${params.PRODUCT}-test -o json > test.json"
+		sh "oc get project ${params.PRODUCT}-test -o json > test.json"
 		def test = readFile('test.json')
 		testStatus = getTestStatus(test)
 		println "the target deployment is $testStatus"
@@ -47,7 +40,7 @@ node {
 				openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-to-prod-${microservice}", waitTime: "300000" 
 		  }		
 		}  else {
-			error("Cannot deploy microservices to production as the test environment has not been passed testing")
+			error("Cannot deploy microservices to production as the test environment has not passed testing")
 		}
 		
 	}
