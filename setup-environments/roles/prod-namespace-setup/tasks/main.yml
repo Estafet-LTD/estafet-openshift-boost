@@ -18,6 +18,11 @@
     role: view
 
 - include_role: 
+    name: jaeger-setup
+  vars:
+    project: "{{ prod_project }}"   
+
+- include_role: 
     name: external-db
   vars:
     project: "{{ prod_project }}"    
