@@ -11,6 +11,9 @@ parameters:
 - description: Defines name of the microservice
   name: MICROSERVICE_NAME
   required: true  
+- description: Defines the product that this pipeline is related to
+  name: PRODUCT
+  required: true   
 objects:
 - apiVersion: v1
   kind: Route
@@ -18,6 +21,7 @@ objects:
     creationTimestamp: null
     labels:
       app: ${MICROSERVICE_NAME}
+      product: ${PRODUCT}      
     name: ${MICROSERVICE_NAME}
   spec:
     port:

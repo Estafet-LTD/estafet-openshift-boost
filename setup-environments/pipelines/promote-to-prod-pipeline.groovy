@@ -46,15 +46,16 @@ node("maven") {
 
 	properties([
 	  parameters([
-	     string(name: 'GITHUB'), string(name: 'PRODUCT'),
+	     string(name: 'GITHUB'), string(name: 'PRODUCT'), string(name: 'REPO'), string(name: 'MICROSERVICE'),
 	  ])
 	])
 	
 	def project = "${params.PRODUCT}-prod"
-	def microservice = "project-burndown"
+	def microservice = params.MICROSERVICE
 	def version
 	def env
 	def testStatus
+	def pipelines
 	
 	stage("determine the environment to deploy to") {
 		sh "oc get route basic-ui -o json -n ${project} > route.json"
@@ -78,19 +79,29 @@ node("maven") {
 	
 	stage("checkout release version") {
 		checkout scm: [$class: 'GitSCM', 
-      userRemoteConfigs: [[url: "https://github.com/${params.GITHUB}/estafet-microservices-scrum-api-project-burndown"]], 
+      userRemoteConfigs: [[url: "https://github.com/${params.GITHUB}/${params.REPO}"]], 
       branches: [[name: "refs/tags/${version}"]]], changelog: false, poll: false
 	}
+
+	stage("read the pipeline definition") {
+		pipelines = readYaml file: "openshift/pipelines/pipelines.yml"
+	}	
 	
-	stage("ensure the exists database") {
-		withMaven(mavenSettingsConfig: 'microservices-scrum') {
-	      sh "mvn clean package -P create-prod-db -Dmaven.test.skip=true -Dproject=${project}"
-	    } 
-	}		
+	if (pipelines.promote.db[0]) {
+		stage("ensure the exists database") {
+			withMaven(mavenSettingsConfig: 'microservices-scrum') {
+		      sh "mvn clean package -P create-prod-db -Dmaven.test.skip=true -Dproject=${project}"
+		    } 
+		}
+	}
 	
 	stage("create deployment config") {
 		sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} -p ENV=${env} -p DOCKER_NAMESPACE=${project} -p DOCKER_IMAGE_LABEL=${version} -p PRODUCT=${params.PRODUCT} | oc apply -f -"
-		sh "oc set env dc/${env}${microservice} JBOSS_A_MQ_BROKER_URL=tcp://broker-amq-tcp.mq-${env}.svc:61616 JAEGER_AGENT_HOST=jaeger-agent.${project}.svc JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger-agent.${project}.svc:5778 JAEGER_SAMPLER_PARAM=1 JAEGER_SAMPLER_TYPE=const -n ${project}"	
+		def mq = ""
+		if (pipelines.promote.mq[0]) {
+			mq = "JBOSS_A_MQ_BROKER_URL=tcp://broker-amq-tcp.mq-${env}.svc:61616"
+		}
+		sh "oc set env dc/${env}${microservice} ${mq} JAEGER_AGENT_HOST=jaeger-agent.${project}.svc JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger-agent.${project}.svc:5778 JAEGER_SAMPLER_PARAM=1 JAEGER_SAMPLER_TYPE=const -n ${project}"	
 	}
 	
 	stage("execute deployment") {
