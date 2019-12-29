@@ -37,7 +37,7 @@ def getLatestVersion(project, microservice) {
 
 @NonCPS
 def getTestStatus(json) {
-	return new groovy.json.JsonSlurper().parseText(json).metadata.name
+	return new groovy.json.JsonSlurper().parseText(json).metadata.labels.test-passed
 }
 
 node("maven") {
