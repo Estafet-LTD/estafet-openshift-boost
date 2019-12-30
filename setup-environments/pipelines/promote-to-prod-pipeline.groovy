@@ -69,12 +69,12 @@ node("maven") {
 		println "the target environment is $env"
 	}
 	
-	stage ("determine the status of the target environment") {
+	stage ("determine the status of the ${params.PRODUCT}-test environment") {
 		sh "oc get project ${params.PRODUCT}-test -o json > test.json"
 		def test = readFile('test.json')
 		testStatus = getTestStatus(test)
 		println "the target environment test status is $testStatus"
-		if (testStatus.equals("false")) error("Cannot promote $env microservices to staging as they have not passed tested")
+		if (testStatus.equals("false")) error("Cannot promote $env microservices to staging as they have not passed ${params.PRODUCT}-test testing")
 	}		
 	
 	stage("determine which image is to be deployed") {
@@ -116,10 +116,6 @@ node("maven") {
 	stage("execute deployment") {
 		openshiftDeploy namespace: project, depCfg: "${env}${microservice}",  waitTime: "3000000"
 		openshiftVerifyDeployment namespace: project, depCfg: "${env}${microservice}", replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000" 
-	}
-
-	stage("reset test flags for ${project}") {
-		sh "oc label namespace ${project} test-passed=false --overwrite=true"	
 	}
 
 }
