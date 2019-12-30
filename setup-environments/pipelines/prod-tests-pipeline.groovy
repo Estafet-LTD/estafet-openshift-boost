@@ -41,7 +41,7 @@ node('maven') {
 
 	stage("execute smoke tests") {
 		withMaven(mavenSettingsConfig: 'microservices-scrum') {
-			sh "mvn clean test"	
+			sh "mvn clean test -Denv=${env}"	
 		} 
 	}
 	
