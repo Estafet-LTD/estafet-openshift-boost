@@ -1,14 +1,4 @@
 @NonCPS
-def getVersions(json) {
-	def tags = new groovy.json.JsonSlurper().parseText(json).status.tags
-	def versions = []
-	for (int i = 0; i < tags.size(); i++) {
-		versions << tags[i]['tag']
-	}
-	return versions
-}
-
-@NonCPS
 def getPassive(json) {
 	def matcher = new groovy.json.JsonSlurper().parseText(json).spec.to.name =~ /(green|blue)(.+)/
 	String namespace = matcher[0][1]
@@ -21,12 +11,27 @@ def getRouteName(json) {
 }
 
 @NonCPS
+def getVersions(json) {
+	def tags = new groovy.json.JsonSlurper().parseText(json).status.tags
+	def versions = []
+	for (int i = 0; i < tags.size(); i++) {
+		versions << tags[i]['tag']
+	}
+	return versions
+}
+
+@NonCPS
 def recentVersion(List versions) {
 	versions.sort( false ) { a, b ->
 		[a,b]*.tokenize('.')*.collect { it as int }.with { u, v ->
 			[u,v].transpose().findResult{ x,y-> x<=>y ?: null } ?: u.size() <=> v.size()
 		}
 	}[-1]
+}
+
+@NonCPS
+def getTestStatus(json) {
+	return new groovy.json.JsonSlurper().parseText(json).metadata.labels."test-passed"
 }
 
 def getLatestVersion(project, microservice) {
@@ -37,11 +42,6 @@ def getLatestVersion(project, microservice) {
 		error("There are no images for ${microservice}")
 	}
 	return recentVersion(versions)
-}
-
-@NonCPS
-def getTestStatus(json) {
-	return new groovy.json.JsonSlurper().parseText(json).metadata.labels."test-passed"
 }
 
 node("maven") {
@@ -116,6 +116,10 @@ node("maven") {
 	stage("execute deployment") {
 		openshiftDeploy namespace: project, depCfg: "${env}${microservice}",  waitTime: "3000000"
 		openshiftVerifyDeployment namespace: project, depCfg: "${env}${microservice}", replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000" 
+	}
+
+	stage("reset test flags for ${project}") {
+		sh "oc label namespace ${project} test-passed=false --overwrite=true"	
 	}
 
 }
