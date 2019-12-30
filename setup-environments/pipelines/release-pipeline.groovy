@@ -70,7 +70,7 @@ node('maven') {
 		def matcher = new XmlSlurper().parseText(pom).version =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
 		String pomVersion = "${matcher[0][1]}${matcher[0][2].toInteger()}-SNAPSHOT"
 		if (!version.equals(pomVersion)) {
-			error("Source version ${pomVersion} does not match image version ${version}")
+			error("Source version ${pomVersion} does not match last build image version ${version}. Perhaps ${pomVersion} has already been released?")
 		}
 	}
 	
