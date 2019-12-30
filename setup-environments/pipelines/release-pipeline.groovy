@@ -102,6 +102,7 @@ node('maven') {
 
 	stage("promote the image from ${params.PRODUCT}-cicd to ${project}") {
 		openshiftTag namespace: "${params.PRODUCT}-cicd", srcStream: microservice, srcTag: version, destinationNamespace: project, destinationStream: microservice, destinationTag: releaseVersion
+		sh "oc patch is/${microservice} -p '{\"metadata\":{\"labels\":{\"product\":\"${params.PRODUCT}\"}}}' -n ${project}"
 	}	
 
 	stage("create deployment config") {
@@ -116,6 +117,7 @@ node('maven') {
 
 	stage("promote the image to ${params.PRODUCT}-prod") {
 		openshiftTag namespace: project, srcStream: microservice, srcTag: releaseVersion, destinationNamespace: "${params.PRODUCT}-prod", destinationStream: microservice, destinationTag: releaseVersion
+		sh "oc patch is/${microservice} -p '{\"metadata\":{\"labels\":{\"product\":\"${params.PRODUCT}\"}}}' -n ${params.PRODUCT}-prod"
 	}	
 	
 	stage("flag this microservice as untested") {

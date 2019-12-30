@@ -116,6 +116,7 @@ node("maven") {
 	if (pipelines.build.promote[0]) {
 		stage("promote the image") {
 			openshiftTag namespace: project, srcStream: microservice, srcTag: version, destinationNamespace: "${params.PRODUCT}-cicd", destinationStream: microservice, destinationTag: version
+			sh "oc patch is/${microservice} -p '{\"metadata\":{\"labels\":{\"product\":\"${params.PRODUCT}\"}}}' -n ${params.PRODUCT}-cicd"
 		}		
 	}
 
