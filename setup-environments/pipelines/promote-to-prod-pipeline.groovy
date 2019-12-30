@@ -93,7 +93,7 @@ node("maven") {
 	}	
 	
 	if (pipelines.promote.db[0]) {
-		stage("ensure the exists database") {
+		stage("ensure the database exists") {
 			withMaven(mavenSettingsConfig: 'microservices-scrum') {
 		      sh "mvn clean package -P create-prod-db -Dmaven.test.skip=true -Dproject=${project}"
 		    } 
