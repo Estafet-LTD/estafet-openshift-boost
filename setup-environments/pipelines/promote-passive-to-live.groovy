@@ -33,7 +33,7 @@ node {
 	def routesJson
 	
 	stage("determine the environment to deploy to") {
-		sh "oc get route -l product=${params.PRODUCT}-o json -n ${params.PRODUCT}-prod > route.json"
+		sh "oc get route -l product=${params.PRODUCT} -o json -n ${params.PRODUCT}-prod > route.json"
 		routesJson = readFile('route.json')
 		env = getTargetEnvironment(routesJson)
 		println "the target environment is $env"
