@@ -15,7 +15,7 @@ def getRoutes(json) {
 	def items = new groovy.json.JsonSlurper().parseText(json).items
 	def routes = []
 	for (int i = 0; i < items.size(); i++) {
-		routes << items[i]['spec']['to']['name']
+		routes << items[i]['metadata']['name']
 	}
 	return routes
 }
@@ -33,7 +33,7 @@ node {
 	def routesJson
 	
 	stage("determine the environment to deploy to") {
-		sh "oc get route -o json -n ${params.PRODUCT}-prod > route.json"
+		sh "oc get route -l product=${params.PRODUCT}-o json -n ${params.PRODUCT}-prod > route.json"
 		routesJson = readFile('route.json')
 		env = getTargetEnvironment(routesJson)
 		println "the target environment is $env"
