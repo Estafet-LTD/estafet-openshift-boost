@@ -3,7 +3,7 @@ def getVersions(json) {
 	def tags = new groovy.json.JsonSlurper().parseText(json).status.tags
 	def versions = []
 	for (int i = 0; i < tags.size(); i++) {
-		versions << tags[i]['tag']
+		versions << tags[i]['tag'].replaceAll("\-SNAPSHOT","")
 	}
 	return versions
 }
@@ -36,7 +36,7 @@ def getLatestVersion(product, microservice) {
 	if (versions.size() == 0) {
 		error("There are no images for ${microservice}")
 	}
-	return recentVersion(versions)
+	return "${recentVersion(versions)}-SNAPSHOT"
 }
 
 node('maven') {
