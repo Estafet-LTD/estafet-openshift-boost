@@ -233,6 +233,12 @@ objects:
             value: ${ADMIN_PASSWORD}       
           - name: PRODUCT
             value: ${PRODUCT}   
+          - name: USER
+            value: ""
+          - name: UPDATE
+            value: "false"
+          - name: TEST
+            value: "false"                                            
         jenkinsfilePath: setup-environments/pipelines/create-environment-pipeline.groovy
       type: JenkinsPipeline
   status:

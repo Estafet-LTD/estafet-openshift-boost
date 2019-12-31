@@ -8,11 +8,6 @@ def getProjects(json) {
 	return projects.sort()
 }
 
-@NonCPS
-def getDataBaseExternalName(json) {
-	return new groovy.json.JsonSlurper().parseText(json).spec.externalName
-}
-
 def getNextProjectName() {
 	sh "oc get projects --selector type=dq -o json > projects.json"
 	def json = readFile('projects.json')	
@@ -45,24 +40,28 @@ node {
 	     string(name: 'ADMIN_USER'), 
 	     string(name: 'ADMIN_PASSWORD'),
 	     string(name: 'PRODUCT'),
+	     string(name: 'USER'),
+	     string(name: 'UPDATE'),
+	     string(name: 'TEST'),
 	  ])
 	])
 	
-	stage("checkout project") {
-		checkout scm: [$class: 'GitSCM', 
-      userRemoteConfigs: [[url: "https://github.com/${params.GITHUB}/${params.REPO}"]], 
-      branches: [[name: "refs/tags/${version}"]]], changelog: false, poll: false
+	stage("checkout repo") {
+    git branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
 	}	
 	
 	stage ("connect as admin") {
 		sh "oc login --insecure-skip-tls-verify=true -u ${params.ADMIN_USER} -p ${params.ADMIN_PASSWORD} ${params.MASTER_HOST}"
 	}
 	
-	stage ("create the namespace") {
-		project = getNextProjectName()
-		sh "oc new-project $project --display-name='${params.PROJECT_TITLE}'"
-		sh "oc label namespace $project type=dq"
-		sh "oc policy add-role-to-user edit system:serviceaccount:${params.PRODUCT}-cicd:jenkins -n $project"
+	if (params.UPDATE.equals("false")) {
+		stage ("create the namespace") {
+			project = getNextProjectName()
+			sh "oc new-project $project --display-name='${params.PROJECT_TITLE}'"
+			sh "oc label namespace $project type=dq product=${params.PRODUCT}"
+			sh "oc policy add-role-to-user edit system:serviceaccount:${params.PRODUCT}-cicd:jenkins -n $project"
+			sh "oc policy add-role-to-user edit ${params.USER} -n $project"
+		}		
 	}
 	
 	stage ("create the message broker") {
@@ -76,14 +75,13 @@ node {
 	}
 	
 	stage ("create the database endpoint") {
-		def database = getDatabaseEndPoint()
-		sh "oc process -f estafet-microservices-scrum/setup-environments/templates/database-service.yml -p DB_HOST=$database | oc apply -f -"
+		sh "oc export svc postgresql -n ${params.PRODUCT}-build --as-template=postgresql | oc apply -f -"
 	}
 	
 	stage ('create each microservice') {
 		def microservices = readYaml file: "${params.REPO}/setup-environments/vars/microservices-vars.yml"
-		microservices.each { microservice ->
-			openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "${pipeline}", waitTime: "300000"
+		microservices[0].each { microservice ->
+			openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "build-${microservice}", env : [ [ name : "DQ_PROJECT", value : project ] ]
 			openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "${pipeline}", waitTime: "300000" 
 		}		
 	}
