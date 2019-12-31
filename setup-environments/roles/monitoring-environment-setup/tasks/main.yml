@@ -18,12 +18,6 @@
     role: view
 
 - include_role: 
-    name: amq-setup
-  vars:
-    project: "{{ test_project }}"
-    templates_project: openshift
-
-- include_role: 
     name: jaeger-setup
   vars:
     project: "{{ monitoring_project }}"   

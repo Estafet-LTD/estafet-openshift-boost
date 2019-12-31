@@ -1,13 +1,6 @@
 ---
-- name: Retrieve the list of users
-  shell: "oc get users -o json"
-  register: users_json     
-
-- name: Get the names of the users
-  set_fact: users="{{users_json.stdout|from_json|json_query('items[*].metadata.name')}}"
-  
 - name: Allow users to access project
-  shell: 'oc policy add-role-to-user {{ role }} {{ item }}'
+  shell: 'oc policy add-role-to-user {{ role }} {{ item }} -n {{ project }}'
   when: "{{ item != 'admin' }}"
   with_items: "{{ users }}"
   register: command_result

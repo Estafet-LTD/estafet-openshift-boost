@@ -34,6 +34,11 @@
     msg: "[Library Definitions] are not set. Please edit libraries-vars.yml"
   when: libraries is undefined
 
+- name: Verify if the users have been defined
+  fail:
+    msg: "[Users] are not set. Please edit users-vars.yml"
+  when: users is undefined
+
 - name: Verify that the database host has been defined
   fail:
     msg: "[Database host] is not set. Please edit inventory"

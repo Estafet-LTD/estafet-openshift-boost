@@ -12,12 +12,6 @@
     cloud_environment: true
 
 - include_role: 
-    name: namespace-role-setup
-  vars:
-    project: "{{ mq_project }}"
-    role: view
-
-- include_role: 
     name: amq-setup
   vars:
     project: "{{ mq_project }}"
