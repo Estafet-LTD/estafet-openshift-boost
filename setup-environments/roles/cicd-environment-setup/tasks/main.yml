@@ -22,8 +22,8 @@
     name: jenkins-setup
   vars:
     project: "{{ cicd_project }}"
-    volume_capacity: 20Gi
-    memory_limit: 2Gi
+    volume_capacity: 30Gi
+    memory_limit: 3Gi
 
 - name: Create build, release and promotion pipelines for each of the microservices
   shell: "oc process -f {{ templates }}/microservice-pipelines.yml -p GITHUB={{ github }} -p MICROSERVICE_NAME={{ item.name }} -p MICROSERVICE_REPO_URI={{ item.repo }} -p PRODUCT={{ product}} | oc create -f -"
