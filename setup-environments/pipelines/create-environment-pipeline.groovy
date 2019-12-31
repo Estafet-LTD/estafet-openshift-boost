@@ -57,7 +57,8 @@ node {
 	if (params.UPDATE.equals("false")) {
 		stage ("create the namespace") {
 			project = getNextProjectName()
-			sh "oc new-project $project --display-name='${params.PROJECT_TITLE}'"
+			def title = params.PROJECT_TITLE.equals("") ? project : params.PROJECT_TITLE
+			sh "oc new-project $project --display-name='${title}'"
 			sh "oc label namespace $project type=dq product=${params.PRODUCT}"
 			sh "oc policy add-role-to-user edit system:serviceaccount:${params.PRODUCT}-cicd:jenkins -n $project"
 			sh "oc policy add-role-to-user edit ${params.USER} -n $project"
