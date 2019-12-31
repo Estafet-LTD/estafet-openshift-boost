@@ -3,7 +3,6 @@
     name : init
 
 - set_fact: build_project="{{ product }}-build"    
-
 - name: "Updating users for {{ build_project }}"
   include_role: 
     name: namespace-role-setup
@@ -12,7 +11,6 @@
     role: edit   
     
 - set_fact: test_project="{{ product }}-test"
-
 - name: "Updating users for {{ test_project }}"
   include_role: 
     name: namespace-role-setup
@@ -21,7 +19,6 @@
     role: edit   
      
 - set_fact: cicd_project="{{ product }}-cicd"
-
 - name: "Updating users for {{ cicd_project }}"
   include_role: 
     name: namespace-role-setup
@@ -30,11 +27,19 @@
     role: edit  
     
 - set_fact: monitoring_project="{{ product }}-monitoring"
-
 - name: "Updating users for {{ monitoring_project }}"
   include_role: 
     name: namespace-role-setup
   vars:
     project: "{{ monitoring_project }}"
     role: view  
+
+- set_fact: nexus_project="nexus"
+- name: "Updating users for {{ nexus_project }}"
+  include_role: 
+    name: namespace-role-setup
+  vars:
+    project: "{{ nexus_project }}"
+    role: view  
+
 
