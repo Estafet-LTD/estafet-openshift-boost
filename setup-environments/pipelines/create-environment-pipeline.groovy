@@ -32,7 +32,7 @@ def getDatabaseEndPoint() {
 	return getDataBaseExternalName(db)
 }
 
-node("maven") {
+node {
 	
 	def project
 	
