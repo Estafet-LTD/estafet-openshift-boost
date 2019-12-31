@@ -79,7 +79,7 @@ node {
 	}
 	
 	stage ('create each microservice') {
-		def microservices = readYaml file: "${params.REPO}/setup-environments/vars/microservices-vars.yml"
+		def microservices = readYaml file: "setup-environments/vars/microservices-vars.yml"
 		microservices[0].each { microservice ->
 			openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "build-${microservice}", env : [ [ name : "DQ_PROJECT", value : project ] ]
 			openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "${pipeline}", waitTime: "300000" 
