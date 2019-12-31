@@ -217,14 +217,16 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/${REPO_URI}"
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
     strategy:
       jenkinsPipelineStrategy:
         env:
           - name: GITHUB
             value: ${GITHUB}
+          - name: REPO
+            value: ${REPO_URI}
           - name: PROJECT_TITLE
-            value: null
+            value: "My Project"
           - name: MASTER_HOST
             value: ${MASTER_HOST}
           - name: ADMIN_USER
