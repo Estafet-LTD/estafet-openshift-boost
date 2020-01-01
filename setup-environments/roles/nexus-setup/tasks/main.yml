@@ -1,9 +1,9 @@
 ---
-# Define the name and description of the OpenShift project
-- set_fact: nexus_project="nexus"
-
 - include_role: 
     name : init
+
+# Define the name and description of the OpenShift project
+- set_fact: nexus_project="nexus"
 
 - include_role: 
     name: namespace-setup

@@ -1,8 +1,8 @@
 ---
-- set_fact: prod_project="{{ product }}-prod"
-
 - include_role: 
     name : init
+
+- set_fact: prod_project="{{ product }}-prod"
 
 - include_role: 
     name: namespace-setup

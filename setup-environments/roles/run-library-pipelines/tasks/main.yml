@@ -1,8 +1,8 @@
 ---
-- set_fact: cicd_project="{{ product }}-cicd"
-
 - include_role: 
     name : init
+
+- set_fact: cicd_project="{{ product }}-cicd"
 
 - name: Verify if type is set
   fail:

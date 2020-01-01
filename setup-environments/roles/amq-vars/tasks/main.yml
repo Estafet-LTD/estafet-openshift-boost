@@ -1,5 +1,4 @@
 ---
-
 - name: Read the broker pod list
   shell: "oc get pods --selector application=broker -o json"
   register: list_of_broker_pods     

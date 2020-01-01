@@ -1,8 +1,8 @@
 --- 
-- set_fact: mq_project="{{ product }}-mq-{{ colour }}"
-
 - include_role: 
     name : init
+
+- set_fact: mq_project="{{ product }}-mq-{{ colour }}"
 
 - include_role: 
     name: namespace-setup

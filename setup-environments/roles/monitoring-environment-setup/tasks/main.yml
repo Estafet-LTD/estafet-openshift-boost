@@ -1,8 +1,8 @@
 ---
-- set_fact: monitoring_project="{{ product }}-monitoring"
-
 - include_role: 
     name : init
+
+- set_fact: monitoring_project="{{ product }}-monitoring"
 
 - include_role: 
     name: namespace-setup

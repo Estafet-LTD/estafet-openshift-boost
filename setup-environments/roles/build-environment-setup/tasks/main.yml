@@ -1,9 +1,9 @@
 ---
-# Define the name and description of the OpenShift project
-- set_fact: build_project="{{ product }}-build"
-
 - include_role: 
     name : init
+
+# Define the name and description of the OpenShift project
+- set_fact: build_project="{{ product }}-build"
 
 - include_role: 
     name: namespace-setup
