@@ -1,7 +1,7 @@
 ---
 - include_vars:
     dir: vars
-    extensions: [yaml]
+    extensions: [yml]
     
 - name: Verify if openshift is set
   fail:
