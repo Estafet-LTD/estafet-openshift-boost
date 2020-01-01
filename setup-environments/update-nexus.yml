@@ -1,0 +1,6 @@
+---
+- name: Update the CICD Environment for Microservices Scrum Demo
+  hosts: local
+  roles:
+    - nexus-setup
+  

@@ -1,0 +1,7 @@
+---
+- name: Update the CICD Environment
+  hosts: local
+  roles:
+    - cicd-environment-setup
+         
+  

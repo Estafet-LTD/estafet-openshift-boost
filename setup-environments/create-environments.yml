@@ -1,0 +1,6 @@
+---
+- name: Create SDLC Environments
+  hosts: local  
+  roles:
+    - create-environments
+

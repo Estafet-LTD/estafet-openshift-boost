@@ -1,0 +1,7 @@
+---
+- name: Update the Product Environment
+  hosts: local
+  roles:
+    - prod-namespace-setup
+         
+  
