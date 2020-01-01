@@ -1,4 +1,8 @@
 ---
+- include_vars:
+    dir: vars
+    extensions: [yaml]
+    
 - name: Verify if openshift is set
   fail:
     msg: "[OpenShift host] is not defined. Please edit inventory"
