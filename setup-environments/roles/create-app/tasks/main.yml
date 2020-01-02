@@ -1,0 +1,73 @@
+---
+- name: Checkout {{ repo }} from github
+  git:
+    repo: "https://github.com/{{ github }}/{{ repo }}.git"
+    dest: "{{ workdir }}/{{ repo }}"
+    update: yes
+  tags:
+    - git  
+
+- set_fact: branch="master"
+
+- name: fetch latest tag for this repo
+  shell: "git describe --abbrev=0 --tags"
+  args:
+    chdir: "{{ workdir }}/{{ repo }}"
+  when: "{{ test_environment }}"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - git  
+
+- set_fact: branch="{{ command_result.stdout }}"
+  when: "{{ test_environment }}"
+
+- name: Create the build config
+  shell: 'oc process -n {{ project }} -f {{ workdir }}/{{ repo }}/openshift/templates/{{ microservice }}-build-config.yml -p NAMESPACE={{ project }} -p GITHUB={{ github }} -p DOCKER_IMAGE_LABEL=latest -p PRODUCT={{ product }} -p MAVEN_MIRROR_URL={{ maven_mirror_url }} -p DOCKER_REGISTRY={{ docker_registry }} | oc apply -f -'
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift         
+
+- name: Wait for the {{ microservice }} build to complete
+  shell : "oc rollout status bc/{{ microservice }}"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+
+- name: Create the deployment config
+  shell: 'oc process -n {{ project }} -f {{ workdir }}/{{ repo }}/openshift/templates/{{ microservice }}-config.yml -p NAMESPACE=${project} -p DOCKER_NAMESPACE=${project} -p DOCKER_IMAGE_LABEL=${version} -p PRODUCT=${params.PRODUCT} | oc apply -f -'
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift     
+
+- name: Add the jaeger environment variables to the deployment config
+  shell: 'oc set env dc/{{ microservice }} -e JAEGER_SAMPLER_TYPE=const -e JAEGER_SAMPLER_PARAM=1 -e JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger-agent.{{ project }}.svc:5778 -e JAEGER_AGENT_HOST=jaeger-agent.{{ project }}.svc -n {{ project }}'
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift   
+
+- name: Wait for the microservice to become available ({{ microservice }})
+  shell : "oc rollout status dc/{{ microservice }}"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+
+- name: Expose Service ({{ microservice }})
+  shell: "oc expose service {{ microservice }}"
+  when: "{{ expose }}"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
