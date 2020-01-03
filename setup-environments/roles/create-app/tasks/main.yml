@@ -24,8 +24,8 @@
   tags:
     - git  
 
-- name: Create the microservice databases on PostgreSQL Pod
-  shell: 'oc exec {{db_pod}} -- /bin/sh -i -c "createdb {{ microservice }}"'
+- name: Create the {{ microservice }} database on PostgreSQL Pod
+  shell: 'oc exec {{db_pod}} -- /bin/sh -i -c "createdb {{ project }}-{{ microservice }}"'
   register: command_result
   when: db      
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
@@ -45,7 +45,7 @@
     - postgresql
 
 - name: Execute Drop ddl on PostgreSQL Pod
-  shell: 'oc exec {{db_pod}} -- /bin/sh -i -c "psql -d {{ microservice }} -U postgres -f /tmp/drop-{{ microservice }}-db.ddl"'
+  shell: 'oc exec {{db_pod}} -- /bin/sh -i -c "psql -d {{ project }}-{{ microservice }} -U postgres -f /tmp/drop-{{ microservice }}-db.ddl"'
   register: command_result
   when: db
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
