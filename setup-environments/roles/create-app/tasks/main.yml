@@ -1,12 +1,4 @@
 ---
-- name: Checkout {{ repo }} from github
-  git:
-    repo: "https://github.com/{{ github }}/{{ repo }}.git"
-    dest: "{{ workdir }}/{{ repo }}"
-    update: yes
-  tags:
-    - git  
-
 - set_fact: branch="master"
 
 - name: fetch latest tag for this repo
@@ -22,6 +14,15 @@
 
 - set_fact: branch="{{ command_result.stdout }}"
   when: test
+
+- name: Checkout {{ repo }} from github branch {{ branch }}
+  git:
+    repo: "https://github.com/{{ github }}/{{ repo }}.git"
+    dest: "{{ workdir }}/{{ repo }}"
+    version: {{ branch }}
+    update: yes
+  tags:
+    - git  
 
 - name: Create the microservice databases on PostgreSQL Pod
   shell: 'oc exec {{db_pod}} -- /bin/sh -i -c "createdb {{ microservice }}"'
