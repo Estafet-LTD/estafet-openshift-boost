@@ -106,11 +106,9 @@ node("maven") {
 	
 	stage("create deployment config") {
 		sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} -p ENV=${env} -p DOCKER_NAMESPACE=${project} -p DOCKER_IMAGE_LABEL=${version} -p PRODUCT=${params.PRODUCT} | oc apply -f -"
-		def mq = ""
 		if (pipelines.promote.mq[0]) {
-			mq = "JBOSS_A_MQ_BROKER_URL=tcp://broker-amq-tcp.${params.PRODUCT}-mq-${env}.svc:61616"
+			sh "oc set env dc/${env}${microservice} JBOSS_A_MQ_BROKER_URL=tcp://broker-amq-tcp.${params.PRODUCT}-mq-${env}.svc:61616 -n ${project}"	
 		}
-		sh "oc set env dc/${env}${microservice} ${mq} JAEGER_AGENT_HOST=jaeger-agent.${project}.svc JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger-agent.${project}.svc:5778 JAEGER_SAMPLER_PARAM=1 JAEGER_SAMPLER_TYPE=const -n ${project}"	
 	}
 	
 	stage("execute deployment") {

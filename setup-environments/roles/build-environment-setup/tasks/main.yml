@@ -20,6 +20,11 @@
     role: edit
 
 - include_role: 
+    name: jaeger-setup
+  vars:
+    project: "{{ build_project }}"   
+
+- include_role: 
     name: amq-setup
   vars:
     project: "{{ build_project }}"
