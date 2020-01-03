@@ -65,6 +65,7 @@
     expose: "{{ item.expose }}"    
     db: "{{ item.db }}"
     db_pod: "{{ db_pod }}"
+    project: "{{ local_project }}"
   with_items: "{{ microservices }}"
   tags:
     - openshift

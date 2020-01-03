@@ -79,7 +79,7 @@
     - openshift
 
 - name: Create the deployment config
-  shell: 'oc process -n {{ project }} -f {{ workdir }}/{{ repo }}/openshift/templates/{{ microservice }}-config.yml -p NAMESPACE=${project} -p DOCKER_NAMESPACE=${project} -p DOCKER_IMAGE_LABEL=${version} -p PRODUCT=${params.PRODUCT} | oc apply -f -'
+  shell: 'oc process -n {{ project }} -f {{ workdir }}/{{ repo }}/openshift/templates/{{ microservice }}-config.yml -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ project }} -p DOCKER_IMAGE_LABEL=latest -p PRODUCT={{ product }} | oc apply -f -'
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
