@@ -77,14 +77,6 @@
   tags:
     - openshift     
 
-- name: Add the jaeger environment variables to the deployment config
-  shell: 'oc set env dc/{{ microservice }} -e JAEGER_SAMPLER_TYPE=const -e JAEGER_SAMPLER_PARAM=1 -e JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger-agent.{{ project }}.svc:5778 -e JAEGER_AGENT_HOST=jaeger-agent.{{ project }}.svc -n {{ project }}'
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"
-  tags:
-    - openshift   
-
 - name: Start the {{ microservice }} deployment
   shell: 'oc deploy {{ microservice }} -n {{ project }}'
   register: command_result
