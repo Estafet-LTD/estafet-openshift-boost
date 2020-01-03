@@ -23,15 +23,6 @@
 - set_fact: branch="{{ command_result.stdout }}"
   when: test
 
-- name: Read the database pod list
-  shell: "oc get pods --selector app=postgresql -o json -n {{ project }}"
-  when: db      
-  register: list_of_db_pods
-    
-- name: Get the name of the PostgreSQL Pod
-  set_fact: db_pod="{{list_of_db_pods.stdout|from_json|json_query('items[0].metadata.name')}}"
-  when: db      
-
 - name: Create the microservice databases on PostgreSQL Pod
   shell: 'oc exec {{db_pod}} -- /bin/sh -i -c "createdb {{ microservice }}"'
   register: command_result
