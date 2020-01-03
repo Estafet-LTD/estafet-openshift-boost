@@ -19,7 +19,7 @@
   git:
     repo: "https://github.com/{{ github }}/{{ repo }}.git"
     dest: "{{ workdir }}/{{ repo }}"
-    version: {{ branch }}
+    version: "{{ branch }}"
     update: yes
   tags:
     - git  
