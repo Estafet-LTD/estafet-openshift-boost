@@ -12,42 +12,42 @@
     msg: "[Docker Registry Host and Port] is not set. Please edit inventory"
   when: docker_registry is undefined
 
-- set_fact: project=microservices-scrum
+- set_fact: local_project=microservices-scrum
     
 - include_role: 
     name: namespace-setup
   vars:
-    project: "{{ project }}"
+    project: "{{ local_project }}"
     project_description: "{{ product_description }}"
     cloud_environment: false
 
 - include_role: 
     name: imagestream-setup
   vars:
-    project: "{{ project }}"
+    project: "{{ local_project }}"
 
 - include_role: 
     name: jaeger-setup
   vars:
-    project: "{{ project }}"   
+    project: "{{ local_project }}"   
 
 - include_role: 
     name: wiremock-setup
   when: not test
   vars:
-    project: "{{ project }}"
+    project: "{{ local_project }}"
     tag: 2.25.1
 
 - include_role: 
     name: postgresql-setup
   vars:
-    project: "{{ project }}"
+    project: "{{ local_project }}"
 
 - include_role: 
     name: amq-setup
   vars:
-    project: "{{ project }}"
-    templates_project: "{{ project }}"
+    project: "{{ local_project }}"
+    templates_project: "{{ local_project }}"
 
 - name: Read the database pod list
   shell: "oc get pods --selector app=postgresql -o json"
