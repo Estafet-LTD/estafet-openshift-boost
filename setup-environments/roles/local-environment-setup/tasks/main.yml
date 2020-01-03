@@ -54,7 +54,7 @@
   register: list_of_db_pods
     
 - name: Get the name of the PostgreSQL Pod
-  set_fact: db_pod="{{list_of_db_pods.stdout|from_json|json_query('items[0].metadata.name')}}"
+  set_fact: local_db_pod="{{list_of_db_pods.stdout|from_json|json_query('items[0].metadata.name')}}"
 
 - name: Create the microservices
   include_role:
@@ -64,7 +64,7 @@
     microservice: "{{ item.name }}" 
     expose: "{{ item.expose }}"    
     db: "{{ item.db }}"
-    db_pod: "{{ db_pod }}"
+    db_pod: "{{ local_db_pod }}"
     project: "{{ local_project }}"
   with_items: "{{ microservices }}"
   tags:
