@@ -68,7 +68,7 @@ node("maven") {
 	}	
 	
 	stage("create build config") {
-			sh "oc process -n ${project} -f openshift/templates/${microservice}-build-config.yml -p NAMESPACE=${project} -p GITHUB=${params.GITHUB} -p DOCKER_IMAGE_LABEL=${version} -p PRODUCT=${params.PRODUCT} | oc apply -f -"
+			sh "oc process -n ${project} -f openshift/templates/${microservice}-build-config.yml -p NAMESPACE=${project} -p GITHUB=${params.GITHUB} -p DOCKER_IMAGE_LABEL=latest -p PRODUCT=${params.PRODUCT} | oc apply -f -"
 	}
 
 	stage("execute build") {
@@ -77,7 +77,7 @@ node("maven") {
 	}
 
 	stage("create deployment config") {
-		sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} -p DOCKER_NAMESPACE=${project} -p DOCKER_IMAGE_LABEL=${version} -p PRODUCT=${params.PRODUCT} | oc apply -f -"
+		sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} -p DOCKER_NAMESPACE=${project} -p DOCKER_IMAGE_LABEL=latest -p PRODUCT=${params.PRODUCT} | oc apply -f -"
 		if (pipelines.build.wiremock[0]) {
 			def envVars = ""
 			pipelines.build.wiremock_environment_variables[0].each {
@@ -116,7 +116,7 @@ node("maven") {
 	
 	if (params.DQ_PROJECT.equals("") && pipelines.build.promote[0]) {
 		stage("promote the image") {
-			openshiftTag namespace: project, srcStream: microservice, srcTag: version, destinationNamespace: "${params.PRODUCT}-cicd", destinationStream: microservice, destinationTag: version
+			openshiftTag namespace: project, srcStream: microservice, srcTag: "latest", destinationNamespace: "${params.PRODUCT}-cicd", destinationStream: microservice, destinationTag: version
 			sh "oc patch is/${microservice} -p '{\"metadata\":{\"labels\":{\"product\":\"${params.PRODUCT}\"}}}' -n ${params.PRODUCT}-cicd"
 		}		
 	}
