@@ -2,6 +2,16 @@
 - include_role: 
     name : init
 
+- name: Verify that the maven mirror url has been defined
+  fail:
+    msg: "[Maven Mirror Url] is not set. Please edit inventory"
+  when: maven_mirror_url is undefined
+
+- name: Verify that the docker registry host and port has been defined
+  fail:
+    msg: "[Docker Registry Host and Port] is not set. Please edit inventory"
+  when: docker_registry is undefined
+
 - set_fact: project=microservices-scrum
     
 - include_role: 

@@ -43,11 +43,6 @@
     msg: "[Users] are not set. Please edit users-vars.yml"
   when: users is undefined
 
-- name: Verify that the database host has been defined
-  fail:
-    msg: "[Database host] is not set. Please edit inventory"
-  when: database is undefined
-
 - name: Login in OpenShift as {{ username }}
   shell: "oc login --insecure-skip-tls-verify=true -u {{ username }} -p {{ password }} {{ openshift }}"
   tags:

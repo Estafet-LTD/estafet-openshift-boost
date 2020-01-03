@@ -1,4 +1,9 @@
 ---
+- name: Verify that the database host has been defined
+  fail:
+    msg: "[Database host] is not set. Please edit inventory"
+  when: database is undefined
+
 - name: Create the service for external database 
   shell: "oc process -f {{ templates }}/database-service.yml -p DB_HOST={{ database }} | oc apply -f -"
   register: command_result
