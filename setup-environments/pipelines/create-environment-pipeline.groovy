@@ -79,12 +79,10 @@ node {
 		sh "oc export svc postgresql -n ${params.PRODUCT}-build --as-template=postgresql | oc apply -f -"
 	}
 	
-	stage ('create each microservice') {
-		def microservices = readYaml file: "setup-environments/vars/microservices-vars.yml"
-		microservices[0].each { microservice ->
-			openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "build-${microservice}", env : [ [ name : "DQ_PROJECT", value : project ] ]
-			openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "${pipeline}", waitTime: "300000" 
-		}		
-	}
+	def microservices = readYaml file: "setup-environments/vars/microservices-vars.yml"
+	microservices[0].each { microservice ->
+		stage ('create each microservice') {
+		}
+	}		
 	
 }

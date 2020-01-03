@@ -13,7 +13,7 @@
   shell: "git describe --abbrev=0 --tags"
   args:
     chdir: "{{ workdir }}/{{ repo }}"
-  when: "{{ test_environment }}"
+  when: test
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
@@ -21,7 +21,37 @@
     - git  
 
 - set_fact: branch="{{ command_result.stdout }}"
-  when: "{{ test_environment }}"
+  when: test
+
+- name: Create the microservice databases on PostgreSQL Pod
+  shell: 'oc exec {{db_pod}} -- /bin/sh -i -c "createdb {{ microservice }}"'
+  register: command_result
+  when: "{{ db }}"      
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - postgresql
+
+- name: Copy ddl to PostgreSQL Pod
+  shell: 'oc rsync --no-perms=true --include="*.ddl" --exclude="*" {{ workdir }}/{{ repo }}/ {{db_pod}}:/tmp'
+  register: command_result
+  when: db
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - postgresql
+
+- name: Execute Drop ddl on PostgreSQL Pod
+  shell: 'oc exec {{db_pod}} -- /bin/sh -i -c "psql -d {{ microservice }} -U postgres -f /tmp/drop-{{ microservice }}-db.ddl"'
+  register: command_result
+  when: db
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - postgresql
 
 - name: Create the build config
   shell: 'oc process -n {{ project }} -f {{ workdir }}/{{ repo }}/openshift/templates/{{ microservice }}-build-config.yml -p NAMESPACE={{ project }} -p GITHUB={{ github }} -p DOCKER_IMAGE_LABEL=latest -p PRODUCT={{ product }} -p MAVEN_MIRROR_URL={{ maven_mirror_url }} -p DOCKER_REGISTRY={{ docker_registry }} | oc apply -f -'
@@ -65,7 +95,7 @@
 
 - name: Expose Service ({{ microservice }})
   shell: "oc expose service {{ microservice }}"
-  when: "{{ expose }}"
+  when: expose
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"

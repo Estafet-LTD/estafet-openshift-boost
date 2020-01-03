@@ -8,12 +8,12 @@ node("maven") {
 
 	properties([
 	  parameters([
-	     string(name: 'GITHUB'), string(name: 'PRODUCT'), string(name: 'REPO'), string(name: 'MICROSERVICE'), string(name: 'DQ_PROJECT'),
+	     string(name: 'GITHUB'), string(name: 'PRODUCT'), string(name: 'REPO'), string(name: 'MICROSERVICE'),
 	  ]),
 	  disableConcurrentBuilds()
 	])
 
-	def project = params.DQ_PROJECT.equals("") ? "${params.PRODUCT}-build" : params.DQ_PROJECT
+	def project = "${params.PRODUCT}-build"
 	def microservice = params.MICROSERVICE	
 	def version
 	def pipelines
@@ -92,7 +92,7 @@ node("maven") {
 		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000" 
 	}
 
-	if (params.DQ_PROJECT.equals("") && pipelines.build.tests[0]) {
+	if (pipelines.build.tests[0]) {
 		stage("execute the container tests") {
 			withMaven(mavenSettingsConfig: 'microservices-scrum') {
 				try {
@@ -106,7 +106,7 @@ node("maven") {
 		}		
 	}
 
-	if (params.DQ_PROJECT.equals("") && pipelines.build.promote[0]) {
+	if (pipelines.build.promote[0]) {
 		stage("deploy snapshots") {
 			withMaven(mavenSettingsConfig: 'microservices-scrum') {
 		 		sh "mvn clean deploy -Dmaven.test.skip=true"

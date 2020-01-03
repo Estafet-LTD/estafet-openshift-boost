@@ -45,9 +45,7 @@ objects:
           - name: REPO
             value: ${MICROSERVICE_REPO_URI}
           - name: MICROSERVICE
-            value: ${MICROSERVICE_NAME}
-          - name: DQ_PROJECT
-            value: ""                                                      
+            value: ${MICROSERVICE_NAME}                                 
         jenkinsfilePath: setup-environments/pipelines/build-pipeline.groovy
       type: JenkinsPipeline
     triggers:

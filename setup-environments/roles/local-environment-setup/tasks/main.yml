@@ -23,7 +23,7 @@
 
 - include_role: 
     name: wiremock-setup
-  when: "not {{ test_environment }}"
+  when: not test
   vars:
     project: "{{ project }}"
     tag: 2.25.1
@@ -39,6 +39,13 @@
     project: "{{ project }}"
     templates_project: "{{ project }}"
 
+- name: Read the database pod list
+  shell: "oc get pods --selector app=postgresql -o json"
+  register: list_of_db_pods
+    
+- name: Get the name of the PostgreSQL Pod
+  set_fact: db_pod="{{list_of_db_pods.stdout|from_json|json_query('items[0].metadata.name')}}"
+
 - name: Create the microservices
   include_role:
     name: create-app
@@ -46,6 +53,8 @@
     repo: "{{ item.repo }}"
     microservice: "{{ item.name }}" 
     expose: "{{ item.expose }}"    
+    db: "{{ item.db }}"
+    db_pod: "{{ db_pod }}"
   with_items: "{{ microservices }}"
   tags:
     - openshift
