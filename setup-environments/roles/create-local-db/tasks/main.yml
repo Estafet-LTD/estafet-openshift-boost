@@ -1,0 +1,30 @@
+---
+- name: Create the {{ microservice }} database on PostgreSQL Pod
+  shell: 'oc exec {{pod}} -- /bin/sh -i -c "createdb {{ db_name }}"'
+  register: command_result
+  when: db and db_pod is defined     
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - postgresql
+
+- name: Copy ddl to PostgreSQL Pod
+  shell: 'oc rsync --no-perms=true --include="*.ddl" --exclude="*" {{ ddl_location }}/ {{pod}}:/tmp'
+  register: command_result
+  when: db and db_pod is defined
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - postgresql
+
+- name: Execute Drop ddl on PostgreSQL Pod
+  shell: 'oc exec {{pod}} -- /bin/sh -i -c "psql -d {{ db_name }} -U postgres -f {{ drop_ddl }}"'
+  register: command_result
+  when: db and db_pod is defined
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - postgresql
