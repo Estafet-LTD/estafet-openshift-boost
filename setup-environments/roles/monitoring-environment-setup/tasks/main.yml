@@ -31,6 +31,7 @@
   include_role:
     name: create-app
   vars:
+    test: false
     repo: "{{ item.repo }}"
     microservice: "{{ item.name }}" 
     expose: "{{ item.expose }}"    
