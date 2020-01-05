@@ -1,0 +1,24 @@
+---
+# Project definition - add new microservices here
+microservices_boost_projects:
+  - name: console-app-api
+    repo: estafet-openshift-boost-console-api-app
+    db: false
+    expose: false
+  - name: console-prod-api
+    repo: estafet-openshift-boost-console-api-prod
+    db: false
+    expose: false
+  - name: console-test-api
+    repo: estafet-openshift-boost-console-api-test
+    db: false
+    expose: false  
+  - name: console-build-api
+    repo: estafet-openshift-boost-console-api-build
+    db: false
+    expose: false 
+  - name: console-ui
+    repo: estafet-openshift-boost-console-ui
+    db: false
+    expose: true        
+    

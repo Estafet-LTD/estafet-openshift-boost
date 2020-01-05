@@ -27,7 +27,15 @@
   vars:
     project: "{{ monitoring_project }}"   
 
-- include_role: 
-    name: boost-console-setup
+- name: Create the microservices
+  include_role:
+    name: create-app
   vars:
-    project: "{{ monitoring_project }}" 
+    repo: "{{ item.repo }}"
+    microservice: "{{ item.name }}" 
+    expose: "{{ item.expose }}"    
+    db: "{{ item.db }}"
+    project: "{{ monitoring_project }}"
+  with_items: "{{ microservices_boost_projects }}"
+  tags:
+    - openshift

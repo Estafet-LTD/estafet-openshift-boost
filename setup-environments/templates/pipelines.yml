@@ -226,7 +226,7 @@ objects:
           - name: REPO
             value: ${REPO_URI}
           - name: PROJECT_TITLE
-            value: ""
+            value: "My Project"
           - name: MASTER_HOST
             value: ${MASTER_HOST}
           - name: ADMIN_USER
@@ -236,11 +236,7 @@ objects:
           - name: PRODUCT
             value: ${PRODUCT}   
           - name: USER
-            value: ""
-          - name: UPDATE
-            value: "false"
-          - name: TEST
-            value: "false"                                            
+            value: "admin"                                   
         jenkinsfilePath: setup-environments/pipelines/create-environment-pipeline.groovy
       type: JenkinsPipeline
   status:
