@@ -31,6 +31,8 @@
   include_role:
     name: create-app
   vars:
+    docker_registry: docker-registry.default.svc:5000
+    maven_mirror_url: http://nexus.nexus.svc:8081/nexus/content/groups/public 
     test: false
     repo: "{{ item.repo }}"
     microservice: "{{ item.name }}" 
