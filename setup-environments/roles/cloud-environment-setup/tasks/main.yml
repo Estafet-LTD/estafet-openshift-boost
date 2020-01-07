@@ -1,0 +1,42 @@
+---
+- include_role: 
+    name : init
+
+- name: Verify that the cloud project has been defined
+  fail:
+    msg: "[Cloud Project] is not set. Please edit inventory"
+  when: cloud_project is undefined
+
+- include_role: 
+    name: jaeger-setup
+  vars:
+    project: "{{ cloud_project }}"   
+
+- include_role: 
+    name: amq-setup
+  vars:
+    project: "{{ cloud_project }}"
+    templates_project: openshift  
+
+- include_role: 
+    name: wiremock-setup
+  when: not test
+  vars:
+    project: "{{ cloud_project }}"
+    tag: 2.25.1
+
+- name: Create the microservices
+  include_role:
+    name: create-app
+  vars:
+    repo: "{{ item.repo }}"
+    microservice: "{{ item.name }}" 
+    expose: "{{ item.expose }}"    
+    db: "{{ item.db }}"
+    imagestream_namespace: openshift
+    docker_registry: docker-registry.default.svc:5000
+    maven_mirror_url: http://nexus.nexus.svc:8081/nexus/content/groups/public  
+    project: "{{ cloud_project }}"
+  with_items: "{{ microservices }}"
+  tags:
+    - openshift
