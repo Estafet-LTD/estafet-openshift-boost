@@ -1,7 +1,7 @@
 ---
 - name: Allow users to access {{ project }} with role {{ role }}
-  shell: 'oc policy add-role-to-user {{ role }} {{ item }} -n {{ project }}'
-  when: "{{ item != 'admin' }}"
+  shell: 'oc policy add-role-to-user {{ role }} {{ item.name }} -n {{ project }}'
+  when: "{{ item.name != 'admin' }}"
   with_items: "{{ users }}"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
