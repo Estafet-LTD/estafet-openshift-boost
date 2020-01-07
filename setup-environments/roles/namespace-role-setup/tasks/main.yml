@@ -1,5 +1,5 @@
 ---
-- name: Allow users to access project
+- name: Allow users to access {{ project }} with role {{ role }}
   shell: 'oc policy add-role-to-user {{ role }} {{ item }} -n {{ project }}'
   when: "{{ item != 'admin' }}"
   with_items: "{{ users }}"
