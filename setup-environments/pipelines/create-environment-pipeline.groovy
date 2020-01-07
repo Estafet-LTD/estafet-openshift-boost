@@ -8,16 +8,16 @@ def getProjects(json) {
 	return projects.sort()
 }
 
-def getNextProjectName() {
-	sh "oc get projects --selector type=dq -o json > projects.json"
+def getNextProjectName(product) {
+	sh "oc get projects -l type=dq -l product=${product} -o json > projects.json"
 	def json = readFile('projects.json')	
 	def projects = getProjects(json)
 	if (projects.isEmpty()) {
-		return "dq00"
+		return "${product}-dq00"
 	} else {
-		def matcher = projects.last() =~ /(dq)(\d+\d+)/
-		def env = "${matcher[0][2].toInteger()+1}"
-		return "${matcher[0][1]}${env.padLeft(2, '0')}"	
+		def matcher = projects.last() =~ /(.*)(dq)(\d+\d+)/
+		def env = "${matcher[0][3].toInteger()+1}"
+		return "${product}-${matcher[0][2]}${env.padLeft(2, '0')}"	
 	}
 }
 
@@ -53,7 +53,7 @@ node {
 	}
 	
 	stage ("create the namespace") {
-		project = getNextProjectName()
+		project = getNextProjectName(params.PRODUCT)
 		def title = params.PROJECT_TITLE.equals("") ? project : params.PROJECT_TITLE
 		sh "oc new-project $project --display-name='${title}'"
 		sh "oc label namespace $project type=dq product=${params.PRODUCT}"
