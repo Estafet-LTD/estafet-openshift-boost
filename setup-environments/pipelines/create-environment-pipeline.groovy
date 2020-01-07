@@ -62,7 +62,8 @@ node {
 	}		
 	
 	stage ("create the database endpoint") {
-		sh "oc export svc postgresql -n ${params.PRODUCT}-build --as-template=postgresql | oc apply -f -"
+		sh "oc export svc postgresql -n ${project} --as-template=postgresql"
+		sh " oc process postgresql | oc apply -f -"
 	}
 	
 }
