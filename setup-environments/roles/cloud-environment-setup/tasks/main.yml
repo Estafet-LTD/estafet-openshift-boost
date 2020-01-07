@@ -7,6 +7,11 @@
     msg: "[Cloud Project] is not set. Please edit inventory"
   when: cloud_project is undefined
 
+- name: Switch to Namespace {{ cloud_project }}
+  shell: "oc project {{ cloud_project }}"
+  tags:
+    - openshift  
+
 - include_role: 
     name: jaeger-setup
   vars:
