@@ -17,4 +17,12 @@
     - openshift
     - wiremock    
    
+- name: Expose Service Wiremock
+  shell: "oc expose service wiremock-docker"
+  when: expose
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
 

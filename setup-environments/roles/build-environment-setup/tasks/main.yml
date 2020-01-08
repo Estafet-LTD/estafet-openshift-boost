@@ -40,6 +40,7 @@
   vars:
     project: "{{ build_project }}"
     tag: 2.25.1
+    expose: false
     
 - include_role: 
     name: add-jenkins-role

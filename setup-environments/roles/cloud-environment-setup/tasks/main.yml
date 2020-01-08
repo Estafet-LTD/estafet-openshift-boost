@@ -29,6 +29,7 @@
   vars:
     project: "{{ cloud_project }}"
     tag: 2.25.1
+    expose: true
 
 - name: Create the microservices
   include_role:

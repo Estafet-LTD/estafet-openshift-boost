@@ -37,6 +37,7 @@
   vars:
     project: "{{ local_project }}"
     tag: 2.25.1
+    expose: true
 
 - include_role: 
     name: postgresql-setup
