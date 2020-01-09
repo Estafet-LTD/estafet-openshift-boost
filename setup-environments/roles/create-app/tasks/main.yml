@@ -74,7 +74,7 @@
     - openshift     
 
 - name: Start the {{ microservice }} deployment
-  shell: 'oc deploy {{ microservice }} -n {{ project }}'
+  shell: 'oc rollout latest dc/{{ microservice }} -n {{ project }}'
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
