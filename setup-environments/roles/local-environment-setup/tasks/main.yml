@@ -11,8 +11,6 @@
   fail:
     msg: "[Docker Registry Host and Port] is not set. Please edit inventory"
   when: docker_registry is undefined
-
-- set_fact: local_project=microservices-scrum
     
 - include_role: 
     name: namespace-setup
