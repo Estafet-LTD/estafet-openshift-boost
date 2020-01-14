@@ -73,21 +73,14 @@
   tags:
     - openshift     
 
-#- name: Start the {{ microservice }} deployment
-#  shell: 'oc rollout latest dc/{{ microservice }} -n {{ project }}'
-#  register: command_result
-#  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-#  changed_when: "'exists' not in command_result.stderr"
-#  tags:
-#    - openshift
-#
-#- name: Wait for the microservice to become available ({{ microservice }})
-#  shell : "oc rollout status dc/{{ microservice }}"
-#  register: command_result
-#  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-#  changed_when: "'exists' not in command_result.stderr"
-#  tags:
-#    - openshift
+- name: Wait for the microservice to become available ({{ microservice }})
+  shell: "oc rollout status dc/{{ microservice }}"
+  when: rollout
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
 
 - name: Expose Service ({{ microservice }})
   shell: "oc expose service {{ microservice }}"
