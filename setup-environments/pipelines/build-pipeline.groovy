@@ -28,9 +28,9 @@ node("maven") {
 		pipelines = readYaml file: "openshift/pipelines/pipelines.yml"
 	}
 
-	stage("remove the previous deployment") {
-		 sh "oc delete dc ${microservice} -n ${project}"
-	}
+//	stage("remove the previous deployment") {
+//		 sh "oc delete dc ${microservice} -n ${project}"
+//	}
 
 	if (pipelines.build.wiremock[0]) {
 		stage("update wiremock") {

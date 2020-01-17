@@ -51,6 +51,7 @@
 
 - name: Remove all aspects of the application so that we can rebuild from scratch
   shell: 'oc delete all -l app={{ microservice }} -n {{ project }}'
+  ignore_errors: yes
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
