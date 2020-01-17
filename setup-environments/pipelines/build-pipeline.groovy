@@ -28,6 +28,10 @@ node("maven") {
 		pipelines = readYaml file: "openshift/pipelines/pipelines.yml"
 	}
 
+	stage("remove the previous deployment") {
+		 sh "oc delete dc ${microservice} -n ${project}"
+	}
+
 	if (pipelines.build.wiremock[0]) {
 		stage("update wiremock") {
 			def files = findFiles(glob: 'src/integration-test/resources/*.json')
