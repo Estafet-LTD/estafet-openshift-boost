@@ -22,6 +22,7 @@
   vars:
     project: "{{ cloud_project }}"
     templates_project: openshift  
+  when: username == "admin"    
 
 - include_role: 
     name: wiremock-setup
@@ -30,6 +31,7 @@
     project: "{{ cloud_project }}"
     tag: 2.25.1
     expose: true
+  when: username == "admin"
 
 - name: Create the microservices
   include_role:
