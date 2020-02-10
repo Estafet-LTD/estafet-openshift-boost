@@ -21,3 +21,6 @@
 [submodule "estafet-openshift-boost-springboot"]
 	path = estafet-openshift-boost-springboot
 	url = https://github.com/Estafet-LTD/estafet-openshift-boost-springboot
+[submodule "estafet-openshift-boost-commons-lib"]
+	path = estafet-openshift-boost-commons-lib
+	url = https://github.com/Estafet-LTD/estafet-openshift-boost-commons-lib
