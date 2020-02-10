@@ -74,8 +74,27 @@
   tags:
     - openshift
 
-- name: Create the deployment config
+- name: Create the deployment config without environment variables
   shell: 'oc process -n {{ project }} -f {{ workdir }}/{{ repo }}/openshift/templates/{{ microservice }}-config.yml -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ project }} -p DOCKER_IMAGE_LABEL=latest -p PRODUCT={{ product }} | oc apply -f -'
+  when: env_vars is undefined
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift     
+
+- name: Initialise environment variables
+  set_fact: environment_variables=""
+  when: env_vars is defined
+
+- name: format the environment environments
+  set_fact: environment_variables="-p {{ item.name }}={{ item.value }} {{ environment_variables }}"
+  when: env_vars is defined
+  with_items: "{{ env_vars }}"
+
+- name: Create the deployment config with environment variables
+  shell: 'oc process -n {{ project }} -f {{ workdir }}/{{ repo }}/openshift/templates/{{ microservice }}-config.yml -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ project }} -p DOCKER_IMAGE_LABEL=latest -p PRODUCT={{ product }} {{ environment_variables }} | oc apply -f -'
+  when: env_vars is defined
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
