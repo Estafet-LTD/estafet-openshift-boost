@@ -27,6 +27,16 @@
   vars:
     project: "{{ monitoring_project }}"   
 
+- include_role: 
+    name: postgresql-setup
+  vars:
+    project: "{{ monitoring_project }}"
+
+- include_role: 
+    name: db-pod
+  vars:
+    project: "{{ monitoring_project }}"
+
 - name: Create the microservices
   include_role:
     name: create-app

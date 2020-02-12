@@ -25,7 +25,7 @@ microservices_boost_projects:
         value: "{{ password }}"    
   - name: console-prod-api
     repo: estafet-openshift-boost-console-api-prod
-    db: false
+    db: true
     expose: false
     environment_variables:
       - name: PRODUCT_LABEL
@@ -38,7 +38,7 @@ microservices_boost_projects:
         value: "{{ password }}"        
   - name: console-test-api
     repo: estafet-openshift-boost-console-api-test
-    db: false
+    db: true
     expose: false  
     environment_variables:
       - name: PRODUCT_LABEL
@@ -51,7 +51,7 @@ microservices_boost_projects:
         value: "{{ password }}"        
   - name: console-build-api
     repo: estafet-openshift-boost-console-api-build
-    db: false
+    db: true
     expose: false       
     environment_variables:
       - name: PRODUCT_LABEL
