@@ -8,11 +8,6 @@
     msg: "[OpenShift host] is not defined. Please edit inventory"
   when: openshift is undefined
 
-- name: Verify if internal openshift is set
-  fail:
-    msg: "[Internal OpenShift host] is not defined. Please edit inventory"
-  when: internal_openshift is undefined
-
 - name: Verify if openshift admin user is set
   fail:
     msg: "[Admin user] is not defined. Please edit inventory"

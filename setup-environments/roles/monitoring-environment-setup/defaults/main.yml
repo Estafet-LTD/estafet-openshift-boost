@@ -18,7 +18,7 @@ microservices_boost_projects:
       - name: PRODUCT_LABEL
         value: "{{ product }}"        
       - name: OPENSHIFT_HOST_PORT
-        value: "{{ internal_openshift }}"
+        value: "{{ openshift }}"
       - name: OPENSHIFT_USER
         value: "{{ username }}"
       - name: OPENSHIFT_PASSWORD
@@ -31,7 +31,7 @@ microservices_boost_projects:
       - name: PRODUCT_LABEL
         value: "{{ product }}"        
       - name: OPENSHIFT_HOST_PORT
-        value: "{{ internal_openshift }}"
+        value: "{{ openshift }}"
       - name: OPENSHIFT_USER
         value: "{{ username }}"
       - name: OPENSHIFT_PASSWORD
@@ -44,7 +44,7 @@ microservices_boost_projects:
       - name: PRODUCT_LABEL
         value: "{{ product }}"        
       - name: OPENSHIFT_HOST_PORT
-        value: "{{ internal_openshift }}"
+        value: "{{ openshift }}"
       - name: OPENSHIFT_USER
         value: "{{ username }}"
       - name: OPENSHIFT_PASSWORD
@@ -57,7 +57,7 @@ microservices_boost_projects:
       - name: PRODUCT_LABEL
         value: "{{ product }}"        
       - name: OPENSHIFT_HOST_PORT
-        value: "{{ internal_openshift }}"
+        value: "{{ openshift }}"
       - name: OPENSHIFT_USER
         value: "{{ username }}"
       - name: OPENSHIFT_PASSWORD
