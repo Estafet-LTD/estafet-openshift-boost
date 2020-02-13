@@ -42,6 +42,8 @@
     name: create-app
   vars:
     microservice: "{{ item }}" 
+    db_type: local
+    db_pod: "{{ local_db_pod }}"
     imagestream_namespace: openshift
     docker_registry: docker-registry.default.svc:5000
     maven_mirror_url: http://nexus.nexus.svc:8081/nexus/content/groups/public 

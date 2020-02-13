@@ -37,10 +37,8 @@
   include_role:
     name: create-app
   vars:
-    repo: "{{ item.repo }}"
-    microservice: "{{ item.name }}" 
-    expose: "{{ item.expose }}"    
-    db: "{{ item.db }}"
+    microservice: "{{ item }}" 
+    db_type: cloud
     imagestream_namespace: openshift
     docker_registry: docker-registry.default.svc:5000
     maven_mirror_url: http://nexus.nexus.svc:8081/nexus/content/groups/public  

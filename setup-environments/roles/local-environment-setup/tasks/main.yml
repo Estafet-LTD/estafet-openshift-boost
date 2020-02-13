@@ -57,10 +57,8 @@
   include_role:
     name: create-app
   vars:
-    repo: "{{ item.repo }}"
-    microservice: "{{ item.name }}" 
-    expose: true    
-    db: "{{ item.db }}"
+    microservice: "{{ item }}" 
+    db_type: local  
     db_pod: "{{ local_db_pod }}"
     project: "{{ local_project }}"
     imagestream_namespace: "{{ local_project }}"
