@@ -5,18 +5,14 @@ microservices_boost_projects:
     repo: estafet-openshift-boost-console-ui
     db: false
     expose: true  
-    environment_variables:
-      - name: PRODUCT_LABEL
-        value: "{{ product }}"    
+    environment_variables:   
       - name: PRODUCT_DESCRIPTION
         value: "{{ product_description }}"        
   - name: console-app-api
     repo: estafet-openshift-boost-console-api-app
     db: false
     expose: false
-    environment_variables:
-      - name: PRODUCT_LABEL
-        value: "{{ product }}"        
+    environment_variables:     
       - name: OPENSHIFT_HOST_PORT
         value: "{{ openshift }}"
       - name: OPENSHIFT_USER
@@ -27,9 +23,7 @@ microservices_boost_projects:
     repo: estafet-openshift-boost-console-api-prod
     db: true
     expose: false
-    environment_variables:
-      - name: PRODUCT_LABEL
-        value: "{{ product }}"        
+    environment_variables:       
       - name: OPENSHIFT_HOST_PORT
         value: "{{ openshift }}"
       - name: OPENSHIFT_USER
@@ -40,9 +34,7 @@ microservices_boost_projects:
     repo: estafet-openshift-boost-console-api-test
     db: true
     expose: false  
-    environment_variables:
-      - name: PRODUCT_LABEL
-        value: "{{ product }}"        
+    environment_variables:        
       - name: OPENSHIFT_HOST_PORT
         value: "{{ openshift }}"
       - name: OPENSHIFT_USER
@@ -53,9 +45,7 @@ microservices_boost_projects:
     repo: estafet-openshift-boost-console-api-build
     db: true
     expose: false       
-    environment_variables:
-      - name: PRODUCT_LABEL
-        value: "{{ product }}"        
+    environment_variables:        
       - name: OPENSHIFT_HOST_PORT
         value: "{{ openshift }}"
       - name: OPENSHIFT_USER
