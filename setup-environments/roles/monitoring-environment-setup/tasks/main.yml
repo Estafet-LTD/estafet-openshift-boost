@@ -37,6 +37,9 @@
   vars:
     project: "{{ monitoring_project }}"
 
+- debug:
+  var: microservices_boost_projects
+
 - name: Create the microservices
   include_role:
     name: create-app
