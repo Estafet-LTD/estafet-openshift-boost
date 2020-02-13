@@ -93,8 +93,8 @@
 
 - name: format the environment environments
   set_fact: variables="-p {{ item.name }}={{ item.value }} {{ variables }}"
-  when: microservice.environment_variables is defined
   with_items: "{{ microservice.environment_variables }}"
+  when: microservice.environment_variables is defined
 
 - name: Create the deployment config with environment variables
   shell: 'oc process -n {{ project }} -f {{ workdir }}/{{ microservice.repo }}/openshift/templates/{{ microservice.name }}-config.yml -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ project }} -p DOCKER_IMAGE_LABEL=latest -p PRODUCT={{ product }} {{ variables }} | oc apply -f -'
@@ -116,7 +116,7 @@
 
 - name: Expose Service {{ microservice.name }}
   shell: "oc expose service {{ microservice.name }}"
-  when: expose
+  when: microservice.expose
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
