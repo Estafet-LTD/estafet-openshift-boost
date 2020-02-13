@@ -58,6 +58,7 @@
     name: create-app
   vars:
     microservice: "{{ item }}" 
+    reset_db: true
     db_type: local  
     db_pod: "{{ local_db_pod }}"
     project: "{{ local_project }}"
