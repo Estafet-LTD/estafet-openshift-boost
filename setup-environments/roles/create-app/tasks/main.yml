@@ -92,7 +92,7 @@
   when: microservice.environment_variables is defined
 
 - name: format the environment environments
-  set_fact: variables="-p {{ item.name }}=\"{{ item.value }}\" {{ variables }}"
+  set_fact: variables='-p {{ item.name }}="{{ item.value }}" {{ variables }}'
   with_items: "{{ microservice.environment_variables }}"
 
 - name: Create the deployment config with environment variables
