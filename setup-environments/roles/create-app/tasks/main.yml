@@ -84,11 +84,11 @@
     - openshift     
 
 - name: Initialise environment variables
-  set_fact: environment_variables=""
+  set_fact: variables=""
   when: env_vars is defined
 
 - name: format the environment environments
-  set_fact: environment_variables="-p {{ item.name }}={{ item.value }} {{ environment_variables }}"
+  set_fact: variables="-p {{ item.name }}={{ item.value }} {{ variables }}"
   when: env_vars is defined
   with_items: "{{ env_vars }}"
 
