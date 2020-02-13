@@ -21,7 +21,7 @@
 
 - name: Checkout {{ microservice.repo }} from github branch {{ branch }}
   git:
-    repo: "https://github.com/{{ github }}/{{ repo }}.git"
+    repo: "https://github.com/{{ github }}/{{ microservice.repo }}.git"
     dest: "{{ workdir }}/{{ microservice.repo }}"
     version: "{{ branch }}"
     update: yes
