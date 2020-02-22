@@ -1,7 +1,7 @@
 ---
 # Project definition - add new microservices here
-microservice_console_ui:
-    name: console-ui
+microservices_boost_projects:
+  - name: console-ui
     repo: estafet-openshift-boost-console-ui
     db: false
     expose: true  
@@ -13,6 +13,5 @@ microservice_console_ui:
       - name: TEST_API_SERVICE_URI
         value: "http://console-test-api.{{ product }}-{{ monitoring }}.svc:8080"
       - name: PROD_API_SERVICE_URI
-        value: "http://console-prod-api.{{ product }}-{{ monitoring }}.svc:8080"        
-     
+        value: "http://console-prod-api.{{ product }}-{{ monitoring }}.svc:8080"            
     

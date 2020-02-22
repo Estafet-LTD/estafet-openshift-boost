@@ -11,12 +11,14 @@
   include_role:
     name: create-app
   vars:
-    microservice: "{{ microservice_console_ui }}" 
+    microservice: "{{ item }}" 
+    db_type: local
     reset_db: false
     imagestream_namespace: openshift
     docker_registry: docker-registry.default.svc:5000
     maven_mirror_url: http://nexus.nexus.svc:8081/nexus/content/groups/public 
     test: false    
     project: "{{ cloud_project }}"
+  with_items: "{{ microservices_boost_projects }}"    
   tags:
     - openshift
