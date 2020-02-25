@@ -24,6 +24,7 @@
 - name: Create the microservices
   include_role:
     name: create-app
+  when: item.name == "{{ console-ui-app }}"
   vars:
     microservice: "{{ item }}" 
     db_type: local
@@ -34,7 +35,6 @@
     maven_mirror_url: http://nexus.nexus.svc:8081/nexus/content/groups/public 
     test: false    
     project: "{{ monitoring_project }}"
-  when: item.name == console-ui-app
   with_items: "{{ microservices_boost_projects }}"
   tags:
     - openshift
