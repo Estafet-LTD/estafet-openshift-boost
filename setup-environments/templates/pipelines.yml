@@ -247,6 +247,67 @@ objects:
     creationTimestamp: null
     labels:
       app: pipeline
+      name: "build-boost-messages-lib"
+    name: "build-boost-messages-lib"
+  spec:
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+          - name: GITHUB
+            value: ${GITHUB}                   
+          - name: REPO
+            value: estafet-openshift-boost-messages-lib            
+        jenkinsfilePath: setup-environments/pipelines/build-library-pipeline.groovy
+      type: JenkinsPipeline
+    triggers:
+    - github:
+        secret: secret101
+      type: GitHub
+    - generic:
+        secret: secret101
+      type: Generic
+  status:
+    lastVersion: 0  
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: pipeline
+      name: release-boost-messages-lib
+    name: release-boost-messages-lib
+  spec:
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+          - name: GITHUB
+            value: ${GITHUB}             
+          - name: REPO
+            value: estafet-openshift-boost-messages-lib                       
+        jenkinsfilePath: setup-environments/pipelines/release-library-pipeline.groovy
+      type: JenkinsPipeline
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: pipeline
       name: "build-boost-commons-lib"
     name: "build-boost-commons-lib"
   spec:

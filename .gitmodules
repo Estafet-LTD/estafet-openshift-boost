@@ -30,3 +30,6 @@
 [submodule "estafet-openshift-boost-console-api-trello"]
 	path = estafet-openshift-boost-console-api-trello
 	url = https://github.com/Estafet-LTD/estafet-openshift-boost-console-api-trello
+[submodule "estafet-openshift-boost-messages-lib"]
+	path = estafet-openshift-boost-messages-lib
+	url = https://github.com/Estafet-LTD/estafet-openshift-boost-messages-lib
