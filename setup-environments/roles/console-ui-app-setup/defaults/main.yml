@@ -1,0 +1,74 @@
+---
+# Project definition - add new microservices here
+microservices_boost_projects:
+  - name: console-ui
+    repo: estafet-openshift-boost-console-ui
+    db: false
+    expose: true  
+    environment_variables:   
+      - name: PRODUCT_DESCRIPTION
+        value: "{{ product_description }}"        
+  - name: console-app-api
+    repo: estafet-openshift-boost-console-api-app
+    db: false
+    expose: false
+    environment_variables:     
+      - name: OPENSHIFT_HOST_PORT
+        value: "{{ openshift }}"
+      - name: OPENSHIFT_USER
+        value: "{{ username }}"
+      - name: OPENSHIFT_PASSWORD
+        value: "{{ password }}"    
+  - name: console-prod-api
+    repo: estafet-openshift-boost-console-api-prod
+    db: true
+    expose: false
+    environment_variables:       
+      - name: OPENSHIFT_HOST_PORT
+        value: "{{ openshift }}"
+      - name: OPENSHIFT_USER
+        value: "{{ username }}"
+      - name: OPENSHIFT_PASSWORD
+        value: "{{ password }}"        
+  - name: console-test-api
+    repo: estafet-openshift-boost-console-api-test
+    db: true
+    expose: false  
+    environment_variables:        
+      - name: OPENSHIFT_HOST_PORT
+        value: "{{ openshift }}"
+      - name: OPENSHIFT_USER
+        value: "{{ username }}"
+      - name: OPENSHIFT_PASSWORD
+        value: "{{ password }}"        
+  - name: console-build-api
+    repo: estafet-openshift-boost-console-api-build
+    db: true
+    expose: false       
+    environment_variables:        
+      - name: OPENSHIFT_HOST_PORT
+        value: "{{ openshift }}"
+      - name: OPENSHIFT_USER
+        value: "{{ username }}"
+      - name: OPENSHIFT_PASSWORD
+        value: "{{ password }}"            
+  - name: console-trello-api
+    repo: estafet-openshift-boost-console-api-trello
+    db: false
+    expose: false       
+    environment_variables:        
+      - name: TRELLO_ACCESS_TOKEN
+        value: "{{ trello_access_token }}"
+      - name: TRELLO_API_KEY
+        value: "{{ trello_api_key }}"
+#  - name: console-feature-api
+#    repo: estafet-openshift-boost-console-api-feature
+#    db: true
+#    expose: false       
+#    environment_variables:        
+#      - name: OPENSHIFT_HOST_PORT
+#        value: "{{ openshift }}"
+#      - name: OPENSHIFT_USER
+#        value: "{{ username }}"
+#      - name: OPENSHIFT_PASSWORD
+#        value: "{{ password }}"           

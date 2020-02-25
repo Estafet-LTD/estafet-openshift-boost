@@ -1,0 +1,40 @@
+---
+- include_role: 
+    name : init
+
+- set_fact: monitoring_project="{{ product }}-monitoring"
+
+- include_role: 
+    name: namespace-setup
+  vars:
+    project: "{{ monitoring_project }}"
+    project_description: "Monitoring: {{ product_description }}"
+    cloud_environment: true
+
+- include_role: 
+    name: postgresql-setup
+  vars:
+    project: "{{ monitoring_project }}"
+
+- include_role: 
+    name: db-pod
+  vars:
+    project: "{{ monitoring_project }}"
+
+- name: Create the microservices
+  include_role:
+    name: create-app
+  vars:
+    microservice: "{{ item }}" 
+    db_type: local
+    db_pod: "{{ local_db_pod }}"
+    reset_db: false
+    imagestream_namespace: openshift
+    docker_registry: docker-registry.default.svc:5000
+    maven_mirror_url: http://nexus.nexus.svc:8081/nexus/content/groups/public 
+    test: false    
+    project: "{{ monitoring_project }}"
+  when: item.name == console-ui-app
+  with_items: "{{ microservices_boost_projects }}"
+  tags:
+    - openshift
