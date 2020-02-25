@@ -49,7 +49,7 @@
 - name: Create the cloud database
   include_role: 
     name: create-cloud-db
-  when: microservice.db and db_type == "local"    
+  when: microservice.db and db_type == "cloud"    
   vars:
     db_project: "{{ project }}"
 
