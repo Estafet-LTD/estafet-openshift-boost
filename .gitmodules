@@ -24,3 +24,9 @@
 [submodule "estafet-openshift-boost-commons-lib"]
 	path = estafet-openshift-boost-commons-lib
 	url = https://github.com/Estafet-LTD/estafet-openshift-boost-commons-lib
+[submodule "estafet-openshift-boost-console-api-feature"]
+	path = estafet-openshift-boost-console-api-feature
+	url = https://github.com/Estafet-LTD/estafet-openshift-boost-console-api-feature
+[submodule "estafet-openshift-boost-console-api-trello"]
+	path = estafet-openshift-boost-console-api-trello
+	url = https://github.com/Estafet-LTD/estafet-openshift-boost-console-api-trello
