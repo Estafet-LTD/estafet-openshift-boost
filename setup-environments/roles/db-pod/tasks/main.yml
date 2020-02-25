@@ -1,6 +1,6 @@
 ---
 - name: Read the database pod list
-  shell: "oc get pods --selector app=postgresql -o json -n {{ project }}"
+  shell: "oc get pods --selector name=postgresql -o json -n {{ project }}"
   register: list_of_db_pods
     
 - name: Get the name of the PostgreSQL Pod
