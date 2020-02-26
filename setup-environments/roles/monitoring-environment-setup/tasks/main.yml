@@ -43,6 +43,15 @@
   vars:
     project: "{{ monitoring_project }}"
 
+- name: Create build, release and promotion pipelines for each of the microservices
+  shell: "oc process -f {{ templates }}/console-app-pipelines.yml -p GITHUB={{ github }} -p MICROSERVICE_NAME={{ item.name }} -p MICROSERVICE_REPO_URI={{ item.repo }} -p PRODUCT={{ product}} | oc create -f -"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  with_items: "{{ microservices_boost_projects }}"
+  tags:
+    - openshift       
+
 - name: Create the microservices
   include_role:
     name: create-app

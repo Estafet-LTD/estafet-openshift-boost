@@ -61,14 +61,14 @@ microservices_boost_projects:
         value: "{{ trello_access_token }}"
       - name: TRELLO_API_KEY
         value: "{{ trello_api_key }}"
-#  - name: console-feature-api
-#    repo: estafet-openshift-boost-console-api-feature
-#    db: true
-#    expose: false       
-#    environment_variables:        
-#      - name: OPENSHIFT_HOST_PORT
-#        value: "{{ openshift }}"
-#      - name: OPENSHIFT_USER
-#        value: "{{ username }}"
-#      - name: OPENSHIFT_PASSWORD
-#        value: "{{ password }}"           
+  - name: console-feature-api
+    repo: estafet-openshift-boost-console-api-feature
+    db: true
+    expose: false       
+    environment_variables:        
+      - name: OPENSHIFT_HOST_PORT
+        value: "{{ openshift }}"
+      - name: OPENSHIFT_USER
+        value: "{{ username }}"
+      - name: OPENSHIFT_PASSWORD
+        value: "{{ password }}"           
