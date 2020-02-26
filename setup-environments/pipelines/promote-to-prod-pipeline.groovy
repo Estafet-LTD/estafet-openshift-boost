@@ -34,6 +34,24 @@ def getTestStatus(json) {
 	return new groovy.json.JsonSlurper().parseText(json).metadata.labels."test-passed"
 }
 
+@NonCPS
+boolean dcexists(json, microservice) {
+	def items = new groovy.json.JsonSlurper().parseText(json).items
+	for (int i = 0; i < items.size(); i++) {
+		def name = items[i]['metadata']['name']
+		if (name.equals(microservice)) {
+			return true;
+		}
+	}
+	return false
+}
+
+boolean deploymentConfigExists(project, microservice) {
+	sh "oc get dc -o json -n ${project} > dc.json"
+	def dc = readFile('dc.json')
+	return dcexists(dc, microservice)
+}
+
 def getLatestVersion(project, microservice) {
 	sh "oc get is ${microservice} -o json -n ${project} > image.json"
 	def image = readFile('image.json')
@@ -94,6 +112,12 @@ node("maven") {
 	
 	stage("reset test flag for ${project}") {
 		sh "oc label namespace ${project} test-passed=false --overwrite=true"	
+	}	
+	
+	stage("remove the previous deployment") {
+		if (deploymentConfigExists(project, "${env}${microservice}")) {
+			sh "oc delete dc ${env}${microservice} -n ${project}"	
+		}
 	}	
 	
 	if (pipelines.promote.db[0]) {

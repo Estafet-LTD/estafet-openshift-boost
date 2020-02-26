@@ -17,6 +17,24 @@ def recentVersion(List versions) {
 	}[-1]
 }
 
+@NonCPS
+boolean dcexists(json, microservice) {
+	def items = new groovy.json.JsonSlurper().parseText(json).items
+	for (int i = 0; i < items.size(); i++) {
+		def name = items[i]['metadata']['name']
+		if (name.equals(microservice)) {
+			return true;
+		}
+	}
+	return false
+}
+
+boolean deploymentConfigExists(project, microservice) {
+	sh "oc get dc -o json -n ${project} > dc.json"
+	def dc = readFile('dc.json')
+	return dcexists(dc, microservice)
+}
+
 def username() {
     withCredentials([usernamePassword(credentialsId: 'microservices-scrum', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         return USERNAME
@@ -61,6 +79,12 @@ node('maven') {
 
 	stage("read the pipeline definition") {
 		pipelines = readYaml file: "openshift/pipelines/pipelines.yml"
+	}
+
+	stage("remove the previous deployment") {
+		if (deploymentConfigExists(project, microservice)) {
+			sh "oc delete dc ${microservice} -n ${project}"	
+		}
 	}
 
 	stage ("verify build image") {
