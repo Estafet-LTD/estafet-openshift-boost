@@ -4,6 +4,24 @@ def getVersion(pom) {
 	return "${matcher[0][1]}${matcher[0][2].toInteger()}-SNAPSHOT"
 }
 
+@NonCPS
+boolean dcexists(json, microservice) {
+	def items = new groovy.json.JsonSlurper().parseText(json).items
+	for (int i = 0; i < items.size(); i++) {
+		def name = items[i]['metadata']['name']
+		if (name.equals(microservice)) {
+			return true;
+		}
+	}
+	return false
+}
+
+boolean deploymentConfigExists(project, microservice) {
+	sh "oc get dc -o json -n ${project} > dc.json"
+	def dc = readFile('dc.json')
+	return dcexists(dc, microservice)
+}
+
 node("maven") {
 
 	properties([
@@ -28,9 +46,11 @@ node("maven") {
 		pipelines = readYaml file: "openshift/pipelines/pipelines.yml"
 	}
 
-//	stage("remove the previous deployment") {
-//		 sh "oc delete dc ${microservice} -n ${project}"
-//	}
+	stage("remove the previous deployment") {
+		if (deploymentConfigExists(project, microservice)) {
+			sh "oc delete dc ${microservice} -n ${project}"	
+		}
+	}
 
 	if (pipelines.build.wiremock[0]) {
 		stage("update wiremock") {
