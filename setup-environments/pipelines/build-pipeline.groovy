@@ -8,12 +8,12 @@ node("maven") {
 
 	properties([
 	  parameters([
-	     string(name: 'GITHUB'), string(name: 'PRODUCT'), string(name: 'REPO'), string(name: 'MICROSERVICE'),
+	     string(name: 'GITHUB'), string(name: 'PRODUCT'), string(name: 'REPO'), string(name: 'MICROSERVICE'), string(name: 'PROJECT'),
 	  ]),
 	  disableConcurrentBuilds()
 	])
 
-	def project = "${params.PRODUCT}-build"
+	def project = params.PROJECT
 	def microservice = params.MICROSERVICE	
 	def version
 	def pipelines

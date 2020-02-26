@@ -16,6 +16,10 @@ parameters:
 - description: Defines the product that this pipeline is related to
   name: PRODUCT
   required: true   
+- description: Defines the build environment use by the build pipeline
+  name: BUILD_ENV
+  required: true   
+  value: build
 objects:
 - apiVersion: v1
   kind: BuildConfig
@@ -46,6 +50,8 @@ objects:
             value: ${MICROSERVICE_REPO_URI}
           - name: MICROSERVICE
             value: ${MICROSERVICE_NAME}                                 
+          - name: PROJECT
+            value: "${PRODUCT}-${BUILD_ENV}"
         jenkinsfilePath: setup-environments/pipelines/build-pipeline.groovy
       type: JenkinsPipeline
     triggers:
