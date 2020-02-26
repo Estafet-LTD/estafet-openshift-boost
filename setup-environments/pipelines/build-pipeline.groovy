@@ -52,6 +52,14 @@ node("maven") {
 		}
 	}
 
+	if (pipelines.build.restart) {
+		stage("restart ${pipelines.build.restart[0]}") {
+			def service = pipelines.build.restart[0]
+			openshiftDeploy namespace: project, depCfg: service
+			openshiftVerifyDeployment namespace: project, depCfg: service, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000"    	
+		}		
+	}
+
 	if (pipelines.build.wiremock[0]) {
 		stage("update wiremock") {
 			def files = findFiles(glob: 'src/integration-test/resources/*.json')
