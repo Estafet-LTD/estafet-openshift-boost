@@ -119,7 +119,7 @@ node("maven") {
 			sh "oc delete dc ${env}${microservice} -n ${project}"	
 		}
 	}	
-	
+		
 	if (pipelines.promote.db[0]) {
 		stage("ensure the database exists") {
 			withMaven(mavenSettingsConfig: 'microservices-scrum') {
