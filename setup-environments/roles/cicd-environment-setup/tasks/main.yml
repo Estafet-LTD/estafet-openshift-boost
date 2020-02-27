@@ -25,6 +25,36 @@
     volume_capacity: 30Gi
     memory_limit: 3Gi
 
+- name: Delete the build pipelines
+  shell: "oc delete bc/build-{{ item.name }}"
+  ignore_errors: yes
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  with_items: "{{ microservices }}"
+  tags:
+    - openshift 
+
+- name: Delete the release pipelines
+  shell: "oc delete bc/release-{{ item.name }}"
+  ignore_errors: yes
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  with_items: "{{ microservices }}"
+  tags:
+    - openshift 
+
+- name: Delete the promotion to prod pipelines
+  shell: "oc delete bc/promote-to-prod-{{ item.name }}"
+  ignore_errors: yes
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  with_items: "{{ microservices }}"
+  tags:
+    - openshift 
+    
 - name: Create build, release and promotion pipelines for each of the microservices
   shell: "oc process -f {{ templates }}/microservice-pipelines.yml -p GITHUB={{ github }} -p MICROSERVICE_NAME={{ item.name }} -p MICROSERVICE_REPO_URI={{ item.repo }} -p PRODUCT={{ product}} | oc create -f -"
   register: command_result
