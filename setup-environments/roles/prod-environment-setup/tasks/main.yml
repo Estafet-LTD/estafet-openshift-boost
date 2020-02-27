@@ -27,6 +27,16 @@
     project: "{{ prod_project }}"
     role: edit
 
+- include_role: 
+    name: mq-namespace-setup
+  vars:
+    colour: green
+
+- include_role: 
+    name: mq-namespace-setup
+  vars:
+    colour: blue
+
 - name: Create a routes to expose the application
   shell: "oc process -f {{ templates }}/prod-route.yml -p MICROSERVICE_NAME={{ item.name }} -p PRODUCT={{ product}} | oc apply -f -"
   register: command_result
