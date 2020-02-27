@@ -81,12 +81,6 @@ node('maven') {
 		pipelines = readYaml file: "openshift/pipelines/pipelines.yml"
 	}
 
-	stage("remove the previous deployment") {
-		if (deploymentConfigExists(project, microservice)) {
-			sh "oc delete dc ${microservice} -n ${project}"	
-		}
-	}
-
 	stage ("verify build image") {
 		version = getLatestVersion(params.PRODUCT, microservice)
 		println "latest version is $version"
@@ -95,6 +89,12 @@ node('maven') {
 		String pomVersion = "${matcher[0][1]}${matcher[0][2].toInteger()}-SNAPSHOT"
 		if (!version.equals(pomVersion)) {
 			error("Source version ${pomVersion} does not match last build image version ${version}. Perhaps ${pomVersion} has already been released?")
+		}
+	}
+
+	stage("remove the previous deployment") {
+		if (deploymentConfigExists(project, microservice)) {
+			sh "oc delete dc ${microservice} -n ${project}"	
 		}
 	}
 	
