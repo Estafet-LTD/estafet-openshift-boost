@@ -33,6 +33,12 @@
     role: view
 
 - include_role: 
+    name: add-jenkins-role
+  vars:
+    project: "{{ monitoring_project }}"
+    role: edit
+
+- include_role: 
     name: amq-setup
   vars:
     project: "{{ monitoring_project }}"
