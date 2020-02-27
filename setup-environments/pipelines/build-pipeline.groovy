@@ -52,7 +52,7 @@ node("maven") {
 		}
 	}
 
-	if (pipelines.build.restart) {
+	if (pipelines.build.restart[0] != null) {
 		stage("restart ${pipelines.build.restart[0]}") {
 			def service = pipelines.build.restart[0]
 			openshiftDeploy namespace: project, depCfg: service
