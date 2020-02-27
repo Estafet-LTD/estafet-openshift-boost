@@ -3,21 +3,21 @@
     name : init
 
 - set_fact: monitoring_project="{{ product }}-monitoring"
-- set_fact: cicd_project="{{ product }}-cicd"
-
-- name: Switch to Namespace {{ cicd_project }}
-  shell: "oc project {{ cicd_project }}"
-  tags:
-    - openshift  
-    
-- name: Create build, release and promotion pipelines for each of the microservices
-  shell: "oc process -f {{ templates }}/console-app-pipelines.yml -p GITHUB={{ github }} -p MICROSERVICE_NAME={{ item.name }} -p MICROSERVICE_REPO_URI={{ item.repo }} -p PRODUCT={{ product}} | oc create -f -"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"  
-  with_items: "{{ microservices_boost_projects }}"
-  tags:
-    - openshift       
+#- set_fact: cicd_project="{{ product }}-cicd"
+#
+#- name: Switch to Namespace {{ cicd_project }}
+#  shell: "oc project {{ cicd_project }}"
+#  tags:
+#    - openshift  
+#    
+#- name: Create build, release and promotion pipelines for each of the microservices
+#  shell: "oc process -f {{ templates }}/console-app-pipelines.yml -p GITHUB={{ github }} -p MICROSERVICE_NAME={{ item.name }} -p MICROSERVICE_REPO_URI={{ item.repo }} -p PRODUCT={{ product}} | oc create -f -"
+#  register: command_result
+#  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+#  changed_when: "'exists' not in command_result.stderr"  
+#  with_items: "{{ microservices_boost_projects }}"
+#  tags:
+#    - openshift       
 
 - include_role: 
     name: namespace-setup
@@ -32,11 +32,11 @@
     project: "{{ monitoring_project }}"
     role: view
 
-- include_role: 
-    name: add-jenkins-role
-  vars:
-    project: "{{ monitoring_project }}"
-    role: edit
+#- include_role: 
+#    name: add-jenkins-role
+#  vars:
+#    project: "{{ monitoring_project }}"
+#    role: edit
 
 - include_role: 
     name: amq-setup
