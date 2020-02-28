@@ -87,11 +87,12 @@ node('maven') {
 		def pom = readFile('pom.xml')
 		def matcher = new XmlSlurper().parseText(pom).version =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
 		String pomVersion = "${matcher[0][1]}${matcher[0][2].toInteger()}-SNAPSHOT"
-		if (!version.equals(pomVersion)) {
+	}
+	
+	if (!version.equals(pomVersion)) {
 			println "Source version ${pomVersion} does not match last build image version ${version}. Perhaps ${pomVersion} has already been released?"
 			currentBuild.result = 'SUCCESS'
    		return
-		}
 	}
 
 	stage("remove the previous deployment") {
