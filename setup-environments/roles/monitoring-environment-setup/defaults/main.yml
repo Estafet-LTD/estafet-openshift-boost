@@ -22,7 +22,7 @@ microservices_boost_projects:
   - name: console-prod-api
     repo: estafet-openshift-boost-console-api-prod
     db: true
-    expose: true
+    expose: false
     environment_variables:       
       - name: OPENSHIFT_HOST_PORT
         value: "{{ openshift }}"
@@ -33,7 +33,7 @@ microservices_boost_projects:
   - name: console-test-api
     repo: estafet-openshift-boost-console-api-test
     db: true
-    expose: true  
+    expose: false  
     environment_variables:        
       - name: OPENSHIFT_HOST_PORT
         value: "{{ openshift }}"
