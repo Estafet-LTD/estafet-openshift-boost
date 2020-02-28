@@ -72,6 +72,7 @@ node('maven') {
 	def developmentVersion
 	def releaseVersion
 	def pipelines
+	String pomVersion
 	
 	stage("checkout") {
 		git branch: "master", url: "https://${username()}:${password()}@github.com/${params.GITHUB}/${params.REPO}"
@@ -86,7 +87,7 @@ node('maven') {
 		println "latest version is $version"
 		def pom = readFile('pom.xml')
 		def matcher = new XmlSlurper().parseText(pom).version =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
-		String pomVersion = "${matcher[0][1]}${matcher[0][2].toInteger()}-SNAPSHOT"
+		pomVersion = "${matcher[0][1]}${matcher[0][2].toInteger()}-SNAPSHOT"
 	}
 	
 	if (!version.equals(pomVersion)) {
