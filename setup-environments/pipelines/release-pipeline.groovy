@@ -72,7 +72,7 @@ node('maven') {
 	def developmentVersion
 	def releaseVersion
 	def pipelines
-	String pomVersion
+	boolean skipStages = false
 	
 	stage("checkout") {
 		git branch: "master", url: "https://${username()}:${password()}@github.com/${params.GITHUB}/${params.REPO}"
@@ -87,69 +87,86 @@ node('maven') {
 		println "latest version is $version"
 		def pom = readFile('pom.xml')
 		def matcher = new XmlSlurper().parseText(pom).version =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
-		pomVersion = "${matcher[0][1]}${matcher[0][2].toInteger()}-SNAPSHOT"
-	}
-	
-	if (!version.equals(pomVersion)) {
+		String pomVersion = "${matcher[0][1]}${matcher[0][2].toInteger()}-SNAPSHOT"
+		if (!version.equals(pomVersion)) {
 			println "Source version ${pomVersion} does not match last build image version ${version}. Perhaps ${pomVersion} has already been released?"
 			currentBuild.result = 'SUCCESS'
-   		return
+			skipStages = true
+		}
 	}
 
-	stage("remove the previous deployment") {
-		if (deploymentConfigExists(project, microservice)) {
-			sh "oc delete dc ${microservice} -n ${project}"	
+	if (!skipStages) {
+		stage("remove the previous deployment") {
+			if (deploymentConfigExists(project, microservice)) {
+				sh "oc delete dc ${microservice} -n ${project}"	
+			}
+		}		
+	}
+
+	if (!skipStages) {
+		if (pipelines.release.db[0]) {
+			stage("prepare the database") {
+				withMaven(mavenSettingsConfig: 'microservices-scrum') {
+			      sh "mvn clean package -P prepare-db -Dmaven.test.skip=true -Dproject=${project}"
+			    } 
+			}	
+		}		
+	}
+
+	if (!skipStages) {
+		stage("increment version") {
+			def pom = readFile('pom.xml');
+			def matcher = new XmlSlurper().parseText(pom).version =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
+			developmentVersion = "${matcher[0][1]}${matcher[0][2].toInteger()+1}-SNAPSHOT"
+			releaseVersion = "${matcher[0][1]}${matcher[0][2]}"
+		}		
+	}
+	
+	if (!skipStages) {
+		stage("perform release") {
+	    sh "git config --global user.email \"jenkins@estafet.com\""
+	  	sh "git config --global user.name \"jenkins\""
+	    withMaven(mavenSettingsConfig: 'microservices-scrum') {
+				sh "mvn release:clean release:prepare release:perform -DreleaseVersion=${releaseVersion} -DdevelopmentVersion=${developmentVersion} -DpushChanges=false -DlocalCheckout=true -DpreparationGoals=initialize -B"
+				sh "git push origin master"
+				sh "git tag ${releaseVersion}"
+				sh "git push origin ${releaseVersion}"
+			} 
+		}			
+	}
+
+	if (!skipStages) {
+		stage("promote the image from ${params.PRODUCT}-cicd to ${project}") {
+			openshiftTag namespace: "${params.PRODUCT}-cicd", srcStream: microservice, srcTag: version, destinationNamespace: project, destinationStream: microservice, destinationTag: releaseVersion
+			sh "oc patch is/${microservice} -p '{\"metadata\":{\"labels\":{\"product\":\"${params.PRODUCT}\"}}}' -n ${project}"
+		}
+	}
+
+	if (!skipStages) {
+		stage("create deployment config") {
+			sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} -p DOCKER_NAMESPACE=${project} -p DOCKER_IMAGE_LABEL=${releaseVersion} -p PRODUCT=${params.PRODUCT} | oc apply -f -"
+		}
+	}
+
+	if (!skipStages) {
+		stage("execute deployment") {
+			openshiftDeploy namespace: project, depCfg: microservice,  waitTime: "3000000"
+			openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000" 
 		}
 	}
 	
-	if (pipelines.release.db[0]) {
-		stage("prepare the database") {
-			withMaven(mavenSettingsConfig: 'microservices-scrum') {
-		      sh "mvn clean package -P prepare-db -Dmaven.test.skip=true -Dproject=${project}"
-		    } 
-		}	
-	}
-	
-	stage("increment version") {
-		def pom = readFile('pom.xml');
-		def matcher = new XmlSlurper().parseText(pom).version =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
-		developmentVersion = "${matcher[0][1]}${matcher[0][2].toInteger()+1}-SNAPSHOT"
-		releaseVersion = "${matcher[0][1]}${matcher[0][2]}"
-	}
-	
-	stage("perform release") {
-    sh "git config --global user.email \"jenkins@estafet.com\""
-  	sh "git config --global user.name \"jenkins\""
-    withMaven(mavenSettingsConfig: 'microservices-scrum') {
-			sh "mvn release:clean release:prepare release:perform -DreleaseVersion=${releaseVersion} -DdevelopmentVersion=${developmentVersion} -DpushChanges=false -DlocalCheckout=true -DpreparationGoals=initialize -B"
-			sh "git push origin master"
-			sh "git tag ${releaseVersion}"
-			sh "git push origin ${releaseVersion}"
-		} 
-	}	
-
-	stage("promote the image from ${params.PRODUCT}-cicd to ${project}") {
-		openshiftTag namespace: "${params.PRODUCT}-cicd", srcStream: microservice, srcTag: version, destinationNamespace: project, destinationStream: microservice, destinationTag: releaseVersion
-		sh "oc patch is/${microservice} -p '{\"metadata\":{\"labels\":{\"product\":\"${params.PRODUCT}\"}}}' -n ${project}"
-	}	
-
-	stage("create deployment config") {
-		sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} -p DOCKER_NAMESPACE=${project} -p DOCKER_IMAGE_LABEL=${releaseVersion} -p PRODUCT=${params.PRODUCT} | oc apply -f -"
-	}
-	
-	stage("execute deployment") {
-		openshiftDeploy namespace: project, depCfg: microservice,  waitTime: "3000000"
-		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000" 
+	if (!skipStages) {
+		stage("promote the image to ${params.PRODUCT}-prod") {
+			openshiftTag namespace: project, srcStream: microservice, srcTag: releaseVersion, destinationNamespace: "${params.PRODUCT}-prod", destinationStream: microservice, destinationTag: releaseVersion
+			sh "oc patch is/${microservice} -p '{\"metadata\":{\"labels\":{\"product\":\"${params.PRODUCT}\"}}}' -n ${params.PRODUCT}-prod"
+		}
 	}
 
-	stage("promote the image to ${params.PRODUCT}-prod") {
-		openshiftTag namespace: project, srcStream: microservice, srcTag: releaseVersion, destinationNamespace: "${params.PRODUCT}-prod", destinationStream: microservice, destinationTag: releaseVersion
-		sh "oc patch is/${microservice} -p '{\"metadata\":{\"labels\":{\"product\":\"${params.PRODUCT}\"}}}' -n ${params.PRODUCT}-prod"
-	}	
-	
-	stage("flag this microservice as untested") {
-		sh "oc patch dc/${microservice} -p '{\"metadata\":{\"labels\":{\"testStatus\":\"untested\"}}}' -n ${project}"		
-	}	
+	if (!skipStages) {
+		stage("flag this microservice as untested") {
+			sh "oc patch dc/${microservice} -p '{\"metadata\":{\"labels\":{\"testStatus\":\"untested\"}}}' -n ${project}"		
+		}
+	}
 
 }
 
