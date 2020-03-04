@@ -72,3 +72,5 @@ microservices_boost_projects:
         value: "{{ username }}"
       - name: OPENSHIFT_PASSWORD
         value: "{{ password }}"           
+      - name: GITHUB
+        value: "{{ github }}"          
