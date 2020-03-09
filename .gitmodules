@@ -33,3 +33,9 @@
 [submodule "estafet-openshift-boost-messages-lib"]
 	path = estafet-openshift-boost-messages-lib
 	url = https://github.com/Estafet-LTD/estafet-openshift-boost-messages-lib
+[submodule "estafet-openshift-boost-console-ui-react"]
+	path = estafet-openshift-boost-console-ui-react
+	url = https://github.com/Estafet-LTD/estafet-openshift-boost-console-ui-react
+[submodule "estafet-openshift-boost-console-api-gateway"]
+	path = estafet-openshift-boost-console-api-gateway
+	url = https://github.com/Estafet-LTD/estafet-openshift-boost-console-api-gateway
