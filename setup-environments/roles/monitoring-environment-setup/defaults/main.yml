@@ -1,6 +1,13 @@
 ---
 # Project definition - add new microservices here
 microservices_boost_projects:
+  - name: console-gateway-api
+    repo: estafet-openshift-boost-console-api-gateway
+    db: false
+    expose: true  
+    environment_variables:   
+      - name: PRODUCT_DESCRIPTION
+        value: "{{ product_description }}"
   - name: console-ui
     repo: estafet-openshift-boost-console-ui
     db: false
@@ -44,7 +51,7 @@ microservices_boost_projects:
   - name: console-build-api
     repo: estafet-openshift-boost-console-api-build
     db: true
-    expose: true       
+    expose: false       
     environment_variables:        
       - name: OPENSHIFT_HOST_PORT
         value: "{{ openshift }}"
