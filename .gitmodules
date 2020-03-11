@@ -39,3 +39,6 @@
 [submodule "estafet-openshift-boost-console-api-gateway"]
 	path = estafet-openshift-boost-console-api-gateway
 	url = https://github.com/Estafet-LTD/estafet-openshift-boost-console-api-gateway
+[submodule "estafet-openshift-boost-console-api-jenkins"]
+	path = estafet-openshift-boost-console-api-jenkins
+	url = https://github.com/Estafet-LTD/estafet-openshift-boost-console-api-jenkins
