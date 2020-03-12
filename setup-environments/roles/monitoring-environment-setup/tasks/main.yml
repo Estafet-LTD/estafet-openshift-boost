@@ -1,12 +1,7 @@
 ---
-- set_fact: openshift="{{ openshift_host }}:{{ openshift_port }}"
-
-
 - include_role: 
     name : init
-  vars:
-    openshift: "{{ openshift }}"
-    
+
 - set_fact: monitoring_project="{{ product }}-monitoring"
 
 - include_role: 
