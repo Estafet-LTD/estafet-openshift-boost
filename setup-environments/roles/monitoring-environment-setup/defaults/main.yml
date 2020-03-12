@@ -1,6 +1,13 @@
 ---
 # Project definition - add new microservices here
 microservices_boost_projects:
+  - name: console-ui-react
+    repo: estafet-openshift-boost-console-ui-react
+    db: false
+    expose: true  
+    environment_variables:   
+      - name: PRODUCT_DESCRIPTION
+        value: "{{ product_description }}"
   - name: console-jenkins-api
     repo: estafet-openshift-boost-console-api-jenkins
     db: false

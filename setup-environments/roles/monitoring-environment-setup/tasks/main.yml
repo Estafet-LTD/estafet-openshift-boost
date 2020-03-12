@@ -3,6 +3,7 @@
     name : init
 
 - set_fact: monitoring_project="{{ product }}-monitoring"
+- set_fact: openshift="{{ openshift_host }}:{{ openshift_port }}"
 
 - include_role: 
     name: namespace-setup
