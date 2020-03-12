@@ -50,3 +50,5 @@
 
 - set_fact: templates={{ workdir }}/estafet-openshift-boost/setup-environments/templates
 - set_fact: objects={{ workdir }}/estafet-openshift-boost/setup-environments/objects
+- set_fact: openshift="{{ openshift_host }}:{{ openshift_port }}"
+
