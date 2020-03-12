@@ -50,7 +50,7 @@
     microservice: "{{ item }}" 
     db_type: local
     db_pod: "{{ local_db_pod }}"
-    reset_db: true
+    reset_db: false
     imagestream_namespace: openshift
     docker_registry: docker-registry.default.svc:5000
     maven_mirror_url: http://nexus.nexus.svc:8081/nexus/content/groups/public 
