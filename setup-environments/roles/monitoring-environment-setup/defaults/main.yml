@@ -12,7 +12,7 @@ microservices_boost_projects:
         value: "{{ openshift_host }}"
   - name: console-jenkins-api
     repo: estafet-openshift-boost-console-api-jenkins
-    db: false
+    db: true
     expose: false
     environment_variables:     
       - name: OPENSHIFT_HOST_PORT
@@ -28,13 +28,13 @@ microservices_boost_projects:
     environment_variables:   
       - name: PRODUCT_DESCRIPTION
         value: "{{ product_description }}"
-  - name: console-ui
-    repo: estafet-openshift-boost-console-ui
-    db: false
-    expose: true  
-    environment_variables:   
-      - name: PRODUCT_DESCRIPTION
-        value: "{{ product_description }}"        
+#  - name: console-ui
+#    repo: estafet-openshift-boost-console-ui
+#    db: false
+#    expose: true  
+#    environment_variables:   
+#      - name: PRODUCT_DESCRIPTION
+#        value: "{{ product_description }}"        
   - name: console-app-api
     repo: estafet-openshift-boost-console-api-app
     db: false
