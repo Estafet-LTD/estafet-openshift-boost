@@ -8,6 +8,8 @@ microservices_boost_projects:
     environment_variables:   
       - name: PRODUCT_DESCRIPTION
         value: "{{ product_description }}"
+      - name: OPENSHIFT_HOST
+        value: "{{ openshift_host }}"
   - name: console-jenkins-api
     repo: estafet-openshift-boost-console-api-jenkins
     db: false
