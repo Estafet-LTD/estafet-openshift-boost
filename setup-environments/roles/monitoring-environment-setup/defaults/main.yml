@@ -10,6 +10,8 @@ microservices_boost_projects:
         value: "{{ product_description }}"
       - name: OPENSHIFT_HOST
         value: "{{ openshift_host }}"
+      - name: TASK_MANAGEMENT_TITLE
+        value: "{{ task_manager_title }}"        
   - name: console-jenkins-api
     repo: estafet-openshift-boost-console-api-jenkins
     db: true
@@ -88,6 +90,8 @@ microservices_boost_projects:
         value: "{{ trello_access_token }}"
       - name: TRELLO_API_KEY
         value: "{{ trello_api_key }}"
+      - name: TASK_MANAGER
+        value: "{{ task_manager }}"
   - name: console-feature-api
     repo: estafet-openshift-boost-console-api-feature
     db: true

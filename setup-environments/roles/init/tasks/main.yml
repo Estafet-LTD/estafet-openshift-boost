@@ -4,7 +4,6 @@
     extensions: [yml]
     
 - set_fact: openshift="{{ openshift_host }}:{{ openshift_port }}"
-
     
 - name: Verify if openshift is set
   fail:
@@ -23,12 +22,12 @@
 
 - name: Verify if product variable is set
   fail:
-    msg: "[Product] is not defined. Please edit playbook"
+    msg: "[Product] is not defined. Please edit project-vars.yml"
   when: product is undefined
 
 - name: Verify if product variable is set
   fail:
-    msg: "[Product Description] is not defined. Please edit playbook"
+    msg: "[Product Description] is not defined. Please edit project-vars.yml"
   when: product_description is undefined
 
 - name: Verify if the microservices have been defined
@@ -45,6 +44,16 @@
   fail:
     msg: "[Users] are not set. Please edit users-vars.yml"
   when: users is undefined
+
+- name: Verify if the tasks manager has been defined
+  fail:
+    msg: "[Task Manager] are not set. Please edit project-vars.yml"
+  when: task_manager is undefined
+
+- name: Verify if the tasks manager has been defined
+  fail:
+    msg: "[Task Manager Title] are not set. Please edit project-vars.yml"
+  when: task_manager is undefined
 
 - name: Login in OpenShift as {{ username }}
   shell: "oc login --insecure-skip-tls-verify=true -u {{ username }} -p {{ password }} {{ openshift }}"

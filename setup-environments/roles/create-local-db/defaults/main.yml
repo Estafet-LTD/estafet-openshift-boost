@@ -1,0 +1,5 @@
+---
+# Project definition - add new microservices here
+liquibase_tables:
+  - table: databasechangelog    
+  - table: databasechangeloglock  
