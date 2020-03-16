@@ -29,11 +29,10 @@
     - openshift
     - postgresql
     
-- name: Drop liquibase tables on PostgreSQL Pod
-  shell: 'oc exec {{pod}} -- /bin/sh -i -c "psql -d {{ db_name }} -U postgres DROP TABLE IF EXISTS {{ item.table }}"'
+- name: Drop liquibase on PostgreSQL Pod
+  shell: 'oc exec {{pod}} -- /bin/sh -i -c "psql -d {{ db_name }} -U postgres -f drop-liquibase-db.ddl"'
   register: command_result
   when: microservice.db and db_pod is defined and reset_db
-  with_items: "{{ liquibase_tables }}"
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
   tags:
