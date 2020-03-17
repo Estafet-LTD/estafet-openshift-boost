@@ -30,7 +30,7 @@
     - postgresql
     
 - name: Drop liquibase on PostgreSQL Pod
-  shell: 'oc exec {{pod}} -- /bin/sh -i -c "psql -d {{ db_name }} -U postgres -f drop-liquibase-db.ddl"'
+  shell: 'oc exec {{pod}} -- /bin/sh -i -c "psql -d {{ db_name }} -U postgres -f {{ drop_liquibase_ddl }}"'
   register: command_result
   when: microservice.db and db_pod is defined and reset_db
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
