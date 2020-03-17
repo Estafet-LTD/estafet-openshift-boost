@@ -1,6 +1,17 @@
 ---
 # Project definition - add new microservices here
 microservices_boost_projects:
+  - name: console-user-api
+    repo: estafet-openshift-boost-console-api-user
+    db: false
+    expose: false
+    environment_variables:     
+      - name: OPENSHIFT_HOST_PORT
+        value: "{{ openshift }}"
+      - name: OPENSHIFT_USER
+        value: "{{ username }}"
+      - name: OPENSHIFT_PASSWORD
+        value: "{{ password }}"  
   - name: console-ui-react
     repo: estafet-openshift-boost-console-ui-react
     db: false
