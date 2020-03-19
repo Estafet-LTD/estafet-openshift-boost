@@ -56,7 +56,7 @@
   when: env.wiremock
 
 - include_role: 
-    name: item.role
+    name: '{{ item.role }}'
   vars:
     project: "{{ stage_project }}"
   with_items: "{{ env.ext_roles }}"
