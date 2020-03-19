@@ -1,7 +1,0 @@
----
-- name: Update the Console UI App
-  hosts: local
-  roles:
-    - console-ui-app-setup
-
-  
