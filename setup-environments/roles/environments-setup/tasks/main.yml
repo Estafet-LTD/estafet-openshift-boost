@@ -50,11 +50,11 @@
     expose: false
   when: env.wiremock
 
-- include_role: 
-    name: "{{ item.name }}"
-  vars:
-    project: "{{ stage_project }}"
-  with_items: "{{ env.ext_roles }}"
+#- include_role: 
+#    name: "{{ item.name }}"
+#  vars:
+#    project: "{{ stage_project }}"
+#  with_items: "{{ env.ext_roles }}"
   
 - include_role: 
     name: add-jenkins-role
