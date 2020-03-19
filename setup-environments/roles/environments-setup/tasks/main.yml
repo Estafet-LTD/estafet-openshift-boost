@@ -20,7 +20,8 @@
     name: namespace-role-setup
   vars:
     project: "{{ stage_project }}"
-    role: edit
+    role: env.role
+  when: env.role is defined
 
 - include_role: 
     name: amq-setup
@@ -53,7 +54,6 @@
     name: "{{ item.role }}"
   vars:
     project: "{{ stage_project }}"
-  when: env.ext_roles is defined
   with_items: "{{ env.ext_roles }}"
   
 - include_role: 
