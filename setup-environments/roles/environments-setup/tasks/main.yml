@@ -7,7 +7,7 @@
     verbosity: 0
 
 - debug:
-    var: item.role
+    var: "{{ item.role }}"
     verbosity: 0
   with_items: "{{ env.ext_roles }}"  
 
