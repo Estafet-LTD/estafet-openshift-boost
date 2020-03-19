@@ -1,7 +1,9 @@
 ---
 - name: Update the Product Environment
   hosts: local
-  roles:
-    - prod-environment-setup
-         
-  
+  tasks:
+    - include_role: 
+        name: environments-setup
+      vars:
+        env: "{{ item }}"     
+      with_items: "{{ environments }}"
