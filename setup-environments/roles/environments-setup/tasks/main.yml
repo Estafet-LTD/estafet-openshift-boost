@@ -1,0 +1,56 @@
+---
+- include_role: 
+    name : init
+
+- debug:
+    var: env
+    verbosity: 0
+
+- set_fact: stage_project="{{ product }}-{{ env.name }}"
+
+- include_role: 
+    name: namespace-setup
+  vars:
+    project: "{{ stage_project }}"
+    project_description: "{{ env.display }}: {{ product_description }}"
+    cloud_environment: true
+    next: "{{ product }}-{{ env.next }}"
+
+- include_role: 
+    name: namespace-role-setup
+  vars:
+    project: "{{ stage_project }}"
+    role: edit
+
+- include_role: 
+    name: amq-setup
+  vars:
+    project: "{{ stage_project }}"
+    templates_project: openshift
+  when: env.amq
+
+- include_role: 
+    name: jaeger-setup
+  vars:
+    project: "{{ stage_project }}" 
+  when: env.jaeger  
+
+- include_role: 
+    name: external-db
+  vars:
+    project: "{{ stage_project }}"    
+  when: env.db == "postgres"
+
+- include_role: 
+    name: wiremock-setup
+  vars:
+    project: "{{ stage_project }}"
+    tag: 2.25.1
+    expose: false
+  when: env.wiremock
+  
+- include_role: 
+    name: add-jenkins-role
+  vars:
+    project: "{{ stage_project }}"
+    role: edit

@@ -4,39 +4,6 @@
 
 - set_fact: prod_project="{{ product }}-prod"
 
-- include_role: 
-    name: namespace-setup
-  vars:
-    project: "{{ prod_project }}"
-    project_description: "Prod: {{ product_description }}"
-    cloud_environment: true
-
-- include_role: 
-    name: jaeger-setup
-  vars:
-    project: "{{ prod_project }}"   
-
-- include_role: 
-    name: external-db
-  vars:
-    project: "{{ prod_project }}"    
-    
-- include_role: 
-    name: add-jenkins-role
-  vars:
-    project: "{{ prod_project }}"
-    role: edit
-
-- include_role: 
-    name: mq-namespace-setup
-  vars:
-    colour: green
-
-- include_role: 
-    name: mq-namespace-setup
-  vars:
-    colour: blue
-
 - name: Switch to Namespace {{ prod_project }}
   shell: "oc project {{ prod_project }}"
   tags:

@@ -1,7 +1,11 @@
 ---
 - name: Update the Monitoring Environment
   hosts: local
-  roles:
-    - monitoring-environment-setup
+  tasks:
+    - include_role: 
+        name: environments-setup
+      vars:
+        env: "{{ item }}"     
+      with_items: "{{ environments }}"
 
   
