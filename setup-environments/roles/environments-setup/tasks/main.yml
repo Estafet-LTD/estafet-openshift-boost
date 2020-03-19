@@ -6,11 +6,6 @@
     var: env
     verbosity: 0
 
-- debug:
-    var: "{{ item.role }}"
-    verbosity: 0
-  with_items: "{{ env.ext_roles }}"  
-
 - set_fact: stage_project="{{ product }}-{{ env.name }}"
 
 - include_role: 
