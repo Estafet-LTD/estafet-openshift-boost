@@ -3,6 +3,8 @@
   hosts: local
   tasks:
     - include_role: 
+        name: init
+    - include_role: 
         name: environments-setup
       vars:
         env: "{{ item }}"     

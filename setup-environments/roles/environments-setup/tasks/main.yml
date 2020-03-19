@@ -48,6 +48,13 @@
     tag: 2.25.1
     expose: false
   when: env.wiremock
+
+- include_role: 
+    name: "{{ item.role }}"
+  vars:
+    project: "{{ stage_project }}"
+  when: env.ext_roles is defined
+  with_items: "{{ env.ext_roles }}"
   
 - include_role: 
     name: add-jenkins-role
