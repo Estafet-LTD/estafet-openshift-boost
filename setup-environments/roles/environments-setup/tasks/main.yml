@@ -55,7 +55,8 @@
     expose: false
   when: env.wiremock
 
-- include_role: 
+- name: Invoke the extended roles
+  include_role: 
     name: "{{ item.role }}"
   vars:
     project: "{{ stage_project }}"
