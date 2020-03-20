@@ -56,7 +56,7 @@ node {
 		project = getNextProjectName(params.PRODUCT)
 		def title = params.PROJECT_TITLE.equals("") ? project : params.PROJECT_TITLE
 		sh "oc new-project $project --display-name='${title}'"
-		sh "oc label namespace $project type=${params.PRODUCT}-dq product=${params.PRODUCT}"
+		sh "oc label namespace $project type=${params.PRODUCT}-dq product=${params.PRODUCT} user=${params.USER}"
 		sh "oc policy add-role-to-user edit system:serviceaccount:${params.PRODUCT}-cicd:jenkins -n $project"
 		sh "oc policy add-role-to-user edit ${params.USER} -n $project"
 	}		
