@@ -1,17 +1,6 @@
 ---
 # Project definition - add new microservices here
 microservices_boost_projects:
-  - name: console-ui-react
-    repo: estafet-openshift-boost-console-ui-react
-    db: false
-    expose: true  
-    environment_variables:   
-      - name: PRODUCT_DESCRIPTION
-        value: "{{ product_description }}"
-      - name: OPENSHIFT_HOST
-        value: "{{ openshift_host }}"
-      - name: TASK_MANAGEMENT_TITLE
-        value: "{{ task_manager_title }}"      
   - name: console-user-api
     repo: estafet-openshift-boost-console-api-user
     db: false
@@ -79,4 +68,15 @@ microservices_boost_projects:
       - name: GITHUB_USER
         value: "{{ github_user }}"        
       - name: GITHUB_PASSWORD
-        value: "{{ github_password }}"               
+        value: "{{ github_password }}"          
+  - name: console-ui-react
+    repo: estafet-openshift-boost-console-ui-react
+    db: false
+    expose: true  
+    environment_variables:   
+      - name: PRODUCT_DESCRIPTION
+        value: "{{ product_description }}"
+      - name: OPENSHIFT_HOST
+        value: "{{ openshift_host }}"
+      - name: TASK_MANAGEMENT_TITLE
+        value: "{{ task_manager_title }}"                   
