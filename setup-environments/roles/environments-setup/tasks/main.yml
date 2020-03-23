@@ -15,6 +15,7 @@
     project_description: "{{ env.display }}: {{ product_description }}"
     cloud_environment: true
     next: "{{ product }}-{{ env.next }}"
+    display: "{{ env.display }}"
 
 - include_role: 
     name: namespace-role-setup
