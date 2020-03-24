@@ -235,8 +235,10 @@ objects:
             value: ${ADMIN_PASSWORD}       
           - name: PRODUCT
             value: ${PRODUCT}   
-          - name: USER
+          - name: USER_NAME
             value: "admin"                                   
+          - name: USER_ID
+            value: "1234"
         jenkinsfilePath: setup-environments/pipelines/create-environment-pipeline.groovy
       type: JenkinsPipeline
   status:

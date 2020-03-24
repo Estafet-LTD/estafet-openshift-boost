@@ -40,7 +40,8 @@ node {
 	     string(name: 'ADMIN_USER'), 
 	     string(name: 'ADMIN_PASSWORD'),
 	     string(name: 'PRODUCT'),
-	     string(name: 'USER'),
+	     string(name: 'USER_ID'),
+	     string(name: 'USER_NAME'),
 	  ])
 	])
 	
@@ -57,9 +58,9 @@ node {
 		def title = params.PROJECT_TITLE.equals("") ? project : params.PROJECT_TITLE
 		sh "oc new-project $project --display-name='${title}'"
 		
-		sh "oc label namespace $project type=${params.PRODUCT}-dq product=${params.PRODUCT} user=\"${params.USER}\""
+		sh "oc label namespace $project type=${params.PRODUCT}-dq product=${params.PRODUCT} userId=${params.USER_ID}"
 		sh "oc policy add-role-to-user edit system:serviceaccount:${params.PRODUCT}-cicd:jenkins -n $project"
-		sh "oc policy add-role-to-user edit ${params.USER} -n $project"
+		sh "oc policy add-role-to-user edit ${params.USER_NAME} -n $project"
 	}		
 	
 	stage ("create the database endpoint") {
