@@ -16,10 +16,21 @@ parameters:
 - description: Defines the product that this pipeline is related to
   name: PRODUCT
   required: true   
-- description: Defines the build environment use by the build pipeline
-  name: BUILD_ENV
+- description: Defines build pipeline
+  name: BUILD_PIPELINE
   required: true   
-  value: build
+- description: Defines promote pipeline
+  name: RELEASE_PIPELINE
+  required: true   
+- description: Defines promote pipeline
+  name: PROMOTE_PIPELINE
+  required: true   
+- description: Defines promote to prod pipeline
+  name: PROMOTE_TO_PROD_PIPELINE
+  required: true   
+- description: Defines the main repository that contains the infrastructor definition
+  name: ENVIRONMENTS_REPO_URI
+  required: true     
 objects:
 - apiVersion: v1
   kind: BuildConfig
@@ -38,7 +49,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        uri: "https://github.com/${GITHUB}/${ENVIRONMENTS_REPO_URI}"
     strategy:
       jenkinsPipelineStrategy:
         env:
@@ -50,9 +61,7 @@ objects:
             value: ${MICROSERVICE_REPO_URI}
           - name: MICROSERVICE
             value: ${MICROSERVICE_NAME}                                 
-          - name: PROJECT
-            value: "${PRODUCT}-${BUILD_ENV}"
-        jenkinsfilePath: setup-environments/pipelines/build-pipeline.groovy
+        jenkinsfilePath: "setup-environments/pipelines/${BUILD_PIPELINE}"
       type: JenkinsPipeline
     triggers:
     - github:
@@ -80,7 +89,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        uri: "https://github.com/${GITHUB}/${ENVIRONMENTS_REPO_URI}"
     strategy:
       jenkinsPipelineStrategy:
         env:
@@ -92,7 +101,7 @@ objects:
             value: ${MICROSERVICE_REPO_URI}
           - name: MICROSERVICE
             value: ${MICROSERVICE_NAME}                              
-        jenkinsfilePath: setup-environments/pipelines/release-pipeline.groovy
+        jenkinsfilePath: "setup-environments/pipelines/${RELEASE_PIPELINE}"
       type: JenkinsPipeline
   status:
     lastVersion: 0
@@ -102,10 +111,10 @@ objects:
     creationTimestamp: null
     labels:
       app: pipeline
-      name: "promote-to-prod-${MICROSERVICE_NAME}"
+      name: "promote-${MICROSERVICE_NAME}"
       type: promote
       product: ${PRODUCT}
-    name: "promote-to-prod-${MICROSERVICE_NAME}"
+    name: "promote-${MICROSERVICE_NAME}"
   spec:
     output: {}
     postCommit: {}
@@ -113,7 +122,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        uri: "https://github.com/${GITHUB}/${ENVIRONMENTS_REPO_URI}"
     strategy:
       jenkinsPipelineStrategy:
         env:
@@ -124,8 +133,45 @@ objects:
           - name: REPO
             value: ${MICROSERVICE_REPO_URI}
           - name: MICROSERVICE
-            value: ${MICROSERVICE_NAME}                         
-        jenkinsfilePath: setup-environments/pipelines/promote-to-prod-pipeline.groovy
+            value: ${MICROSERVICE_NAME}
+          - name: PROJECT
+            value: "some_project"                         
+        jenkinsfilePath: "setup-environments/pipelines/${PROMOTE_PIPELINE}"
       type: JenkinsPipeline
   status:
     lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: pipeline
+      name: "promote-to-prod-${MICROSERVICE_NAME}"
+      type: promote-to-prod
+      product: ${PRODUCT}
+    name: "promote-to-prod-${MICROSERVICE_NAME}"
+  spec:
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: "https://github.com/${GITHUB}/${ENVIRONMENTS_REPO_URI}"
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+          - name: GITHUB
+            value: ${GITHUB}      
+          - name: PRODUCT
+            value: ${PRODUCT}               
+          - name: REPO
+            value: ${MICROSERVICE_REPO_URI}
+          - name: MICROSERVICE
+            value: ${MICROSERVICE_NAME}
+          - name: PROJECT
+            value: "some_project"                         
+        jenkinsfilePath: "setup-environments/pipelines/${PROMOTE_TO_PROD_PIPELINE}"
+      type: JenkinsPipeline
+  status:
+    lastVersion: 0    

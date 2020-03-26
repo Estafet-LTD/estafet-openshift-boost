@@ -13,11 +13,12 @@ node {
 	properties([
 	  parameters([
 	     string(name: 'PRODUCT'),
-	  ])
-	])			
+	  ]),
+	  disableConcurrentBuilds()
+	])				
 	
-	stage ('build all microservices') {
-		sh "oc get bc -n ${params.PRODUCT}-cicd --selector app=pipeline --selector type=build -o json > images.output"
+	stage ('release all microservices') {
+		sh "oc get bc -n ${params.PRODUCT}-cicd --selector app=pipeline --selector type=release -o json > images.output"
 		def images = readFile('images.output')
 		def pipelines = getPipelines(images)
 		pipelines.each { pipeline ->

@@ -6,13 +6,7 @@
     name : nexus-setup
 
 - include_role: 
-    name : cicd-environment-setup
-        
-- include_role: 
-    name: environments-setup
-  vars:
-    env: "{{ item }}"     
-  with_items: "{{ environments }}"    
+    name: update-environments
 
 - include_role: 
     name: prod-route-setup

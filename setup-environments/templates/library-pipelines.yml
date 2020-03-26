@@ -42,7 +42,7 @@ objects:
             value: ${GITHUB}                   
           - name: REPO
             value: ${LIBRARY_REPO_URI}            
-        jenkinsfilePath: setup-environments/pipelines/build-library-pipeline.groovy
+        jenkinsfilePath: setup-environments/pipelines/build-library.jenkinsFile
       type: JenkinsPipeline
     triggers:
     - github:
@@ -78,7 +78,7 @@ objects:
             value: ${GITHUB}             
           - name: REPO
             value: ${LIBRARY_REPO_URI}                       
-        jenkinsfilePath: setup-environments/pipelines/release-library-pipeline.groovy
+        jenkinsfilePath: setup-environments/pipelines/release-library.jenkinsFile
       type: JenkinsPipeline
   status:
     lastVersion: 0
