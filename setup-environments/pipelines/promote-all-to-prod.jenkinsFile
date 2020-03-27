@@ -17,11 +17,13 @@ node {
 	
 	properties([
 	  parameters([
-	     string(name: 'PRODUCT'),
+	     string(name: 'PRODUCT'), string(name: 'PROJECT'),
 	  ])
 	])	
 	
+	def project = params.PROJECT
 	def testStatus
+
 	
 	stage ("determine the status of the test environment") {
 		sh "oc get project ${params.PRODUCT}-test -o json > test.json"

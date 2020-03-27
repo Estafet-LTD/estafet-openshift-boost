@@ -56,7 +56,7 @@
     - openshift 
     
 - name: Create build, release and promotion pipelines for each of the microservices
-  shell: "oc process -f {{ templates }}/microservice-pipelines.yml -p GITHUB={{ github }} -p MICROSERVICE_NAME={{ item.name }} -p MICROSERVICE_REPO_URI={{ item.repo }} -p PRODUCT={{ product}} -p ENVIRONMENTS_REPO_URI={{ environments.repo }} -p BUILD_PIPELINE={{ item.build_jenkinsFile }} -p RELEASE_PIPELINE={{ item.release_jenkinsFile }} -p PROMOTE_PIPELINE={{ item.promote_jenkinsFile }} -p PROMOTE_TO_PROD_PIPELINE={{ item.promote_to_prod_jenkinsFile }} | oc create -f -"
+  shell: "oc process -f {{ templates }}/microservice-pipelines.yml -p GITHUB={{ github }} -p MICROSERVICE_NAME={{ item.name }} -p MICROSERVICE_REPO_URI={{ item.repo }} -p PRODUCT={{ product}} -p ENVIRONMENTS_REPO_URI={{ environments.repo }} -p BUILD_PIPELINE={{ item.build_jenkinsFile }} -p RELEASE_PIPELINE={{ item.release_jenkinsFile }} -p PROMOTE_PIPELINE={{ item.promote_jenkinsFile }} -p PROMOTE_TO_PROD_PIPELINE={{ item.promote_to_prod_jenkinsFile }} -p ENVIRONMENTS_REPO_URI={{ environments.repo }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
@@ -65,13 +65,23 @@
     - openshift       
 
 - name: Create build and release and promotion pipelines for the environments
-  shell: "oc process -f {{ templates }}/environment-pipelines.yml -p GITHUB={{ github }} -p PRODUCT={{ product }} | oc create -f -"
+  shell: "oc process -f {{ templates }}/environment-pipelines.yml -p GITHUB={{ github }} -p PRODUCT={{ product }} -p ENV={{ item.name }} -p REPO_URI={{ item.test_repo }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
-  with_items: "{{ environments }}"
+  with_items: "{{ environments.stages }}"
   tags:
     - openshift  
+
+- name: Create promotion to prod pipeline
+  shell: "oc process -f {{ templates }}/promote-to-prod.yml -p GITHUB={{ github }} -p PRODUCT={{ product }} -p ENV={{ item.name }} | oc create -f -"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  when: item.next == 'prod'
+  with_items: "{{ environments.stages }}"
+  tags:
+    - openshift 
 
 - name: Create build and release pipelines for the libraries
   shell: "oc process -f {{ templates }}/library-pipelines.yml -p GITHUB={{ github }} -p LIBRARY_NAME={{ item.name }} -p LIBRARY_REPO_URI={{ item.repo }} -p PRODUCT={{ product }} | oc create -f -"

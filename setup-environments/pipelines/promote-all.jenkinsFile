@@ -13,28 +13,37 @@ def getTestStatus(json) {
 	return new groovy.json.JsonSlurper().parseText(json).metadata.labels."test-passed"
 }
 
+def testStatus(project) {
+	sh "oc get project ${project} -o json > test.json"
+	def test = readFile('test.json')
+	return getTestStatus(test)
+}
+
+def microservices(project) {
+	sh "oc get is -n ${project} --selector product=${params.PRODUCT} -o json > images.output"
+	def images = readFile('images.output')
+	return getMicroServices(images)
+}
+
 node {
 	
 	properties([
 	  parameters([
-	     string(name: 'PRODUCT'),
+	     string(name: 'PRODUCT'), string(name: 'PROJECT'),
 	  ])
 	])	
 	
+	def project = params.PROJECT
 	def testStatus
 	
-	stage ("determine the status of the test environment") {
-		sh "oc get project ${params.PRODUCT}-test -o json > test.json"
-		def test = readFile('test.json')
-		testStatus = getTestStatus(test)
+	stage ("determine the status of the ${project} environment") {
+		testStatus = testStatus project
 		println "the target deployment is $testStatus"
 	}
 	
-	stage ('deploy each microservice to prod') {
+	stage ('promote each microservice') {
 		if (testStatus.equals("true")) {
-			sh "oc get is -n ${params.PRODUCT}-test --selector product=${params.PRODUCT} -o json > images.output"
-			def images = readFile('images.output')
-			def microservices = getMicroServices(images)
+			def microservices = microservices project
 			microservices.each { microservice ->
 				openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-${microservice}", waitTime: "300000"
 				openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-${microservice}", waitTime: "300000" 
@@ -42,6 +51,5 @@ node {
 		}  else {
 			error("Cannot deploy microservices to production as the test environment has not passed testing")
 		}
-		
 	}
 }
