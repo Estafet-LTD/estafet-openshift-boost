@@ -56,7 +56,7 @@
     - openshift 
     
 - name: Create build, release and promotion pipelines for each of the microservices
-  shell: "oc process -f {{ templates }}/microservice-pipelines.yml -p GITHUB={{ github }} -p MICROSERVICE_NAME={{ item.name }} -p MICROSERVICE_REPO_URI={{ item.repo }} -p PRODUCT={{ product}} -p ENVIRONMENTS_REPO_URI={{ environments.repo }} -p BUILD_PIPELINE={{ item.build_jenkinsFile }} -p RELEASE_PIPELINE={{ item.release_jenkinsFile }} -p PROMOTE_PIPELINE={{ item.promote_jenkinsFile }} -p PROMOTE_TO_PROD_PIPELINE={{ item.promote_to_prod_jenkinsFile }} -p ENVIRONMENTS_REPO_URI={{ environments.repo }} | oc create -f -"
+  shell: "oc process -f {{ templates }}/microservice-pipelines.yml -p GITHUB={{ github }} -p MICROSERVICE_NAME={{ item.name }} -p MICROSERVICE_REPO_URI={{ item.repo }} -p PRODUCT={{ product}} -p ENVIRONMENTS_REPO_URI={{ environments.repo }} -p BUILD_PIPELINE={{ item.build_jenkinsFile }} -p RELEASE_PIPELINE={{ item.release_jenkinsFile }} -p PROMOTE_PIPELINE={{ item.promote_jenkinsFile }} -p PROMOTE_TO_PROD_PIPELINE={{ item.promote_to_prod_jenkinsFile }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
