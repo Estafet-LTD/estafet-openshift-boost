@@ -1,9 +1,9 @@
 ---
 - include_role: 
-  name: environments-setup
+    name: environments-setup
   vars:
     env: "{{ item }}"     
   with_items: "{{ environments.stages }}"
 
 - include_role: 
-  name: cicd-environment-setup
+    name: cicd-environment-setup
