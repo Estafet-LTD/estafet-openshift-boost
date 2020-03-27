@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Template
 metadata:
   creationTimestamp: null
-  name: prod-pipelines
+  name: environment-pipelines
 parameters:
 - description: Defines the location of the estafet github (change this if you have forked and want to use another github)
   name: GITHUB
@@ -21,17 +21,102 @@ parameters:
   required: true    
 - description: Defines the product that this pipeline is related to
   name: PRODUCT
-  required: true   
-objects:              
+  required: true
+- description: Defines the environment that this pipeline is related to
+  name: ENV
+  required: true      
+objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
     creationTimestamp: null
     labels:
       app: pipeline
-      name: create-environment
+      name: "promote-all-to-prod-${ENV}"
       product: ${PRODUCT}
-    name: create-environment
+    name: "promote-all-to-prod-${ENV}"
+  spec:
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+          - name: PRODUCT
+            value: ${PRODUCT}        
+          - name: PROJECT
+            value: "${PRODUCT}-${ENV}"  
+        jenkinsfilePath: setup-environments/pipelines/promote-all-to-prod.jenkinsFile
+      type: JenkinsPipeline
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: pipeline
+      name: "promote-all-${ENV}"
+      product: ${PRODUCT}
+    name: "promote-all-${ENV}"
+  spec:
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+          - name: PRODUCT
+            value: ${PRODUCT}        
+          - name: PROJECT
+            value: "${PRODUCT}-${ENV}"  
+        jenkinsfilePath: setup-environments/pipelines/promote-all.jenkinsFile
+      type: JenkinsPipeline
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: pipeline
+      name: promote-to-live
+      product: ${PRODUCT}
+    name: promote-to-live
+  spec:
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+          - name: PRODUCT
+            value: ${PRODUCT}          
+        jenkinsfilePath: setup-environments/pipelines/promote-passive-to-live.groovy
+      type: JenkinsPipeline
+  status:
+    lastVersion: 0     
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: pipeline
+      name: qa-test
+      product: ${PRODUCT}
+    name: qa-test
   spec:
     output: {}
     postCommit: {}
@@ -44,237 +129,108 @@ objects:
       jenkinsPipelineStrategy:
         env:
           - name: GITHUB
-            value: ${GITHUB}
-          - name: REPO
-            value: ${REPO_URI}
-          - name: PROJECT_TITLE
-            value: "My Project"
-          - name: MASTER_HOST
-            value: ${MASTER_HOST}
-          - name: ADMIN_USER
-            value: ${ADMIN_USER}
-          - name: ADMIN_PASSWORD
-            value: ${ADMIN_PASSWORD}       
+            value: ${GITHUB}           
           - name: PRODUCT
-            value: ${PRODUCT}   
-          - name: USER_NAME
-            value: "admin"                                   
-          - name: USER_ID
-            value: "1234"
-        jenkinsfilePath: setup-environments/pipelines/create-environment-pipeline.groovy
+            value: ${PRODUCT}     
+          - name: REPO
+            value: ${REPO_URI}                                    
+        jenkinsfilePath: setup-environments/pipelines/qa-tests-pipeline.groovy
+      type: JenkinsPipeline
+    triggers:
+    - github:
+        secret: secret101
+      type: GitHub
+    - generic:
+        secret: secret101
+      type: Generic    
+  status:
+    lastVersion: 0     
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: pipeline
+      name: prod-test
+      product: ${PRODUCT}
+    name: prod-test
+  spec:
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+          - name: GITHUB
+            value: ${GITHUB}               
+          - name: PRODUCT
+            value: ${PRODUCT}     
+          - name: REPO
+            value: ${REPO_URI}                   
+        jenkinsfilePath: setup-environments/pipelines/prod-tests-pipeline.groovy
+      type: JenkinsPipeline
+    triggers:
+    - github:
+        secret: secret101
+      type: GitHub
+    - generic:
+        secret: secret101
+      type: Generic    
+  status:
+    lastVersion: 0           
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: pipeline
+      name: build-all
+      product: ${PRODUCT}
+    name: build-all
+  spec:
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+          - name: PRODUCT
+            value: ${PRODUCT}           
+        jenkinsfilePath: setup-environments/pipelines/build-all-pipeline.groovy
+      type: JenkinsPipeline
+  status:
+    lastVersion: 0     
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: pipeline
+      name: release-all
+      product: ${PRODUCT}
+    name: release-all
+  spec:
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+          - name: PRODUCT
+            value: ${PRODUCT}        
+        jenkinsfilePath: setup-environments/pipelines/release-all-pipeline.groovy
       type: JenkinsPipeline
   status:
     lastVersion: 0    
-- apiVersion: v1
-  kind: BuildConfig
-  metadata:
-    creationTimestamp: null
-    labels:
-      app: pipeline
-      name: "build-boost-messages-lib"
-    name: "build-boost-messages-lib"
-  spec:
-    output: {}
-    postCommit: {}
-    resources: {}
-    runPolicy: Serial
-    source:
-      git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
-    strategy:
-      jenkinsPipelineStrategy:
-        env:
-          - name: GITHUB
-            value: ${GITHUB}                   
-          - name: REPO
-            value: estafet-openshift-boost-messages-lib            
-        jenkinsfilePath: setup-environments/pipelines/build-library-pipeline.groovy
-      type: JenkinsPipeline
-    triggers:
-    - github:
-        secret: secret101
-      type: GitHub
-    - generic:
-        secret: secret101
-      type: Generic
-  status:
-    lastVersion: 0  
-- apiVersion: v1
-  kind: BuildConfig
-  metadata:
-    creationTimestamp: null
-    labels:
-      app: pipeline
-      name: release-boost-messages-lib
-    name: release-boost-messages-lib
-  spec:
-    output: {}
-    postCommit: {}
-    resources: {}
-    runPolicy: Serial
-    source:
-      git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
-    strategy:
-      jenkinsPipelineStrategy:
-        env:
-          - name: GITHUB
-            value: ${GITHUB}             
-          - name: REPO
-            value: estafet-openshift-boost-messages-lib                       
-        jenkinsfilePath: setup-environments/pipelines/release-library-pipeline.groovy
-      type: JenkinsPipeline
-  status:
-    lastVersion: 0
-- apiVersion: v1
-  kind: BuildConfig
-  metadata:
-    creationTimestamp: null
-    labels:
-      app: pipeline
-      name: "build-boost-commons-lib"
-    name: "build-boost-commons-lib"
-  spec:
-    output: {}
-    postCommit: {}
-    resources: {}
-    runPolicy: Serial
-    source:
-      git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
-    strategy:
-      jenkinsPipelineStrategy:
-        env:
-          - name: GITHUB
-            value: ${GITHUB}                   
-          - name: REPO
-            value: estafet-openshift-boost-commons-lib            
-        jenkinsfilePath: setup-environments/pipelines/build-library-pipeline.groovy
-      type: JenkinsPipeline
-    triggers:
-    - github:
-        secret: secret101
-      type: GitHub
-    - generic:
-        secret: secret101
-      type: Generic
-  status:
-    lastVersion: 0  
-- apiVersion: v1
-  kind: BuildConfig
-  metadata:
-    creationTimestamp: null
-    labels:
-      app: pipeline
-      name: release-boost-commons-lib
-    name: release-boost-commons-lib
-  spec:
-    output: {}
-    postCommit: {}
-    resources: {}
-    runPolicy: Serial
-    source:
-      git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
-    strategy:
-      jenkinsPipelineStrategy:
-        env:
-          - name: GITHUB
-            value: ${GITHUB}             
-          - name: REPO
-            value: estafet-openshift-boost-commons-lib                       
-        jenkinsfilePath: setup-environments/pipelines/release-library-pipeline.groovy
-      type: JenkinsPipeline
-  status:
-    lastVersion: 0         
-- apiVersion: v1
-  kind: BuildConfig
-  metadata:
-    creationTimestamp: null
-    labels:
-      app: pipeline
-      name: "build-springboot"
-    name: "build-springboot"
-  spec:
-    output: {}
-    postCommit: {}
-    resources: {}
-    runPolicy: Serial
-    source:
-      git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
-    strategy:
-      jenkinsPipelineStrategy:
-        env:
-          - name: GITHUB
-            value: ${GITHUB}                   
-          - name: REPO
-            value: estafet-openshift-boost-springboot            
-        jenkinsfilePath: setup-environments/pipelines/build-library-pipeline.groovy
-      type: JenkinsPipeline
-    triggers:
-    - github:
-        secret: secret101
-      type: GitHub
-    - generic:
-        secret: secret101
-      type: Generic
-  status:
-    lastVersion: 0
-- apiVersion: v1
-  kind: BuildConfig
-  metadata:
-    creationTimestamp: null
-    labels:
-      app: pipeline
-      name: release-springboot
-    name: release-springboot
-  spec:
-    output: {}
-    postCommit: {}
-    resources: {}
-    runPolicy: Serial
-    source:
-      git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
-    strategy:
-      jenkinsPipelineStrategy:
-        env:
-          - name: GITHUB
-            value: ${GITHUB}             
-          - name: REPO
-            value: estafet-openshift-boost-springboot                       
-        jenkinsfilePath: setup-environments/pipelines/release-library-pipeline.groovy
-      type: JenkinsPipeline
-  status:
-    lastVersion: 0   
-- apiVersion: v1
-  kind: BuildConfig
-  metadata:
-    creationTimestamp: null
-    labels:
-      app: pipeline
-      name: create-db
-      product: ${PRODUCT}
-    name: create-db
-  spec:
-    output: {}
-    postCommit: {}
-    resources: {}
-    runPolicy: Serial
-    source:
-      git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
-    strategy:
-      jenkinsPipelineStrategy:
-        env:
-          - name: GITHUB
-            value: ${GITHUB}
-          - name: REPO
-            value: ${REPO_URI}
-          - name: PROJECT
-            value: ""                                   
-        jenkinsfilePath: setup-environments/pipelines/create-db-pipeline.groovy
-      type: JenkinsPipeline
-  status:
-    lastVersion: 0         

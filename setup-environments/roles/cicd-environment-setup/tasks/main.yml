@@ -65,7 +65,7 @@
     - openshift       
 
 - name: Create build and release and promotion pipelines for the environments
-  shell: "oc process -f {{ templates }}/environments-pipelines.yml -p GITHUB={{ github }} -p PRODUCT={{ product }} | oc create -f -"
+  shell: "oc process -f {{ templates }}/environment-pipelines.yml -p GITHUB={{ github }} -p PRODUCT={{ product }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
