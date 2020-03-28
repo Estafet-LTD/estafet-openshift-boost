@@ -64,6 +64,17 @@
   with_items: "{{ microservices }}"
   tags:
     - openshift 
+
+- name: Delete the test pipelines
+  shell: "oc delete bc/qa-{{ item.name }}"
+  ignore_errors: yes
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  when: item.test_repo is defined
+  with_items: "{{ environments.stages }}"
+  tags:
+    - openshift 
   
 - name: set_fact when for preprod
   set_fact: preprod_project="{{ product }}-{{ item.name }}"
