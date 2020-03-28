@@ -56,10 +56,9 @@
     - openshift 
   
 - name: set_fact when for preprod
-  set_fact:
-    preprod_project: "{{ product }}-{{ item.value.perf }}"
-  loop: "{{ lookup('dict', environments.stages) }}"
-  when: "'prod' == item.value.next"  
+  set_fact: preprod_project="{{ product }}-{{ item.value.perf }}"
+  with_items: "{{ environments.stages }}"
+  when: "item.next == 'prod'"  
     
 - name: Create build, release and promotion pipelines for each of the microservices
   shell: "oc process -f {{ templates }}/microservice-pipelines.yml -p GITHUB={{ github }} -p MICROSERVICE_NAME={{ item.name }} -p MICROSERVICE_REPO_URI={{ item.repo }} -p PRODUCT={{ product}} -p ENVIRONMENTS_REPO_URI={{ environments.repo }} -p BUILD_PIPELINE={{ item.build }} -p RELEASE_PIPELINE={{ item.release }} -p PROMOTE_PIPELINE={{ item.promote }} -p PROMOTE_TO_PROD_PIPELINE={{ item.promote_to_prod }} -p PREPROD_PROJECT={{ preprod_project }} | oc create -f -"
