@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: promote-all
+parameters:
+- description: Defines the location of the estafet github (change this if you have forked and want to use another github)
+  name: GITHUB
+  required: true  
+- description: Defines the product that this pipeline is related to
+  name: PRODUCT
+  required: true
+- description: Defines the environment that this pipeline is related to
+  name: ENV
+  required: true      
+objects:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: pipeline
+      name: "promote-all-${ENV}"
+      product: ${PRODUCT}
+    name: "promote-all-${ENV}"
+  spec:
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+          - name: PRODUCT
+            value: ${PRODUCT}        
+          - name: PROJECT
+            value: "${PRODUCT}-${ENV}"  
+        jenkinsfilePath: setup-environments/pipelines/promote-all.jenkinsFile
+      type: JenkinsPipeline
+  status:
+    lastVersion: 0    

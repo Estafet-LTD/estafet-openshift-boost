@@ -54,9 +54,15 @@
   with_items: "{{ microservices }}"
   tags:
     - openshift 
+  
+- name: set_fact when for preprod
+  set_fact:
+    preprod_project: "{{ product }}-{{ item.value.perf }}"
+  loop: "{{ lookup('dict', environments.stages) }}"
+  when: "'prod' == item.value.next"  
     
 - name: Create build, release and promotion pipelines for each of the microservices
-  shell: "oc process -f {{ templates }}/microservice-pipelines.yml -p GITHUB={{ github }} -p MICROSERVICE_NAME={{ item.name }} -p MICROSERVICE_REPO_URI={{ item.repo }} -p PRODUCT={{ product}} -p ENVIRONMENTS_REPO_URI={{ environments.repo }} -p BUILD_PIPELINE={{ item.build }} -p RELEASE_PIPELINE={{ item.release }} -p PROMOTE_PIPELINE={{ item.promote }} -p PROMOTE_TO_PROD_PIPELINE={{ item.promote_to_prod }} | oc create -f -"
+  shell: "oc process -f {{ templates }}/microservice-pipelines.yml -p GITHUB={{ github }} -p MICROSERVICE_NAME={{ item.name }} -p MICROSERVICE_REPO_URI={{ item.repo }} -p PRODUCT={{ product}} -p ENVIRONMENTS_REPO_URI={{ environments.repo }} -p BUILD_PIPELINE={{ item.build }} -p RELEASE_PIPELINE={{ item.release }} -p PROMOTE_PIPELINE={{ item.promote }} -p PROMOTE_TO_PROD_PIPELINE={{ item.promote_to_prod }} -p PREPROD_PROJECT={{ preprod_project }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
@@ -64,18 +70,18 @@
   tags:
     - openshift       
 
-- name: Create build and release and promotion pipelines for the build environment
-  shell: "oc process -f {{ templates }}/environment-pipelines.yml -p GITHUB={{ github }} -p PRODUCT={{ product }} -p ENV={{ item.name }} | oc create -f -"
+- name: Create promotion pipelines for the build environment
+  shell: "oc process -f {{ templates }}/promote-all.yml -p GITHUB={{ github }} -p PRODUCT={{ product }} -p ENV={{ item.name }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
-  when: item.test_repo is undefined  
+  when: item.test_repo is undefined and item.name != 'build' and and item.name != 'prod' and item.next != 'end' 
   with_items: "{{ environments.stages }}"
   tags:
     - openshift  
 
-- name: Create build and release and promotion pipelines for the environments
-  shell: "oc process -f {{ templates }}/environment-pipelines.yml -p GITHUB={{ github }} -p PRODUCT={{ product }} -p ENV={{ item.name }} -p REPO_URI={{ item.test_repo }} | oc create -f -"
+- name: Create test pipelines for the environments
+  shell: "oc process -f {{ templates }}/test.yml -p GITHUB={{ github }} -p PRODUCT={{ product }} -p ENV={{ item.name }} -p REPO_URI={{ item.test_repo }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"

@@ -31,6 +31,9 @@ parameters:
 - description: Defines the main repository that contains the infrastructor definition
   name: ENVIRONMENTS_REPO_URI
   required: true     
+- description: Defines the last namespace before production
+  name: PREPROD_PROJECT
+  required: true
 objects:
 - apiVersion: v1
   kind: BuildConfig
@@ -170,7 +173,7 @@ objects:
           - name: MICROSERVICE
             value: ${MICROSERVICE_NAME}
           - name: PROJECT
-            value: "some_project"                         
+            value: ${PREPROD_PROJECT}                         
         jenkinsfilePath: "setup-environments/pipelines/${PROMOTE_TO_PROD_PIPELINE}"
       type: JenkinsPipeline
   status:

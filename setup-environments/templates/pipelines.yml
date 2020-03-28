@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Template
 metadata:
   creationTimestamp: null
-  name: prod-pipelines
+  name: global-pipelines
 parameters:
 - description: Defines the location of the estafet github (change this if you have forked and want to use another github)
   name: GITHUB
