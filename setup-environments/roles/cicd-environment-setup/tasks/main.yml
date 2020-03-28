@@ -56,7 +56,7 @@
     - openshift 
   
 - name: set_fact when for preprod
-  set_fact: preprod_project="{{ product }}-{{ item.value.perf }}"
+  set_fact: preprod_project="{{ product }}-{{ item.name }}"
   with_items: "{{ environments.stages }}"
   when: "item.next == 'prod'"  
     
