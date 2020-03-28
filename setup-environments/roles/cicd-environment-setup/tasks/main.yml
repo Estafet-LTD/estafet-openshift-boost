@@ -64,11 +64,22 @@
   tags:
     - openshift       
 
+- name: Create build and release and promotion pipelines for the build environment
+  shell: "oc process -f {{ templates }}/environment-pipelines.yml -p GITHUB={{ github }} -p PRODUCT={{ product }} -p ENV={{ item.name }} | oc create -f -"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  when: item.test_repo is undefined  
+  with_items: "{{ environments.stages }}"
+  tags:
+    - openshift  
+
 - name: Create build and release and promotion pipelines for the environments
   shell: "oc process -f {{ templates }}/environment-pipelines.yml -p GITHUB={{ github }} -p PRODUCT={{ product }} -p ENV={{ item.name }} -p REPO_URI={{ item.test_repo }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"  
+  changed_when: "'exists' not in command_result.stderr"
+  when: item.test_repo is defined  
   with_items: "{{ environments.stages }}"
   tags:
     - openshift  
