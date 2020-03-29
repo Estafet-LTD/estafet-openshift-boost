@@ -25,6 +25,26 @@
     volume_capacity: 30Gi
     memory_limit: 3Gi
 
+- name: Delete the build library pipelines
+  shell: "oc delete bc/build-{{ item.name }}"
+  ignore_errors: yes
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  with_items: "{{ libraries }}"
+  tags:
+    - openshift 
+
+- name: Delete the release library pipelines
+  shell: "oc delete bc/release-{{ item.name }}"
+  ignore_errors: yes
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  with_items: "{{ libraries }}"
+  tags:
+    - openshift 
+
 - name: Delete the build pipelines
   shell: "oc delete bc/build-{{ item.name }}"
   ignore_errors: yes
