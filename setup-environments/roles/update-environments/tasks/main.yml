@@ -3,6 +3,13 @@
     name : init
 
 - include_role: 
+    name: "{{ item.name }}"
+  vars:
+    project: "{{ item.project }}"
+  when: environments.roles
+  with_items: "{{ environments.roles }}"
+  
+- include_role: 
     name: environments-setup
   vars:
     env: "{{ item }}"     

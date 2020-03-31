@@ -10,18 +10,9 @@
 
 - include_role: 
     name: prod-route-setup
-
-- include_role: 
-    name: mq-namespace-setup
-  vars:
-    colour: green
-
-- include_role: 
-    name: mq-namespace-setup
-  vars:
-    colour: blue
  
 - include_role: 
-    name: monitoring-environment-setup
+    name: console-environment-setup
     
-  
+- include_role: 
+    name: monitoring-environment-setup  

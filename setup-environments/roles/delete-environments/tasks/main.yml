@@ -8,29 +8,15 @@
     project: "{{ product }}-cicd"
 
 - include_role: 
-    name : delete-namespace
+    name: delete-namespace
   vars:
-    project: "{{ product }}-build"
-    
-- include_role: 
-    name : delete-namespace
-  vars:
-    project: "{{ product }}-test"
-    
-- include_role: 
-    name : delete-namespace
-  vars:
-    project: "{{ product }}-mq-blue"        
+    project: "{{ product }}-{{ item.name }}"     
+  with_items: "{{ environments.stages }}"
 
 - include_role: 
     name : delete-namespace
   vars:
-    project: "{{ product }}-mq-green"
-
-- include_role: 
-    name : delete-namespace
-  vars:
-    project: "{{ product }}-prod"
+    project: "{{ product }}-console"
 
 - include_role: 
     name : delete-namespace

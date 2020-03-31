@@ -18,44 +18,6 @@
     role: view
 
 - include_role: 
-    name: amq-setup
-  vars:
-    project: "{{ monitoring_project }}"
-    templates_project: openshift
-
-- include_role: 
-    name: jaeger-setup
-  vars:
-    project: "{{ monitoring_project }}"   
-
-- include_role: 
     name: pgadmin-setup
   vars:
     project: "{{ monitoring_project }}"   
-
-- include_role: 
-    name: postgresql-setup
-  vars:
-    project: "{{ monitoring_project }}"
-
-- include_role: 
-    name: db-pod
-  vars:
-    project: "{{ monitoring_project }}"
-
-- name: Create the microservices
-  include_role:
-    name: create-app
-  vars:
-    microservice: "{{ item }}" 
-    db_type: local
-    db_pod: "{{ local_db_pod }}"
-    reset_db: true
-    imagestream_namespace: openshift
-    docker_registry: docker-registry.default.svc:5000
-    maven_mirror_url: http://nexus.nexus.svc:8081/nexus/content/groups/public 
-    test: false    
-    project: "{{ monitoring_project }}"
-  with_items: "{{ microservices_boost_projects }}"
-  tags:
-    - openshift
