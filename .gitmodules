@@ -25,3 +25,9 @@
 [submodule "estafet-openshift-boost-console-api-environment"]
 	path = estafet-openshift-boost-console-api-environment
 	url = https://github.com/Estafet-LTD/estafet-openshift-boost-console-api-environment
+[submodule "estafet-openshift-boost-console-api-project"]
+	path = estafet-openshift-boost-console-api-project
+	url = https://github.com/Estafet-LTD/estafet-openshift-boost-console-api-project
+[submodule "estafet-openshift-boost-console-api-user"]
+	path = estafet-openshift-boost-console-api-user
+	url = https://github.com/Estafet-LTD/estafet-openshift-boost-console-api-user
