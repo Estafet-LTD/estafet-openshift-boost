@@ -1,9 +1,9 @@
 ---
 # Project definition - add new microservices here
 amq_params:
-- amq_user: amq
-- amq_password: amq
-- templates_project: openshift
+  amq_user: amq
+  amq_password: amq
+  templates_project: openshift
 
 microservices_boost_projects:
   - name: console-project-api
