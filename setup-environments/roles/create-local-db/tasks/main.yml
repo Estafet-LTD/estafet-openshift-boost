@@ -22,6 +22,16 @@
   tags:
     - openshift
     - postgresql
+    
+- name: Copy liqubase ddl to PostgreSQL Pod
+  shell: 'oc rsync --no-perms=true --include="*.ddl" --exclude="*" {{ boost_ddl }}/ {{pod}}:/tmp'
+  register: command_result
+  when: microservice.db and db_pod is defined and reset_db 
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - postgresql  
 
 - name: Execute Drop ddl on PostgreSQL Pod
   shell: 'oc exec {{db_pod}} -- /bin/sh -i -c "psql -d {{ project }}-{{ params.app }} -U postgres -f /tmp/drop-{{ params.app }}-db.ddl"'
