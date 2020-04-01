@@ -25,7 +25,7 @@
     - postgresql
 
 - name: Execute Drop ddl on PostgreSQL Pod
-  shell: 'oc exec {{pod}} -- /bin/sh -i -c "psql -d {{ project }}-{{ microservice.name }} -U postgres -f "/tmp/drop-{{ microservice.name }}-db.ddl"'
+  shell: 'oc exec {{pod}} -- /bin/sh -i -c "psql -d {{ project }}-{{ microservice.name }} -U postgres -f /tmp/drop-{{ microservice.name }}-db.ddl"'
   register: command_result
   when: microservice.db and local_db_pod is defined and params.reset_db
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
