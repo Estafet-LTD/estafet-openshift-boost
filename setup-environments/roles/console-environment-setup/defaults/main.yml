@@ -8,7 +8,6 @@ amq_params:
 microservices_boost_projects:
   - name: console-project-api
     repo: estafet-openshift-boost-console-api-project
-    db: false
     expose: false
     test: false
     environment_variables:     
@@ -21,7 +20,6 @@ microservices_boost_projects:
         
   - name: console-user-api
     repo: estafet-openshift-boost-console-api-user
-    db: false
     expose: false
     test: false
     environment_variables:     
@@ -34,11 +32,11 @@ microservices_boost_projects:
           
   - name: console-environment-api
     repo: estafet-openshift-boost-console-api-environment
-    db: true
-    reset_db: true
-    db_type: local
     expose: false
     test: false
+    roles:
+      - name: create-local-db
+        reset_db: true    
     environment_variables:     
       - name: OPENSHIFT_HOST_PORT
         value: "{{ openshift }}"
@@ -49,11 +47,11 @@ microservices_boost_projects:
               
   - name: console-jenkins-api
     repo: estafet-openshift-boost-console-api-jenkins
-    db: true
-    reset_db: true
-    db_type: local
     expose: false
     test: false
+    roles:
+      - name: create-local-db
+        reset_db: true    
     environment_variables:     
       - name: OPENSHIFT_HOST_PORT
         value: "{{ openshift }}"
@@ -64,7 +62,6 @@ microservices_boost_projects:
         
   - name: console-gateway-api
     repo: estafet-openshift-boost-console-api-gateway
-    db: false
     expose: true  
     test: false
     environment_variables:   
@@ -73,7 +70,6 @@ microservices_boost_projects:
                    
   - name: console-trello-api
     repo: estafet-openshift-boost-console-api-trello
-    db: false
     expose: false      
     test: false 
     environment_variables:        
@@ -86,11 +82,11 @@ microservices_boost_projects:
         
   - name: console-feature-api
     repo: estafet-openshift-boost-console-api-feature
-    db: true
-    reset_db: true
-    db_type: local
     expose: false       
     test: false
+    roles:
+      - name: create-local-db
+        reset_db: true    
     environment_variables:        
       - name: OPENSHIFT_HOST_PORT
         value: "{{ openshift }}"

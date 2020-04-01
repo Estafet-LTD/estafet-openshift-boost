@@ -28,16 +28,11 @@
   tags:
     - git  
 
-- name: Create the local database
-  include_role: 
-    name: create-local-db
-  when: microservice.db and microservice.db_type == "local"   
+- include_role: 
+    name: "{{ item.name }}"
   vars:
-    pod: "{{ local_db_pod }}"
-    db_name: "{{ project }}-{{ microservice.name }}"
-    ddl_location: "{{ workdir }}/{{ microservice.repo }}/ddl"
-    drop_ddl: "/tmp/drop-{{ microservice.name }}-db.ddl"
-    drop_liquibase_ddl: "/tmp/drop-liquibase-db.ddl"
+    params: "{{ item }}"
+  with_items: "{{ microservice.roles | default([]) }}"
 
 - name: Create the {{ microservice.name }} build config from {{ branch }} branch
   shell: "oc process -n {{ project }} -f {{ workdir }}/{{ microservice.repo }}/openshift/templates/{{ microservice.name }}-build-config.yml -p NAMESPACE={{ project }} -p IMAGESTREAM_NAMESPACE={{ imagestream_namespace }} -p GITHUB={{ github }} -p DOCKER_IMAGE_LABEL=latest -p PRODUCT={{ product }} -p MAVEN_MIRROR_URL={{ maven_mirror_url }} -p DOCKER_REGISTRY={{ docker_registry }} -p SOURCE_REPOSITORY_REF={{ branch }} | oc apply -f -"
@@ -46,13 +41,6 @@
   changed_when: "'exists' not in command_result.stderr"
   tags:
     - openshift         
-    
-- name: Create the cloud database
-  include_role: 
-    name: create-cloud-db
-  when: microservice.db and microservice.db_type == "cloud"    
-  vars:
-    db_project: "{{ project }}"
 
 - name: Remove all aspects of the application so that we can rebuild from scratch
   shell: "oc delete all -l app={{ microservice.name }} -n {{ project }}"
