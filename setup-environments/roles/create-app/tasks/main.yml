@@ -31,7 +31,7 @@
 - include_role: 
     name: "{{ item.name }}"
   vars:
-    app: microservice
+    app: "{{ microservice }}"
     params: "{{ item }}"
   with_items: "{{ microservice.roles | default([]) }}"
 

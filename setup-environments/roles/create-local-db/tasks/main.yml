@@ -1,6 +1,10 @@
 ---
 
 - debug:
+    var: app
+    verbosity: 0
+
+- debug:
     var: params
     verbosity: 0
 
