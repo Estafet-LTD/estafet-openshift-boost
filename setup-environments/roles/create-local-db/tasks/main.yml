@@ -1,6 +1,11 @@
 ---
-- name: Create the {{ params.name }} database on PostgreSQL Pod
-  shell: 'oc exec {{pod}} -- /bin/sh -i -c "createdb {{ project }}-{{ params.name }}"'
+
+- debug:
+    var: params
+    verbosity: 0
+
+- name: Create the {{ microservice.name }} database on PostgreSQL Pod
+  shell: 'oc exec {{pod}} -- /bin/sh -i -c "createdb {{ project }}-{{ microservice.name }}"'
   register: command_result
   when: microservice.db and db_pod is defined     
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
@@ -12,7 +17,7 @@
 - name: Copy ddl to PostgreSQL Pod
   shell: 'oc rsync --no-perms=true --include="*.ddl" --exclude="*" {{ workdir }}/{{ microservice.repo }}/ddl/ {{pod}}:/tmp'
   register: command_result
-  when: microservice.db and db_pod is defined and reset_db 
+  when: microservice.db and local_db_pod is defined and params.reset_db 
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
   tags:
@@ -20,9 +25,9 @@
     - postgresql
 
 - name: Execute Drop ddl on PostgreSQL Pod
-  shell: 'oc exec {{pod}} -- /bin/sh -i -c "psql -d {{ db_name }} -U postgres -f "/tmp/drop-{{ microservice.name }}-db.ddl"'
+  shell: 'oc exec {{pod}} -- /bin/sh -i -c "psql -d {{ project }}-{{ microservice.name }} -U postgres -f "/tmp/drop-{{ microservice.name }}-db.ddl"'
   register: command_result
-  when: microservice.db and db_pod is defined and reset_db
+  when: microservice.db and local_db_pod is defined and params.reset_db
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
   tags:
@@ -30,9 +35,9 @@
     - postgresql
     
 - name: Drop liquibase on PostgreSQL Pod
-  shell: 'oc exec {{pod}} -- /bin/sh -i -c "psql -d {{ db_name }} -U postgres -f /tmp/drop-liquibase-db.ddl"'
+  shell: 'oc exec {{pod}} -- /bin/sh -i -c "psql -d {{ project }}-{{ microservice.name }} -U postgres -f /tmp/drop-liquibase-db.ddl"'
   register: command_result
-  when: microservice.db and db_pod is defined and reset_db
+  when: microservice.db and local_db_pod is defined and params.reset_db
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
   tags:
