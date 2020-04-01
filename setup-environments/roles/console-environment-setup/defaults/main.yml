@@ -1,10 +1,16 @@
 ---
 # Project definition - add new microservices here
+amq_params:
+- amq_user: amq
+- amq_password: amq
+- templates_project: openshift
+
 microservices_boost_projects:
   - name: console-project-api
     repo: estafet-openshift-boost-console-api-project
     db: false
     expose: false
+    test: false
     environment_variables:     
       - name: OPENSHIFT_HOST_PORT
         value: "{{ openshift }}"
@@ -12,32 +18,27 @@ microservices_boost_projects:
         value: "{{ username }}"
       - name: OPENSHIFT_PASSWORD
         value: "{{ password }}" 
+        
   - name: console-user-api
     repo: estafet-openshift-boost-console-api-user
     db: false
     expose: false
+    test: false
     environment_variables:     
       - name: OPENSHIFT_HOST_PORT
         value: "{{ openshift }}"
       - name: OPENSHIFT_USER
         value: "{{ username }}"
       - name: OPENSHIFT_PASSWORD
-        value: "{{ password }}"     
+        value: "{{ password }}"   
+          
   - name: console-environment-api
     repo: estafet-openshift-boost-console-api-environment
     db: true
+    reset_db: true
+    db_type: local
     expose: false
-    environment_variables:     
-      - name: OPENSHIFT_HOST_PORT
-        value: "{{ openshift }}"
-      - name: OPENSHIFT_USER
-        value: "{{ username }}"
-      - name: OPENSHIFT_PASSWORD
-        value: "{{ password }}"          
-  - name: console-jenkins-api
-    repo: estafet-openshift-boost-console-api-jenkins
-    db: true
-    expose: false
+    test: false
     environment_variables:     
       - name: OPENSHIFT_HOST_PORT
         value: "{{ openshift }}"
@@ -45,17 +46,36 @@ microservices_boost_projects:
         value: "{{ username }}"
       - name: OPENSHIFT_PASSWORD
         value: "{{ password }}"    
+              
+  - name: console-jenkins-api
+    repo: estafet-openshift-boost-console-api-jenkins
+    db: true
+    reset_db: true
+    db_type: local
+    expose: false
+    test: false
+    environment_variables:     
+      - name: OPENSHIFT_HOST_PORT
+        value: "{{ openshift }}"
+      - name: OPENSHIFT_USER
+        value: "{{ username }}"
+      - name: OPENSHIFT_PASSWORD
+        value: "{{ password }}"    
+        
   - name: console-gateway-api
     repo: estafet-openshift-boost-console-api-gateway
     db: false
     expose: true  
+    test: false
     environment_variables:   
       - name: PRODUCT_DESCRIPTION
-        value: "{{ product_description }}"             
+        value: "{{ product_description }}"  
+                   
   - name: console-trello-api
     repo: estafet-openshift-boost-console-api-trello
     db: false
-    expose: false       
+    expose: false      
+    test: false 
     environment_variables:        
       - name: TRELLO_ACCESS_TOKEN
         value: "{{ trello_access_token }}"
@@ -63,10 +83,14 @@ microservices_boost_projects:
         value: "{{ trello_api_key }}"
       - name: TASK_MANAGER
         value: "{{ task_manager }}"
+        
   - name: console-feature-api
     repo: estafet-openshift-boost-console-api-feature
     db: true
+    reset_db: true
+    db_type: local
     expose: false       
+    test: false
     environment_variables:        
       - name: OPENSHIFT_HOST_PORT
         value: "{{ openshift }}"
@@ -80,10 +104,12 @@ microservices_boost_projects:
         value: "{{ github_user }}"        
       - name: GITHUB_PASSWORD
         value: "{{ github_password }}"          
+        
   - name: console-ui-react
     repo: estafet-openshift-boost-console-ui-react
     db: false
     expose: true  
+    test: false
     environment_variables:   
       - name: PRODUCT_DESCRIPTION
         value: "{{ product_description }}"

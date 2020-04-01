@@ -9,7 +9,7 @@
   shell: "git describe --abbrev=0 --tags"
   args:
     chdir: "{{ workdir }}/{{ microservice.repo }}"
-  when: test
+  when: microservice.test
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
@@ -17,7 +17,7 @@
     - git  
 
 - set_fact: branch="{{ command_result.stdout }}"
-  when: test
+  when: microservice.test
 
 - name: Checkout {{ microservice.repo }} from github branch {{ branch }}
   git:
@@ -31,9 +31,9 @@
 - name: Create the local database
   include_role: 
     name: create-local-db
-  when: microservice.db and db_type == "local"   
+  when: microservice.db and microservice.db_type == "local"   
   vars:
-    pod: "{{ db_pod }}"
+    pod: "{{ local_db_pod }}"
     db_name: "{{ project }}-{{ microservice.name }}"
     ddl_location: "{{ workdir }}/{{ microservice.repo }}/ddl"
     drop_ddl: "/tmp/drop-{{ microservice.name }}-db.ddl"
@@ -50,7 +50,7 @@
 - name: Create the cloud database
   include_role: 
     name: create-cloud-db
-  when: microservice.db and db_type == "cloud"    
+  when: microservice.db and microservice.db_type == "cloud"    
   vars:
     db_project: "{{ project }}"
 

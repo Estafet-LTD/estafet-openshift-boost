@@ -21,7 +21,7 @@
     name: amq-setup
   vars:
     project: "{{ console_project }}"
-    templates_project: openshift
+    params: "{{ amq_params }}"
 
 - include_role: 
     name: jaeger-setup
@@ -43,13 +43,9 @@
     name: create-app
   vars:
     microservice: "{{ item }}" 
-    db_type: local
-    db_pod: "{{ local_db_pod }}"
-    reset_db: true
     imagestream_namespace: openshift
     docker_registry: docker-registry.default.svc:5000
-    maven_mirror_url: http://nexus.nexus.svc:8081/nexus/content/groups/public 
-    test: false    
+    maven_mirror_url: http://nexus.nexus.svc:8081/nexus/content/groups/public     
     project: "{{ console_project }}"
   with_items: "{{ microservices_boost_projects }}"
   tags:
