@@ -7,8 +7,8 @@
   vars:
     project: "{{ item.project }}"
     params: "{{ item }}"
-  with_items: "{{ environments.roles }}"
-  
+  with_items: "{{ environments.roles | default([]) }}"
+
 - include_role: 
     name: environments-setup
   vars:

@@ -28,15 +28,15 @@
     name: "{{ item.name }}"
   vars:
     project: "{{ stage_project }}"
-    params: "{{ item }}" 
-  with_items: "{{ env.roles }}"
+    params: "{{ item }}"
+  with_items: "{{ env.roles | default([]) }}"
 
 - include_role: 
     name: "{{ item.name }}"
   vars:
     project: "{{ stage_project }}"
     params: "{{ item }}"
-  with_items: "{{ env.ext_roles }}"
+  with_items: "{{ env.ext_roles | default([]) }}"
   
 - include_role: 
     name: add-jenkins-role
