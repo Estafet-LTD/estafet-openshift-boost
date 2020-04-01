@@ -5,6 +5,9 @@
     var: microservice
     verbosity: 0
 
+- set_fact:
+    app: microservice
+
 - name: fetch latest tag for this repo
   shell: "git describe --abbrev=0 --tags"
   args:
@@ -31,8 +34,6 @@
 - include_role: 
     name: "{{ item.name }}"
   vars:
-    app: microservice.name
-    repo: microservice.repo
     params: "{{ item }}"
   with_items: "{{ microservice.roles | default([]) }}"
 
