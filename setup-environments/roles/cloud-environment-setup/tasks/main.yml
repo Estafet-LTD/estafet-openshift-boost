@@ -1,7 +1,6 @@
 ---
 - include_role: 
     name : init
-  when: openshift_connected is undefined or not openshift_connected
 
 - name: Verify that the cloud project has been defined
   fail:

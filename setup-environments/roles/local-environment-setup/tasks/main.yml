@@ -1,7 +1,6 @@
 ---
 - include_role: 
     name : init
-  when: openshift_connected is undefined or not openshift_connected
 
 - name: Verify that the maven mirror url has been defined
   fail:

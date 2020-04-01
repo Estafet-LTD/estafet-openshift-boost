@@ -60,8 +60,6 @@
   tags:
     - openshift
 
-- set_fact: 
-    openshift_connected: true
 - set_fact: boost_ddl={{ workdir }}/estafet-openshift-boost/setup-environments/ddl
 - set_fact: templates={{ workdir }}/estafet-openshift-boost/setup-environments/templates
 - set_fact: objects={{ workdir }}/estafet-openshift-boost/setup-environments/objects
