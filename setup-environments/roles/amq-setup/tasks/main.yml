@@ -1,4 +1,9 @@
 ---
+
+- debug:
+    var: params
+    verbosity: 0
+
 - name: Install the JBoss A-MQ Message Broker
   shell: "oc process amq63-basic -n {{ params.templates_project }} -p IMAGE_STREAM_NAMESPACE={{ params.templates_project }} -p MQ_USERNAME={{ params.amq_user }} -p MQ_PASSWORD={{ params.amq_password }} | oc create -f -"
   register: command_result
