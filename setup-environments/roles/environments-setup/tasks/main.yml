@@ -29,7 +29,7 @@
   vars:
     project: "{{ stage_project }}"
     stage: "{{ env }}"
-  when: "{{ env.ext_roles }}"
+  when: env.ext_roles is defined
   with_items: "{{ env.ext_roles }}"
   
 - include_role: 

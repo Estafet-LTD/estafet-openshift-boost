@@ -6,7 +6,7 @@
     name: "{{ item.name }}"
   vars:
     project: "{{ item.project }}"
-  when: environments.roles
+  when: environments.roles is defined
   with_items: "{{ environments.roles }}"
   
 - include_role: 
