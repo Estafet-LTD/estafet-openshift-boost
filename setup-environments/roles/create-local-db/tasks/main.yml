@@ -24,7 +24,7 @@
     - postgresql
     
 - name: Copy liqubase ddl to PostgreSQL Pod
-  shell: 'oc rsync --no-perms=true --include="*.ddl" --exclude="*" {{ boost_ddl }}/ {{pod}}:/tmp'
+  shell: 'oc rsync --no-perms=true --include="*.ddl" --exclude="*" {{ boost_ddl }}/ {{db_pod}}:/tmp'
   register: command_result
   when: params.reset_db 
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
