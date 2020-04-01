@@ -28,8 +28,7 @@
     name: "{{ item.name }}"
   vars:
     project: "{{ stage_project }}"
-    params: "{{ item }}"
-  when: env.roles is defined
+    params: "{{ item }}" 
   with_items: "{{ env.roles }}"
 
 - include_role: 
@@ -37,7 +36,6 @@
   vars:
     project: "{{ stage_project }}"
     params: "{{ item }}"
-  when: env.ext_roles is defined
   with_items: "{{ env.ext_roles }}"
   
 - include_role: 
