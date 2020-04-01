@@ -1,6 +1,6 @@
 ---
 - name: Install the JBoss A-MQ Message Broker
-  shell: "oc process amq63-basic -n {{ templates_project }} -p IMAGE_STREAM_NAMESPACE={{ templates_project }} -p MQ_USERNAME={{ amq_user }} -p MQ_PASSWORD={{ amq_password }} | oc create -f -"
+  shell: "oc process amq63-basic -n {{ params.templates_project }} -p IMAGE_STREAM_NAMESPACE={{ params.templates_project }} -p MQ_USERNAME={{ params.amq_user }} -p MQ_PASSWORD={{ params.amq_password }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
