@@ -1,6 +1,7 @@
 ---
 - include_role: 
     name : init
+  when: openshift_connected is undefined or not openshift_connected
 
 - set_fact: cicd_project="{{ product }}-cicd"
 
