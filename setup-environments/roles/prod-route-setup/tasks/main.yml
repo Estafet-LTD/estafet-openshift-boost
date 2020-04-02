@@ -1,7 +1,4 @@
 ---
-- include_role: 
-    name : init
-
 - set_fact: prod_project="{{ product }}-prod"
 
 - name: Switch to Namespace {{ prod_project }}

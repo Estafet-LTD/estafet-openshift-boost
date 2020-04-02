@@ -3,6 +3,12 @@
     name : init
 
 - include_role: 
+    name: "{{ item.name }}"
+  vars:
+    params: "{{ item }}"
+  with_items: "{{ environments.teardown_roles | default([]) }}"
+
+- include_role: 
     name : delete-namespace
   vars:
     project: "{{ product }}-cicd"
