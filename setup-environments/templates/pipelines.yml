@@ -61,7 +61,7 @@ objects:
             value: "admin"                                   
           - name: USER_ID
             value: "1234"
-        jenkinsfilePath: setup-environments/pipelines/create-environment-pipeline.jenkinsFile
+        jenkinsfilePath: setup-environments/pipelines/create-environment.jenkinsFile
       type: JenkinsPipeline
   status:
     lastVersion: 0    
@@ -88,7 +88,7 @@ objects:
             value: ${GITHUB}                   
           - name: REPO
             value: estafet-openshift-boost-messages-lib            
-        jenkinsfilePath: setup-environments/pipelines/build-library-pipeline.jenkinsFile
+        jenkinsfilePath: setup-environments/pipelines/build-library.jenkinsFile
       type: JenkinsPipeline
     triggers:
     - github:
@@ -122,7 +122,7 @@ objects:
             value: ${GITHUB}             
           - name: REPO
             value: estafet-openshift-boost-messages-lib                       
-        jenkinsfilePath: setup-environments/pipelines/release-library-pipeline.jenkinsFile
+        jenkinsfilePath: setup-environments/pipelines/release-library.jenkinsFile
       type: JenkinsPipeline
   status:
     lastVersion: 0
@@ -149,7 +149,7 @@ objects:
             value: ${GITHUB}                   
           - name: REPO
             value: estafet-openshift-boost-commons-lib            
-        jenkinsfilePath: setup-environments/pipelines/build-library-pipeline.jenkinsFile
+        jenkinsfilePath: setup-environments/pipelines/build-library.jenkinsFile
       type: JenkinsPipeline
     triggers:
     - github:
@@ -183,7 +183,7 @@ objects:
             value: ${GITHUB}             
           - name: REPO
             value: estafet-openshift-boost-commons-lib                       
-        jenkinsfilePath: setup-environments/pipelines/release-library-pipeline.jenkinsFile
+        jenkinsfilePath: setup-environments/pipelines/release-library.jenkinsFile
       type: JenkinsPipeline
   status:
     lastVersion: 0         
@@ -210,7 +210,7 @@ objects:
             value: ${GITHUB}                   
           - name: REPO
             value: estafet-openshift-boost-springboot            
-        jenkinsfilePath: setup-environments/pipelines/build-library-pipeline.jenkinsFile
+        jenkinsfilePath: setup-environments/pipelines/build-library.jenkinsFile
       type: JenkinsPipeline
     triggers:
     - github:
@@ -244,7 +244,7 @@ objects:
             value: ${GITHUB}             
           - name: REPO
             value: estafet-openshift-boost-springboot                       
-        jenkinsfilePath: setup-environments/pipelines/release-library-pipeline.jenkinsFile
+        jenkinsfilePath: setup-environments/pipelines/release-library.jenkinsFile
       type: JenkinsPipeline
   status:
     lastVersion: 0   
@@ -274,7 +274,7 @@ objects:
             value: ${REPO_URI}
           - name: PROJECT
             value: ""                                   
-        jenkinsfilePath: setup-environments/pipelines/create-db-pipeline.jenkinsFile
+        jenkinsfilePath: setup-environments/pipelines/create-db.jenkinsFile
       type: JenkinsPipeline
   status:
     lastVersion: 0         
@@ -300,7 +300,7 @@ objects:
         env:
           - name: PRODUCT
             value: ${PRODUCT}           
-        jenkinsfilePath: setup-environments/pipelines/build-all-pipeline.jenkinsFile
+        jenkinsfilePath: setup-environments/pipelines/build-all.jenkinsFile
       type: JenkinsPipeline
   status:
     lastVersion: 0     
@@ -326,7 +326,7 @@ objects:
         env:
           - name: PRODUCT
             value: ${PRODUCT}        
-        jenkinsfilePath: setup-environments/pipelines/release-all-pipeline.jenkinsFile
+        jenkinsfilePath: setup-environments/pipelines/release-all.jenkinsFile
       type: JenkinsPipeline
   status:
     lastVersion: 0    
