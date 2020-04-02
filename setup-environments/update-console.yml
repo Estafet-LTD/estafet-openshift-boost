@@ -1,0 +1,7 @@
+---
+- name: Update the Monitoring Environment
+  hosts: local
+  roles:
+    - console-environment-setup
+
+  
