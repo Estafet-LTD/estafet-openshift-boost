@@ -31,3 +31,6 @@
 [submodule "estafet-openshift-boost-console-api-user"]
 	path = estafet-openshift-boost-console-api-user
 	url = https://github.com/Estafet-LTD/estafet-openshift-boost-console-api-user
+[submodule "estafet-openshift-boost-console-api-jira"]
+	path = estafet-openshift-boost-console-api-jira
+	url = https://github.com/Estafet-LTD/estafet-openshift-boost-console-api-jira
