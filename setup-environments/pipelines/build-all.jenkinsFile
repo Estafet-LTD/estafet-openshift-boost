@@ -22,8 +22,8 @@ node {
 		def images = readFile('images.output')
 		def pipelines = getPipelines(images)
 		pipelines.each { pipeline ->
-			openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "${pipeline}", waitTime: "300000"
-			openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "${pipeline}", waitTime: "300000" 
+			openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "${pipeline}", waitTime: "1800000"
+			openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "${pipeline}", waitTime: "1800000" 
 	  }	
 	}
 }

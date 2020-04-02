@@ -38,8 +38,8 @@ node {
 			def images = readFile('images.output')
 			def microservices = getMicroServices(images)
 			microservices.each { microservice ->
-				openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-to-prod-${microservice}", waitTime: "300000"
-				openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-to-prod-${microservice}", waitTime: "300000" 
+				openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-to-prod-${microservice}", waitTime: "1800000"
+				openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-to-prod-${microservice}", waitTime: "1800000" 
 		  }		
 		}  else {
 			error("Cannot deploy microservices to production as the test environment has not passed testing")

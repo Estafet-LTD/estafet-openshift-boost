@@ -45,8 +45,8 @@ node {
 		if (testStatus.equals("true")) {
 			def microservices = microservices project
 			microservices.each { microservice ->
-				openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-${microservice}", waitTime: "300000"
-				openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-${microservice}", waitTime: "300000" 
+				openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-${microservice}", waitTime: "1800000"
+				openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-${microservice}", waitTime: "1800000" 
 		  }		
 		}  else {
 			error("Cannot deploy microservices to production as the test environment has not passed testing")
