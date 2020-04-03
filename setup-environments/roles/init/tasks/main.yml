@@ -35,6 +35,11 @@
     msg: "[Microservices Definitions] are not set. Please edit microservices-vars.yml"
   when: microservices is undefined
 
+- name: Verify if the environments have been defined
+  fail:
+    msg: "[Environments Definitions] are not set. Please edit environments-vars.yml"
+  when: environments is undefined
+
 - name: Verify if the libraries have been defined
   fail:
     msg: "[Library Definitions] are not set. Please edit libraries-vars.yml"
