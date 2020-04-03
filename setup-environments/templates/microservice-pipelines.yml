@@ -56,7 +56,7 @@ objects:
     strategy:
       jenkinsPipelineStrategy:
         env:
-          - name: GITHUB
+          - name: 
             value: ${GITHUB}
           - name: PRODUCT
             value: ${PRODUCT}
