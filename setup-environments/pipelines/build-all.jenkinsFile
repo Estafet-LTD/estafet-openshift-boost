@@ -14,7 +14,7 @@ node {
 	}
 	
 	stage("read the microservices definition") {
-		def yml = readYaml file: "setup-environments/vars/microservices.yml"
+		def yml = readYaml file: "setup-environments/vars/microservices-vars.yml"
 		microservices = yml.microservices
 	}
 
