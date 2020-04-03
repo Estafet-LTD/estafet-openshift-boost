@@ -46,6 +46,8 @@ microservices_boost_projects:
         value: "{{ username }}"
       - name: OPENSHIFT_PASSWORD
         value: "{{ password }}"    
+      - name: PRODUCT_REPO
+        value: "{{ environments.repo }}"            
               
   - name: console-jenkins-api
     repo: estafet-openshift-boost-console-api-jenkins
