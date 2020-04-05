@@ -10,7 +10,6 @@
   vars:
     project: "{{ nexus_project }}"
     project_description: "Nexus"
-    cloud_environment: true
 
 - include_role: 
     name: namespace-role-setup

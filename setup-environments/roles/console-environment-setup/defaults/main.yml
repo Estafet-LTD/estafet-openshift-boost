@@ -6,120 +6,125 @@ amq_params:
   templates_project: openshift
 
 microservices_boost_projects:
-  - name: console-project-api
-    repo: estafet-openshift-boost-console-api-project
-    expose: false
-    test: false
-    environment_variables:     
-      - name: OPENSHIFT_HOST_PORT
-        value: "{{ openshift }}"
-      - name: OPENSHIFT_USER
-        value: "{{ username }}"
-      - name: OPENSHIFT_PASSWORD
-        value: "{{ password }}" 
-        
-  - name: console-user-api
-    repo: estafet-openshift-boost-console-api-user
-    expose: false
-    test: false
-    environment_variables:     
-      - name: OPENSHIFT_HOST_PORT
-        value: "{{ openshift }}"
-      - name: OPENSHIFT_USER
-        value: "{{ username }}"
-      - name: OPENSHIFT_PASSWORD
-        value: "{{ password }}"   
+  
+  docker_registry: docker-registry.default.svc:5000
+  maven_mirror_url: http://nexus.nexus.svc:8081/nexus/content/groups/public    
+  
+  apps:
+    - name: console-project-api
+      repo: estafet-openshift-boost-console-api-project
+      expose: false
+      test: false
+      environment_variables:     
+        - name: OPENSHIFT_HOST_PORT
+          value: "{{ openshift }}"
+        - name: OPENSHIFT_USER
+          value: "{{ username }}"
+        - name: OPENSHIFT_PASSWORD
+          value: "{{ password }}" 
           
-  - name: console-environment-api
-    repo: estafet-openshift-boost-console-api-environment
-    expose: false
-    test: false
-    roles:
-      - name: create-local-db
-        app: console-environment-api
-        repo: estafet-openshift-boost-console-api-environment
-        reset_db: true          
-    environment_variables:     
-      - name: OPENSHIFT_HOST_PORT
-        value: "{{ openshift }}"
-      - name: OPENSHIFT_USER
-        value: "{{ username }}"
-      - name: OPENSHIFT_PASSWORD
-        value: "{{ password }}"    
-      - name: PRODUCT_REPO
-        value: "{{ environments.repo }}"   
-      - name: GITHUB
-        value: "{{ github }}"                 
-              
-  - name: console-jenkins-api
-    repo: estafet-openshift-boost-console-api-jenkins
-    expose: false
-    test: false
-    roles:
-      - name: create-local-db
-        app: console-jenkins-api
-        repo: estafet-openshift-boost-console-api-jenkins
-        reset_db: true    
-    environment_variables:     
-      - name: OPENSHIFT_HOST_PORT
-        value: "{{ openshift }}"
-      - name: OPENSHIFT_USER
-        value: "{{ username }}"
-      - name: OPENSHIFT_PASSWORD
-        value: "{{ password }}"    
-        
-  - name: console-gateway-api
-    repo: estafet-openshift-boost-console-api-gateway
-    expose: true  
-    test: false
-    environment_variables:   
-      - name: PRODUCT_DESCRIPTION
-        value: "{{ product_description }}"  
-                   
-  - name: console-trello-api
-    repo: estafet-openshift-boost-console-api-trello
-    expose: false      
-    test: false 
-    environment_variables:        
-      - name: TRELLO_ACCESS_TOKEN
-        value: "{{ trello_access_token }}"
-      - name: TRELLO_API_KEY
-        value: "{{ trello_api_key }}"
-      - name: TASK_MANAGER
-        value: "{{ task_manager }}"
-        
-  - name: console-feature-api
-    repo: estafet-openshift-boost-console-api-feature
-    expose: false       
-    test: false
-    roles:
-      - name: create-local-db
-        app: console-feature-api
-        repo: estafet-openshift-boost-console-api-feature
-        reset_db: true          
-    environment_variables:        
-      - name: OPENSHIFT_HOST_PORT
-        value: "{{ openshift }}"
-      - name: OPENSHIFT_USER
-        value: "{{ username }}"
-      - name: OPENSHIFT_PASSWORD
-        value: "{{ password }}"           
-      - name: GITHUB
-        value: "{{ github }}"          
-      - name: GITHUB_USER
-        value: "{{ github_user }}"        
-      - name: GITHUB_PASSWORD
-        value: "{{ github_password }}"          
-        
-  - name: console-ui-react
-    repo: estafet-openshift-boost-console-ui-react
-    db: false
-    expose: true  
-    test: false
-    environment_variables:   
-      - name: PRODUCT_DESCRIPTION
-        value: "{{ product_description }}"
-      - name: OPENSHIFT_HOST
-        value: "{{ openshift_host }}"
-      - name: TASK_MANAGEMENT_TITLE
-        value: "{{ task_manager_title }}"                   
+    - name: console-user-api
+      repo: estafet-openshift-boost-console-api-user
+      expose: false
+      test: false
+      environment_variables:     
+        - name: OPENSHIFT_HOST_PORT
+          value: "{{ openshift }}"
+        - name: OPENSHIFT_USER
+          value: "{{ username }}"
+        - name: OPENSHIFT_PASSWORD
+          value: "{{ password }}"   
+            
+    - name: console-environment-api
+      repo: estafet-openshift-boost-console-api-environment
+      expose: false
+      test: false
+      roles:
+        - name: create-local-db
+          app: console-environment-api
+          repo: estafet-openshift-boost-console-api-environment
+          reset_db: true          
+      environment_variables:     
+        - name: OPENSHIFT_HOST_PORT
+          value: "{{ openshift }}"
+        - name: OPENSHIFT_USER
+          value: "{{ username }}"
+        - name: OPENSHIFT_PASSWORD
+          value: "{{ password }}"    
+        - name: PRODUCT_REPO
+          value: "{{ environments.repo }}"   
+        - name: GITHUB
+          value: "{{ github }}"                 
+                
+    - name: console-jenkins-api
+      repo: estafet-openshift-boost-console-api-jenkins
+      expose: false
+      test: false
+      roles:
+        - name: create-local-db
+          app: console-jenkins-api
+          repo: estafet-openshift-boost-console-api-jenkins
+          reset_db: true    
+      environment_variables:     
+        - name: OPENSHIFT_HOST_PORT
+          value: "{{ openshift }}"
+        - name: OPENSHIFT_USER
+          value: "{{ username }}"
+        - name: OPENSHIFT_PASSWORD
+          value: "{{ password }}"    
+          
+    - name: console-gateway-api
+      repo: estafet-openshift-boost-console-api-gateway
+      expose: true  
+      test: false
+      environment_variables:   
+        - name: PRODUCT_DESCRIPTION
+          value: "{{ product_description }}"  
+                     
+    - name: console-trello-api
+      repo: estafet-openshift-boost-console-api-trello
+      expose: false      
+      test: false 
+      environment_variables:        
+        - name: TRELLO_ACCESS_TOKEN
+          value: "{{ trello_access_token }}"
+        - name: TRELLO_API_KEY
+          value: "{{ trello_api_key }}"
+        - name: TASK_MANAGER
+          value: "{{ task_manager }}"
+          
+    - name: console-feature-api
+      repo: estafet-openshift-boost-console-api-feature
+      expose: false       
+      test: false
+      roles:
+        - name: create-local-db
+          app: console-feature-api
+          repo: estafet-openshift-boost-console-api-feature
+          reset_db: true          
+      environment_variables:        
+        - name: OPENSHIFT_HOST_PORT
+          value: "{{ openshift }}"
+        - name: OPENSHIFT_USER
+          value: "{{ username }}"
+        - name: OPENSHIFT_PASSWORD
+          value: "{{ password }}"           
+        - name: GITHUB
+          value: "{{ github }}"          
+        - name: GITHUB_USER
+          value: "{{ github_user }}"        
+        - name: GITHUB_PASSWORD
+          value: "{{ github_password }}"          
+          
+    - name: console-ui-react
+      repo: estafet-openshift-boost-console-ui-react
+      db: false
+      expose: true  
+      test: false
+      environment_variables:   
+        - name: PRODUCT_DESCRIPTION
+          value: "{{ product_description }}"
+        - name: OPENSHIFT_HOST
+          value: "{{ openshift_host }}"
+        - name: TASK_MANAGEMENT_TITLE
+          value: "{{ task_manager_title }}"                   

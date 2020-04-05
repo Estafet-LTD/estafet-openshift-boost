@@ -9,7 +9,6 @@
   vars:
     project: "{{ console_project }}"
     project_description: "Console: {{ product_description }}"
-    cloud_environment: true
 
 - include_role: 
     name: namespace-role-setup
@@ -33,20 +32,14 @@
   vars:
     project: "{{ console_project }}"
 
-- include_role: 
-    name: db-pod
-  vars:
-    project: "{{ console_project }}"
-
 - name: Create the microservices
   include_role:
     name: create-app
   vars:
     microservice: "{{ item }}" 
-    imagestream_namespace: openshift
-    docker_registry: docker-registry.default.svc:5000
-    maven_mirror_url: http://nexus.nexus.svc:8081/nexus/content/groups/public     
+    docker_registry: "{{ microservices_boost_projects.docker_registry }}"
+    maven_mirror_url: "{{ microservices_boost_projects.maven_mirror_url }}"     
     project: "{{ console_project }}"
-  with_items: "{{ microservices_boost_projects }}"
+  with_items: "{{ microservices_boost_projects.apps }}"
   tags:
     - openshift

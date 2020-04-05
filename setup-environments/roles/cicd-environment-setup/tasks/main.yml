@@ -10,7 +10,6 @@
   vars:
     project: "{{ cicd_project }}"
     project_description: "CI/CD: {{ product_description }}"
-    cloud_environment: true
 
 - include_role: 
     name: namespace-role-setup

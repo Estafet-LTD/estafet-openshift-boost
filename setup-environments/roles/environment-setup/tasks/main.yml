@@ -1,0 +1,40 @@
+---
+- include_role: 
+    name : init
+
+- name: Verify if the environments have been defined
+  fail:
+    msg: "[Project namespace ] is not defined."
+  when: env_project is undefined
+
+- include_role: 
+    name: namespace-setup
+  vars:
+    project: "{{ env_project }}"
+    project_description: "{{ env.description }}"
+
+- include_role: 
+    name: "{{ item.name }}"
+  vars:
+    project: "{{ env_project }}"
+    params: "{{ item }}"
+  with_items: "{{ env.roles | default([]) }}"
+
+- include_role: 
+    name: "{{ item.name }}"
+  vars:
+    project: "{{ env_project }}"
+    params: "{{ item }}"
+  with_items: "{{ env.ext_roles | default([]) }}"
+
+- name: Create the microservices
+  include_role:
+    name: create-app
+  vars:
+    microservice: "{{ item }}" 
+    maven_mirror_url: "{{ env.maven_mirror_url }}"
+    docker_registry: "{{ env.docker_registry }}"
+    project: "{{ env_project }}"
+  with_items: "{{ microservices }}"
+  tags:
+    - openshift

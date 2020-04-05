@@ -1,29 +1,27 @@
-@NonCPS
-def getPipelines(json) {
-	def items = new groovy.json.JsonSlurper().parseText(json).items
-	def microservices = []
-	for (int i = 0; i < items.size(); i++) {
-		microservices << items[i]['metadata']['name']
-	}
-	return microservices
-}
-
 node {
 	
 	properties([
 	  parameters([
-	     string(name: 'PRODUCT'),
+	     string(name: 'GITHUB'), string(name: 'PRODUCT'), string(name: 'REPO'),
 	  ]),
 	  disableConcurrentBuilds()
-	])				
+	])	
+
+	def microservices		
 	
-	stage ('release all microservices') {
-		sh "oc get bc -n ${params.PRODUCT}-cicd --selector app=pipeline --selector type=release -o json > images.output"
-		def images = readFile('images.output')
-		def pipelines = getPipelines(images)
-		pipelines.each { pipeline ->
-			openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "${pipeline}", waitTime: "300000"
-			openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "${pipeline}", waitTime: "300000" 
+	stage("checkout") {
+		git branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
+	}
+	
+	stage("read the microservices definition") {
+		def yml = readYaml file: "setup-environments/vars/microservices-vars.yml"
+		microservices = yml.microservices
+	}
+
+	stage ('build all microservices') {
+		microservices.each { microservice ->
+			openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "release-${microservice.name}", env : [ [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'REPO', value : "${microservice.repo}" ], [ name : 'MICROSERVICE', value : "${microservice.name}" ] ], waitTime: "1800000"
+			openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "release-${microservice.name}", waitTime: "1800000" 
 	  }	
 	}
 }

@@ -16,3 +16,8 @@
   tags:
     - openshift
     - postgres   
+
+- include_role: 
+    name: db-pod
+  vars:
+    project: "{{ project }}"    

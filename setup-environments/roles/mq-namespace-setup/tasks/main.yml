@@ -11,7 +11,6 @@
   vars:
     project: "{{ mq_project }}"
     project_description: "MQ {{ params.colour }}: {{ product_description }}"
-    cloud_environment: true
 
 - include_role: 
     name: amq-setup

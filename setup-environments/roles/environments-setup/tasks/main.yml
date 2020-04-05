@@ -1,5 +1,4 @@
 ---
-
 - debug:
     var: env
     verbosity: 0
@@ -11,7 +10,6 @@
   vars:
     project: "{{ stage_project }}"
     project_description: "{{ env.display }}: {{ product_description }}"
-    cloud_environment: true
     next: "{{ product }}-{{ env.next }}"
     display: "{{ env.display }}"
 
