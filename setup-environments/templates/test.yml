@@ -42,7 +42,9 @@ objects:
           - name: PRODUCT
             value: ${PRODUCT}     
           - name: REPO
-            value: ${REPO_URI}                                    
+            value: ${REPO_URI}
+          - name: PROJECT
+            value: some_project                                                
         jenkinsfilePath: openshift/pipelines/test.jenkinsFile
       type: JenkinsPipeline
     triggers:
