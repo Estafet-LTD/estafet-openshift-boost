@@ -3,17 +3,23 @@ localhost ansible_connection=local
 
 [local:vars]
 # The name of the github organisation
-github=Estafet-LTD 
+github=Estafet-LTD
 
 # openshift host and port
-openshift=192.168.99.100:8443 
+openshift_host=djddjdjdd
+openshift_port=8443
 
-# openshift credentials 
-username=developer 
-password=developer
+# openshift credentials
+username=ddjdjdj
+password=djdjddjdj
 
-# the name of the product/application
-product=microservices-scrum
+# extenral database host
+external_postgres_database=djdsjsjssjsjsjsjsjs
 
-# Uncomment the following line to adjust the SCC (not using CDK3/minishift)
-adjust_scc=false
+# trello (cloud environment only)
+trello_access_token=djddjdjdjdj
+trello_api_key=fddkdfkdkddkdkd
+
+# github (cloud environment only)
+github_user=sjsjsjsjsj
+github_password=dkdskddkdkdkd
