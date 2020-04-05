@@ -53,13 +53,3 @@
     - openshift
     - postgresql    
 
-- name: Read the database pod list
-  shell: "oc get pods --selector app=postgresql -o json -n {{ project }}"
-  register: list_of_db_pods
-    
-- name: Get the name of the PostgreSQL Pod
-  set_fact: db_pod="{{list_of_db_pods.stdout|from_json|json_query('items[0].metadata.name')}}"
-  
-- debug:
-   var: db_pod
-   verbosity: 0    
