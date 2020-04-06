@@ -20,8 +20,12 @@ node {
 	
 	stage ('promote each microservice') {
 		microservices.each { microservice ->
-			openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-${microservice.name}", env : [ [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'REPO', value : microservice.repo ], [ name : 'MICROSERVICE', value : microservice.name ], [ name : 'PROJECT', value : params.PROJECT ] ], waitTime: "1800000"
-			openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-${microservice.name}", waitTime: "1800000" 
+			parallel {
+				stage ("promote ${microservice}") {
+					openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-${microservice.name}", env : [ [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'REPO', value : microservice.repo ], [ name : 'MICROSERVICE', value : microservice.name ], [ name : 'PROJECT', value : params.PROJECT ] ], waitTime: "1800000"
+					openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-${microservice.name}", waitTime: "1800000" 
+				}
+			}
 		}		
 	}
 }
