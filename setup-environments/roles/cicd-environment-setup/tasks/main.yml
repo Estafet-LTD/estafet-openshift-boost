@@ -95,6 +95,17 @@
   tags:
     - openshift 
   
+- name: Delete the promote all pipelines
+  shell: "oc delete bc/promote-all-{{ item.name }}"
+  ignore_errors: yes
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  when: item.name != 'build' and item.name != 'prod' and item.next != 'end' 
+  with_items: "{{ environments.stages }}"
+  tags:
+    - openshift 
+
 - name: set_fact when for preprod
   set_fact: preprod_project="{{ product }}-{{ item.name }}"
   with_items: "{{ environments.stages }}"
