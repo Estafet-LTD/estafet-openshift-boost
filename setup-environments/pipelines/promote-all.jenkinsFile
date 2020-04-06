@@ -1,14 +1,3 @@
-@NonCPS
-def getTestStatus(json) {
-	return new groovy.json.JsonSlurper().parseText(json).metadata.labels."test-passed"
-}
-
-def testStatus(project) {
-	sh "oc get project ${project} -o json > test.json"
-	def test = readFile('test.json')
-	return getTestStatus(test)
-}
-
 node {
 	
 	properties([
@@ -18,7 +7,6 @@ node {
 	])	
 	
 	def project = params.PROJECT
-	def testStatus
 	def microservices		
 	
 	stage("checkout") {
@@ -29,20 +17,11 @@ node {
 		def yml = readYaml file: "setup-environments/vars/microservices-vars.yml"
 		microservices = yml.microservices
 	}
-
-	stage ("determine the status of the ${project} environment") {
-		testStatus = testStatus project
-		println "the target deployment is $testStatus"
-	}
 	
 	stage ('promote each microservice') {
-		if (testStatus.equals("true")) {
-			microservices.each { microservice ->
-				openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-${microservice}", env : [ [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'REPO', value : "${microservice.repo}" ], [ name : 'MICROSERVICE', value : "${microservice.name}" ], [ name : 'PROJECT', value : params.PROJECT ] ], waitTime: "1800000"
-				openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-${microservice}", waitTime: "1800000" 
-		  	}		
-		}  else {
-			error("Cannot deploy microservices to production as the test environment has not passed testing")
-		}
+		microservices.each { microservice ->
+			openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-${microservice}", env : [ [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'REPO', value : microservice.repo ], [ name : 'MICROSERVICE', value : microservice.name ], [ name : 'PROJECT', value : params.PROJECT ] ], waitTime: "1800000"
+			openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-${microservice}", waitTime: "1800000" 
+		}		
 	}
 }
