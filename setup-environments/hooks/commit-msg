@@ -1,0 +1,106 @@
+#!C:/Program\ Files/Git/usr/bin/sh.exe
+#
+# This hook is triggered by a commit and checks that the commit message contains a link to a Trello
+# Card and that the card does not have a status of 'Done'
+#
+# Note on Windows the top line may need to be adjusted to point to your own location of Git
+# If running on Linux the top line should be changed to #!/bin/sh - Note this script is untested on Linux
+#
+# To enable this hook, rename this file to "commit-msg" and copy it to the hooks folder of the project.
+# If you have checked out the top level project with sub-projects then the location will be top-level-project\.git\modules\sub-project\hooks
+# If you have checked out a sub project directly then the location will be sub-project\.git\hooks
+
+
+#URL of the api to get Trello card details from the Gateway
+GATEWAY_URL="http://console-gateway-api-blockchain-demo-console.52.56.85.176.xip.io/card"
+
+#Set language settings (required for grep -P)
+LANG=en_US.UTF-8
+LANGUAGE=
+LC_CTYPE="en_US.UTF-8"
+LC_NUMERIC="en_US.UTF-8"
+LC_TIME="en_US.UTF-8"
+LC_COLLATE="en_US.UTF-8"
+LC_MONETARY="en_US.UTF-8"
+LC_MESSAGES="en_US.UTF-8"
+LC_PAPER="en_US.UTF-8"
+LC_NAME="en_US.UTF-8"
+LC_ADDRESS="en_US.UTF-8"
+LC_TELEPHONE="en_US.UTF-8"
+LC_MEASUREMENT="en_US.UTF-8"
+LC_IDENTIFICATION="en_US.UTF-8"
+LC_ALL=
+
+
+#Get commit message location
+MSG=$1
+
+#Get commit message from file
+COMMIT_MESSAGE=`cat $MSG`
+
+#Extract Trello URL Extension. E.g. 8M8wss8T from https://trello.com/c/8M8wss8T
+URL_EXTENSION=`echo $COMMIT_MESSAGE | grep -Po  '((https):\/\/)(trello.com\/c\/)\K([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?'`
+
+#ERROR var used to track if error has occured
+ERROR=false
+
+if [ ! -z "$URL_EXTENSION" ] #If URL is not null
+then 
+	#API requires url in the payload and with .json? at the end on URL
+	GATEWAY_URL="$GATEWAY_URL/$URL_EXTENSION"
+	echo $GATEWAY_URL
+	#API call
+	RESPONSE=`curl -s --request GET -H "Content-Type:application/json" $GATEWAY_URL`
+
+	#Get the status from the payload 
+	STATUS=`echo $RESPONSE | grep -Po '"status":(\W+)?"\K[a-zA-Z0-9. _-]+(?=")'`
+	
+	#Check for errors in the response
+	#Check response not null
+	if [ -z "$RESPONSE" ] 
+	then
+		ERROR=true
+		ERROR_MESSAGE="No response from Gateway URL: $GATEWAY_URL ."
+	#Check the response is not empty
+	elif [ "$RESPONSE" = "{}" ]
+	then
+		ERROR=true
+		ERROR_MESSAGE="Gateway response is empty. Card not found at $GATEWAY_URL . "
+	#Check response contains all expected atttributes
+	elif [[ "$RESPONSE" != *"id"* ]] || [[ "$RESPONSE" != *status* ]] || [[ "$RESPONSE" != *name* ]] || [[ "$RESPONSE" != *desc* ]] || [[ "$RESPONSE" != *dateLastActivity* ]]
+	then
+		ERROR=true
+		ERROR_MESSAGE="Response does not contain all expected attributes: id, status, desc, dateLastActivity. "
+	#Check status not null
+	elif [ -z "$STATUS" ] || [ "$STATUS" == "null" ]
+	then 
+		ERROR=true
+		ERROR_MESSAGE="No Trello Card returned from gateway for provided URL extension: $URL_EXTENSION . "
+	#Check status is not set to Done
+	elif [ "$STATUS" == "Done" ]
+	then	
+		ERROR=true
+		ERROR_MESSAGE="Trello Card has status set to Done. Please use a different card or change card status. "	
+	fi
+	
+else #Error if URL extension is null
+	ERROR=true
+	ERROR_MESSAGE="No Trello URL found in commit message: $COMMIT_MESSAGE ."
+fi
+
+
+
+
+#If an error message has been set. Print and exit
+if [ "$ERROR" = true ]
+then 
+	tput setaf 1; #Set echo colour to red
+	echo "-----------------------------------------------------------------------------------------------------"
+	echo "ERROR: $ERROR_MESSAGE"
+	echo "Gateway Response: $RESPONSE"
+	echo "-----------------------------------------------------------------------------------------------------"
+	echo
+	tput sgr0; #Reset colour
+	exit 1
+fi
+
