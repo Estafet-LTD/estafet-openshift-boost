@@ -92,6 +92,20 @@ microservices_boost_projects:
           value: "{{ trello_api_key }}"
         - name: TASK_MANAGER
           value: "{{ task_manager }}"
+
+    - name: console-jira-api
+      repo: estafet-openshift-boost-console-api-jira
+      expose: false
+      test: false
+      environment_variables:
+        - name: JIRA_ACCESS_TOKEN
+          value: "{{ jira_access_token }}"
+        - name: JIRA_USERNAME
+          value: "{{ jira_username }}"
+        - name: JIRA_BASE_URL
+          value: "{{ jira_base_url }}"
+        - name: TASK_MANAGER
+          value: "{{ task_manager }}"
           
     - name: console-feature-api
       repo: estafet-openshift-boost-console-api-feature
