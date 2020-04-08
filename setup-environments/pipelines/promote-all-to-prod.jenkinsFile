@@ -182,7 +182,7 @@ node {
 	stage ('deploy each microservice to prod') {
 		microservices.each { microservice ->
 			println "microservice ${env}${microservice.name}"
-			def version = getLatestVersion prevProject, "${env}${microservice.name}"
+			def version = getLatestVersion prevProject, microservice.name
 			openshiftBuild namespace: "${product}-cicd", buildConfig: "promote-to-prod-${microservice.name}", env : [ [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'REPO', value : "${microservice.repo}" ], [ name : 'MICROSERVICE', value : "${microservice.name}" ], [ name : 'PROJECT', value : params.PROJECT ] ], waitTime: "1800000"
 			openshiftVerifyBuild namespace: "${product}-cicd", buildConfig: "promote-to-prod-${microservice.name}", waitTime: "1800000" 
 	  	}		
