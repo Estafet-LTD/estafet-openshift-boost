@@ -73,6 +73,8 @@ boolean isMatchedSha(json, sha) {
  		error("Pattern didn't match!")
 	}
 	def imageSha = matcher.group(3)
+	println ("dc sha ${sha}")
+	println ("is sha ${imageSha}")
 	return imageSha.equals(sha)
 }
 
