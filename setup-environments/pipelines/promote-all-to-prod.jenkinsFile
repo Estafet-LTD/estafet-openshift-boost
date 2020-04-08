@@ -183,9 +183,9 @@ node {
 		microservices.each { microservice ->
 			println "microservice ${env}${microservice.name}"
 			def version = getLatestVersion prevProject, microservice.name
-			if (!deploymentConfigExists(project, microservice.name) || 
-				!isRunning(project, microservice.name) || 
-				!isVersion(project, microservice.name, version)) {
+			if (!deploymentConfigExists(project, "${env}${microservice.name}") || 
+				!isRunning(project, "${env}${microservice.name}") || 
+				!isVersion(project, "${env}${microservice.name}", version)) {
 				openshiftBuild namespace: "${product}-cicd", buildConfig: "promote-to-prod-${microservice.name}", env : [ [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'REPO', value : "${microservice.repo}" ], [ name : 'MICROSERVICE', value : "${microservice.name}" ], [ name : 'PROJECT', value : params.PROJECT ] ], waitTime: "1800000"
 				openshiftVerifyBuild namespace: "${product}-cicd", buildConfig: "promote-to-prod-${microservice.name}", waitTime: "1800000" 
 			}
