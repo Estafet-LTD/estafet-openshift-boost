@@ -1,3 +1,114 @@
+@NonCPS
+def next(json) {
+	return new groovy.json.JsonSlurper().parseText(json).metadata.labels.next
+}
+
+@NonCPS
+def readinessPath(json) {
+	return new groovy.json.JsonSlurper().parseText(json).spec.template.spec.containers[0].readinessProbe.httpGet.path
+}
+
+@NonCPS
+def readinessPort(json) {
+	return new groovy.json.JsonSlurper().parseText(json).spec.template.spec.containers[0].readinessProbe.httpGet.port
+}
+
+@NonCPS
+def svcClusterAddress(json) {
+	return new groovy.json.JsonSlurper().parseText(json).spec.clusterIP
+}
+
+@NonCPS
+def recentVersion(List versions) {
+	versions.sort( false ) { a, b ->
+		[a,b]*.tokenize('.')*.collect { it as int }.with { u, v ->
+			[u,v].transpose().findResult{ x,y-> x<=>y ?: null } ?: u.size() <=> v.size()
+		}
+	}[-1]
+}
+
+@NonCPS
+boolean dcexists(json, microservice) {
+	def items = new groovy.json.JsonSlurper().parseText(json).items
+	for (int i = 0; i < items.size(); i++) {
+		def name = items[i]['metadata']['name']
+		if (name.equals(microservice)) {
+			return true;
+		}
+	}
+	return false
+}
+
+@NonCPS
+def getImageSha(json, version) {
+	def tags = new groovy.json.JsonSlurper().parseText(json).spec.tags
+	for (int i = 0; i < tags.size(); i++) {
+		def name = tags[i]['name']
+		if (name.equals(version)) {
+			Matcher matcher = tags[i]['from']['name'] =~ /(.+\@)(\w+)/
+			if (!matcher.matches()) {
+ 			   error("Pattern didn't match!")
+			}
+			return matcher.group(2)
+		}
+	}
+	return null
+}
+
+@NonCPS
+boolean isMatchedSha(json, sha) {
+	def image = new groovy.json.JsonSlurper().parseText(json).spec.template.spec.containers[0].image
+	Matcher matcher = image =~ /(.+\@)(sha256\:)(\w+)/
+	if (!matcher.matches()) {
+ 		error("Pattern didn't match!")
+	}
+	def imageSha = matcher.group(3)
+	return imageSha.equals(sha)
+}
+
+def nextProject(project) {
+	sh "oc get project ${project} -o json > namespace.json"
+	def namespace = readFile('namespace.json')
+	return next(namespace)
+}
+
+def getLatestVersion(project, microservice) {
+	sh "oc get is ${microservice} -o json -n ${project} > image.json"
+	def image = readFile('image.json')
+	def versions = getVersions(image)
+	if (versions.size() == 0) {
+		error("There are no images for ${microservice}")
+	}
+	return "${recentVersion(versions)}"
+}
+
+boolean deploymentConfigExists(project, microservice) {
+	sh "oc get dc -o json -n ${project} > dc.json"
+	def dc = readFile('dc.json')
+	return dcexists(dc, microservice)
+}
+
+boolean isRunning(project, microservice) {
+	sh "oc get dc ${microservice} -o json -n ${project} > dc.json"
+	def dc = readFile('dc.json')
+	def path = readinessPath(dc)
+	def port = readinessPort(dc)
+	sh "oc get svc ${microservice} -o json -n ${project} > svc.json"
+	def svc = readFile('svc.json')
+	def svcClusterAddress(svc)
+	def response = httpRequest "http://${svc}:${port}/${path}"
+	return response.status == 200
+}
+
+boolean isVersion(project, microservice, version) {
+	sh "oc get is ${microservice} -o json -n ${project} > is.json"
+	def is = readFile('is.json')
+	def sha = getImageSha(is, version)
+	sh "oc get dc ${microservice} -o json -n ${project} > dc.json"
+	def dc = readFile('dc.json')
+	return isMatchedSha(dc, sha)
+}
+
 node {
 	
 	properties([
@@ -6,7 +117,9 @@ node {
 	  ])
 	])	
 	
-	def project = params.PROJECT
+	def prevProject = params.PROJECT
+	def product = params.PRODUCT
+	def project
 	def microservices		
 	
 	stage("checkout") {
@@ -17,11 +130,21 @@ node {
 		def yml = readYaml file: "setup-environments/vars/microservices-vars.yml"
 		microservices = yml.microservices
 	}
-	
+
+	stage("determine the environment to promote to") {
+		project = nextProject prevProject
+		println "the promotion project is ${project}"
+	}	
+
 	stage ('promote each microservice') {
 		microservices.each { microservice ->
-			openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-${microservice.name}", env : [ [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'REPO', value : microservice.repo ], [ name : 'MICROSERVICE', value : microservice.name ], [ name : 'PROJECT', value : params.PROJECT ] ], waitTime: "1800000"
-			openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "promote-${microservice.name}", waitTime: "1800000" 
+			def version = getLatestVersion prevProject, microservice.name
+			if (!deploymentConfigExists(project, microservice.name) || 
+				!isRunning(project, microservice.name) || 
+				!isVersion(project, microservice.name, version)) {
+				openshiftBuild namespace: "${product}-cicd", buildConfig: "promote-${microservice.name}", env : [ [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'REPO', value : microservice.repo ], [ name : 'MICROSERVICE', value : microservice.name ], [ name : 'PROJECT', value : params.PROJECT ] ], waitTime: "1800000"
+				openshiftVerifyBuild namespace: "${product}-cicd", buildConfig: "promote-${microservice.name}", waitTime: "1800000" 
+			}
 		}		
 	}
 }
