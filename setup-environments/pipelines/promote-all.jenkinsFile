@@ -58,7 +58,7 @@ def getImageSha(json, version) {
 		def name = tags[i]['name']
 		println name.getClass() 
 		println "name ${name}"
-		if (name.equals("${version}".toString)) {
+		if (name.equals(version)) {
 			def matcher = tags[i]['from']['name'] =~ /(.+\@)(\w+)/
 			if (!matcher.matches()) {
  			   error("Pattern didn't match!")
@@ -95,7 +95,7 @@ def getLatestVersion(project, microservice) {
 	if (versions.size() == 0) {
 		error("There are no images for ${microservice}")
 	}
-	return "${recentVersion(versions)}"
+	return "${recentVersion(versions)}".toString
 }
 
 boolean deploymentConfigExists(project, microservice) {
