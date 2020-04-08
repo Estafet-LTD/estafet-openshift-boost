@@ -45,7 +45,7 @@ def getImageSha(json, version) {
 	for (int i = 0; i < tags.size(); i++) {
 		def name = tags[i]['name']
 		if (name.equals(version)) {
-			Matcher matcher = tags[i]['from']['name'] =~ /(.+\@)(\w+)/
+			def matcher = tags[i]['from']['name'] =~ /(.+\@)(\w+)/
 			if (!matcher.matches()) {
  			   error("Pattern didn't match!")
 			}
@@ -58,7 +58,7 @@ def getImageSha(json, version) {
 @NonCPS
 boolean isMatchedSha(json, sha) {
 	def image = new groovy.json.JsonSlurper().parseText(json).spec.template.spec.containers[0].image
-	Matcher matcher = image =~ /(.+\@)(sha256\:)(\w+)/
+	def matcher = image =~ /(.+\@)(sha256\:)(\w+)/
 	if (!matcher.matches()) {
  		error("Pattern didn't match!")
 	}
