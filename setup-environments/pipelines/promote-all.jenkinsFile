@@ -95,7 +95,7 @@ def getLatestVersion(project, microservice) {
 	if (versions.size() == 0) {
 		error("There are no images for ${microservice}")
 	}
-	return "${recentVersion(versions)}".toString
+	return "${recentVersion(versions)}".toString()
 }
 
 boolean deploymentConfigExists(project, microservice) {
