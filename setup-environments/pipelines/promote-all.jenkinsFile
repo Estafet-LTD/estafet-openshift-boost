@@ -106,8 +106,13 @@ boolean isRunning(project, microservice) {
 	sh "oc get svc ${microservice} -o json -n ${project} > svc.json"
 	def svc = readFile('svc.json')
 	def address = svcClusterAddress(svc)
-	def response = httpRequest "http://${address}:${port}/${path}"
-	def running = response.status == 200
+	def running
+	try {
+		def response = httpRequest "http://${address}:${port}${path}"
+		running = response.status == 200
+	} catch(err) {
+		running = false
+	}
 	println "running ${running}"
 	return running
 }
@@ -152,7 +157,7 @@ node {
 
 	stage ('promote each microservice') {
 		microservices.each { microservice ->
-			println "microservice ${microservice}"
+			println "microservice ${microservice.name}"
 			def version = getLatestVersion prevProject, microservice.name
 			if (!deploymentConfigExists(project, microservice.name) || 
 				!isRunning(project, microservice.name) || 
