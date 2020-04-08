@@ -51,9 +51,11 @@ boolean dcexists(json, microservice) {
 
 @NonCPS
 def getImageSha(json, version) {
+	println "version ${version}"
 	def tags = new groovy.json.JsonSlurper().parseText(json).spec.tags
 	for (int i = 0; i < tags.size(); i++) {
 		def name = tags[i]['name']
+		println "name ${name}"
 		if (name.equals(version)) {
 			def matcher = tags[i]['from']['name'] =~ /(.+\@)(\w+)/
 			if (!matcher.matches()) {
@@ -62,7 +64,7 @@ def getImageSha(json, version) {
 			return matcher.group(2)
 		}
 	}
-	return null
+	error("Cannot find version $version")
 }
 
 @NonCPS
@@ -72,9 +74,9 @@ boolean isMatchedSha(json, sha) {
 	if (!matcher.matches()) {
  		error("Pattern didn't match!")
 	}
-	def imageSha = matcher.group(3)
-	println ("dc sha ${sha}")
-	println ("is sha ${imageSha}")
+	def dcSha = matcher.group(3)
+	println ("dc sha ${dcSha}")
+	println ("is sha ${sha}")
 	return imageSha.equals(sha)
 }
 
