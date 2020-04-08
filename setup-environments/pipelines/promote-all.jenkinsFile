@@ -107,7 +107,9 @@ boolean isRunning(project, microservice) {
 	def svc = readFile('svc.json')
 	def address = svcClusterAddress(svc)
 	def response = httpRequest "http://${address}:${port}/${path}"
-	return response.status == 200
+	def running = response.status == 200
+	println "running ${running}"
+	return running
 }
 
 boolean isVersion(project, microservice, version) {
@@ -116,7 +118,9 @@ boolean isVersion(project, microservice, version) {
 	def sha = getImageSha(is, version)
 	sh "oc get dc ${microservice} -o json -n ${project} > dc.json"
 	def dc = readFile('dc.json')
-	return isMatchedSha(dc, sha)
+	def matched = isMatchedSha(dc, sha)
+	println "matched version ${matched}"
+	return matched
 }
 
 node {
@@ -148,6 +152,7 @@ node {
 
 	stage ('promote each microservice') {
 		microservices.each { microservice ->
+			println "microservice ${microservice}"
 			def version = getLatestVersion prevProject, microservice.name
 			if (!deploymentConfigExists(project, microservice.name) || 
 				!isRunning(project, microservice.name) || 
