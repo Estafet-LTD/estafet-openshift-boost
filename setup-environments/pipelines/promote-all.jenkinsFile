@@ -79,7 +79,7 @@ boolean isMatchedSha(json, sha) {
 	def dcSha = matcher.group(3)
 	println ("dc sha ${dcSha}")
 	println ("is sha ${sha}")
-	return imageSha.equals(sha)
+	return dcSha.equals(sha)
 }
 
 def nextProject(project) {
