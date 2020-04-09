@@ -11,18 +11,6 @@ microservices_boost_projects:
   maven_mirror_url: http://nexus.nexus.svc:8081/nexus/content/groups/public    
   
   apps:
-    - name: console-ui-react
-      repo: estafet-openshift-boost-console-ui-react
-      expose: true
-      test: false
-      environment_variables:
-        - name: PRODUCT_DESCRIPTION
-          value: "{{ product_description }}"
-        - name: OPENSHIFT_HOST
-          value: "{{ openshift_host }}"
-        - name: TASK_MANAGEMENT_TITLE
-          value: "{{ task_manager_title }}"
-
     - name: console-project-api
       repo: estafet-openshift-boost-console-api-project
       expose: false
@@ -141,3 +129,15 @@ microservices_boost_projects:
           value: "{{ github_user }}"        
         - name: GITHUB_PASSWORD
           value: "{{ github_password }}"          
+
+    - name: console-ui-react
+      repo: estafet-openshift-boost-console-ui-react
+      expose: true
+      test: false
+      environment_variables:
+        - name: PRODUCT_DESCRIPTION
+          value: "{{ product_description }}"
+        - name: OPENSHIFT_HOST
+          value: "{{ openshift_host }}"
+        - name: TASK_MANAGEMENT_TITLE
+          value: "{{ task_manager_title }}"                   
