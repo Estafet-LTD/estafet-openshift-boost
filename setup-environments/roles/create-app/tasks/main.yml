@@ -9,7 +9,7 @@
   shell: "git describe --abbrev=0 --tags"
   args:
     chdir: "{{ workdir }}/{{ microservice.repo }}"
-  when: (microservice.test is defined and microservice.test) || (test is defined and test)
+  when: (microservice.test is defined and microservice.test == true) or (test is defined and test == true)
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
@@ -17,7 +17,7 @@
     - git  
 
 - set_fact: branch="{{ command_result.stdout }}"
-  when: (microservice.test is defined and microservice.test) || (test is defined and test)
+  when: (microservice.test is defined and microservice.test) or (test is defined and test)
 
 - name: Checkout {{ microservice.repo }} from github branch {{ branch }}
   git:
