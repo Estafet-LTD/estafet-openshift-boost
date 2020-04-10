@@ -15,4 +15,3 @@
         name: environment-setup    
       vars:
         env: "{{ qa_environment }}" 
-        env_test: true

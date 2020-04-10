@@ -15,5 +15,4 @@
         name: environment-setup    
       vars:
         env: "{{ local_environment }}" 
-        env_test: false
         
