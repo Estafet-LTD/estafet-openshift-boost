@@ -35,6 +35,7 @@
     maven_mirror_url: "{{ env.maven_mirror_url }}"
     docker_registry: "{{ env.docker_registry }}"
     project: "{{ env_project }}"
+    test: "{{ env.test }}"
     
   with_items: "{{ microservices }}"
   tags:
