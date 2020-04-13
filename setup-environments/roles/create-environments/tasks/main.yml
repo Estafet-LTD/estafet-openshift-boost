@@ -3,9 +3,6 @@
     name : init
 
 - include_role: 
-    name : nexus-setup
-
-- include_role: 
     name: update-environments
 
 - include_role: 
