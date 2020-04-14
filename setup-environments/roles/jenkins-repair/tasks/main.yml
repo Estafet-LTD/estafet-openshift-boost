@@ -1,5 +1,5 @@
 ---
-- name: Read the jenbkins pod list
+- name: Read the jenkins pod list
   shell: "oc get pods --selector app=jenkins-persistent -o json -n {{ project }}"
   register: list_of_jenkins_pods
 
