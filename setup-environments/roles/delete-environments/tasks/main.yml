@@ -6,7 +6,7 @@
     name: "{{ item.name }}"
   vars:
     params: "{{ item }}"
-  with_items: "{{ environments.teardown_roles | default([]) }}"
+  with_items: "{{ environments.teardown | default([]) }}"
 
 - include_role: 
     name : delete-namespace
