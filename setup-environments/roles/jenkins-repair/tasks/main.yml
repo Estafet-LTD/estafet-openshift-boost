@@ -1,0 +1,26 @@
+---
+- name: Read the jenbkins pod list
+  shell: "oc get pods --selector app=jenkins-persistent -o json -n {{ project }}"
+  register: list_of_jenkins_pods
+    
+- name: Get the name of the Jenkins Pod
+  set_fact: jenkins_pod="{{list_of_jenkins_pods.stdout|from_json|json_query('items[0].metadata.name')}}"       
+  
+- name: Rename the config file
+  shell: 'oc exec {{jenkins_pod}} -- /bin/sh -i -c "mv /var/lib/jenkins/.kube/config /var/lib/jenkins/.kube/config_bak_{{ansible_date_time.date}}"'
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - jenkins    
+    
+- name: Restart the jenkins server
+  shell : "oc rollout latest dc/jenkins-persistent -n {{ project }}"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+
+    
