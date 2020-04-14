@@ -1,11 +1,7 @@
 ---
 - name: Read the jenkins pod list
-  shell: "oc get pods --selector app=jenkins-persistent -o json -n {{ project }}"
+  shell: "oc get pods --selector name=jenkins -o json -n {{ project }}"
   register: list_of_jenkins_pods
-
-- debug:
-    var: list_of_jenkins_pods
-    verbosity: 0
     
 - name: Get the name of the Jenkins Pod
   set_fact: jenkins_pod="{{list_of_jenkins_pods.stdout|from_json|json_query('items[0].metadata.name')}}"       
