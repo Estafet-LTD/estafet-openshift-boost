@@ -14,7 +14,7 @@
     verbosity: 0
 
 - name: Rename the config file
-  shell: 'oc exec {{jenkins_pod}} -- /bin/sh -i -c "mv /var/lib/jenkins/.kube/config /var/lib/jenkins/.kube/config_bak_{{ansible_date_time.date}}"'
+  shell: 'oc exec {{jenkins_pod}} -- /bin/sh -i -c "mv /var/lib/jenkins/.kube/config /var/lib/jenkins/.kube/config_bak_{{ansible_date_time.date}} || true"'
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
