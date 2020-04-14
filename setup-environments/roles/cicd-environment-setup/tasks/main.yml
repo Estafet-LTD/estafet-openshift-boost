@@ -25,8 +25,7 @@
     memory_limit: 3Gi
 
 - name: Delete the build library pipelines
-  shell: "oc delete bc/build-{{ item.name }}"
-  ignore_errors: yes
+  shell: "oc delete bc/build-{{ item.name }} || true"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
@@ -35,8 +34,7 @@
     - openshift 
 
 - name: Delete the release library pipelines
-  shell: "oc delete bc/release-{{ item.name }}"
-  ignore_errors: yes
+  shell: "oc delete bc/release-{{ item.name }} || true"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
@@ -45,8 +43,7 @@
     - openshift 
 
 - name: Delete the build pipelines
-  shell: "oc delete bc/build-{{ item.name }}"
-  ignore_errors: yes
+  shell: "oc delete bc/build-{{ item.name }} || true"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
@@ -55,8 +52,7 @@
     - openshift 
 
 - name: Delete the release pipelines
-  shell: "oc delete bc/release-{{ item.name }}"
-  ignore_errors: yes
+  shell: "oc delete bc/release-{{ item.name }} || true"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
@@ -65,8 +61,7 @@
     - openshift 
 
 - name: Delete the promotion pipelines
-  shell: "oc delete bc/promote-{{ item.name }}"
-  ignore_errors: yes
+  shell: "oc delete bc/promote-{{ item.name }} || true"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
@@ -75,8 +70,7 @@
     - openshift 
 
 - name: Delete the promotion to prod pipelines
-  shell: "oc delete bc/promote-to-prod-{{ item.name }}"
-  ignore_errors: yes
+  shell: "oc delete bc/promote-to-prod-{{ item.name }} || true"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
@@ -85,8 +79,7 @@
     - openshift 
 
 - name: Delete the test pipelines
-  shell: "oc delete bc/qa-{{ item.name }}"
-  ignore_errors: yes
+  shell: "oc delete bc/qa-{{ item.name }} || true"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
@@ -96,8 +89,7 @@
     - openshift 
   
 - name: Delete the promote all pipelines
-  shell: "oc delete bc/promote-all-to-prod"
-  ignore_errors: yes
+  shell: "oc delete bc/promote-all-to-prod || true"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
@@ -105,8 +97,7 @@
     - openshift 
 
 - name: Delete the promote all pipelines
-  shell: "oc delete bc/promote-all-{{ item.name }}"
-  ignore_errors: yes
+  shell: "oc delete bc/promote-all-{{ item.name }} || true"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
