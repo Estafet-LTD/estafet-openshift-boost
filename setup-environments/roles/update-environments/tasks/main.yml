@@ -7,7 +7,7 @@
   vars:
     project: "{{ item.project }}"
     params: "{{ item }}"
-  with_items: "{{ environments.roles | default([]) }}"
+  with_items: "{{ environments.setup | default([]) }}"
 
 - include_role: 
     name: cicd-environment-setup
