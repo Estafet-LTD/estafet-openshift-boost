@@ -1,23 +1,23 @@
 ---
-- set_fact: db_project="{{ product }}-db"
+- set_fact: db_project="{{ product }}-database"
 
 - include_role: 
     name: namespace-setup
   vars:
     project: "{{ db_project }}"
     project_description: "Database: {{ product_description }}"
-  when: environments.db is defined
+  when: environments.databases is defined
 
 - include_role: 
     name: namespace-role-setup
   vars:
     project: "{{ db_project }}"
     role: view
-  when: environments.db is defined    
+  when: environments.databases is defined    
 
 - include_role: 
     name: "{{ item.name }}"
   vars:
     project: "{{ db_project }}"
     params: "{{ item }}"
-  with_items: "{{ environments.db | default([]) }}"   
+  with_items: "{{ environments.databases | default([]) }}"   

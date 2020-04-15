@@ -16,7 +16,7 @@
     name: monitoring-environment-setup
 
 - include_role: 
-    name: db-environment-setup
+    name: database-environment-setup
 
 - include_role: 
     name: environments-setup

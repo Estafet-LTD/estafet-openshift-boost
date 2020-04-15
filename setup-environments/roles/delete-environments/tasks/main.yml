@@ -29,3 +29,9 @@
   vars:
     project: "{{ product }}-monitoring"
   when: environments.monitoring is defined
+
+- include_role: 
+    name : delete-namespace
+  vars:
+    project: "{{ product }}-database"
+  when: environments.monitoring is defined
