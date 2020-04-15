@@ -28,3 +28,4 @@
     name : delete-namespace
   vars:
     project: "{{ product }}-monitoring"
+  when: environments.monitoring is defined

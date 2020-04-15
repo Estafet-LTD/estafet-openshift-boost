@@ -13,8 +13,14 @@
     name: cicd-environment-setup
 
 - include_role: 
+    name: monitoring-environment-setup
+
+- include_role: 
     name: environments-setup
   vars:
     env: "{{ item }}"     
   with_items: "{{ environments.stages }}"
 
+- include_role: 
+    name: prod-route-setup
+ 

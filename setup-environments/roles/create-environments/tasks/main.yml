@@ -6,10 +6,6 @@
     name: update-environments
 
 - include_role: 
-    name: prod-route-setup
- 
-- include_role: 
     name: console-environment-setup
     
-- include_role: 
-    name: monitoring-environment-setup  
+  

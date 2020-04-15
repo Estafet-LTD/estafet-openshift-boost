@@ -9,14 +9,18 @@
   vars:
     project: "{{ monitoring_project }}"
     project_description: "Monitoring: {{ product_description }}"
+  when: environments.monitoring is defined
 
 - include_role: 
     name: namespace-role-setup
   vars:
     project: "{{ monitoring_project }}"
     role: view
+  when: environments.monitoring is defined    
 
 - include_role: 
-    name: pgadmin-setup
+    name: "{{ item.name }}"
   vars:
-    project: "{{ monitoring_project }}"   
+    project: "{{ monitoring_project }}"
+    params: "{{ item }}"
+  with_items: "{{ environments.monitoring | default([]) }}"    
