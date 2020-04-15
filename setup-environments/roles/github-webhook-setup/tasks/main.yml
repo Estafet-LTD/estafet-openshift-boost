@@ -6,6 +6,7 @@
   github_webhook:
     repository: "{{ github }}/{{ item.repo }}"
     url: http://console-gateway-api-{{ product }}-console.{{ openshift_host }}/github/hooks/
+    content_type: json
     events:
       - push
     user: "{{ github_user }}"
@@ -17,6 +18,7 @@
   github_webhook:
     repository: "{{ github }}/{{ item.test_repo }}"
     url: http://console-gateway-api-{{ product }}-console.{{ openshift_host }}/github/hooks/
+    content_type: json
     events:
       - push
     user: "{{ github_user }}"
