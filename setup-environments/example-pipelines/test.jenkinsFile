@@ -1,0 +1,42 @@
+node('maven') {
+
+	properties([
+	  parameters([
+	     string(name: 'GITHUB'), string(name: 'PRODUCT'), string(name: 'REPO'), string(name: 'PROJECT'),
+	  ])
+	])
+
+	def project = params.PROJECT
+
+	stage("checkout") {
+		git branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
+	}
+
+	stage("reset test flags for ${project}") {
+		sh "oc label namespace ${project} test-passed=false --overwrite=true"	
+	}
+
+	stage("reset the blockchain") {
+		openshiftDeploy namespace: project, depCfg: "go-ethereum"
+		openshiftVerifyDeployment namespace: project, depCfg: "go-ethereum", replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000"    	
+	}
+
+	stage("cucumber tests") {
+		withMaven(mavenSettingsConfig: 'microservices-scrum') {
+			try {
+				sh "mvn clean test"	
+			} finally {
+				cucumber buildStatus: 'UNSTABLE', fileIncludePattern: '**/*cucumber-report.json',  trendsLimit: 10
+			}
+		} 
+	}
+	
+	stage("flag this environment") {
+		if (currentBuild.currentResult == 'SUCCESS') {
+			println "The tests passed successfully"
+			sh "oc label namespace ${project} test-passed=true --overwrite=true"	
+		}
+	}
+	
+}
+

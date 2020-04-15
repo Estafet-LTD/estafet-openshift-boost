@@ -1,0 +1,21 @@
+---
+- name:  create a new webhook for microservice {{ item.name }}
+  github_webhook:
+    repository: "{{ github }}/{{ item.repo }}"
+    url: http://console-gateway-api-{{ product }}-console.{{ openshift_host }}/github/hooks/
+    events:
+      - push
+    user: "{{ github_user }}"
+    password: "{{ github_password }}"
+  with_items: "{{ microservices }}"
+
+- name:  create a new webhook for test {{ item.test_repo }}
+  github_webhook:
+    repository: "{{ github }}/{{ item.test_repo }}"
+    url: http://console-gateway-api-{{ product }}-console.{{ openshift_host }}/github/hooks/
+    events:
+      - push
+    user: "{{ github_user }}"
+    password: "{{ github_password }}"
+  when: item.test_repo is defined
+  with_items: "{{ environments.stages }}"  
