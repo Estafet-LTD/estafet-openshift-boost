@@ -16,6 +16,9 @@
     name: monitoring-environment-setup
 
 - include_role: 
+    name: db-environment-setup
+
+- include_role: 
     name: environments-setup
   vars:
     env: "{{ item }}"     
