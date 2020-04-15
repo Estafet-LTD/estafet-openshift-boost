@@ -1,4 +1,7 @@
 ---
+- set_fact: github_hook_state=present
+  when: hook_state is undefined  
+
 - name:  create a new webhook for microservice {{ item.name }}
   github_webhook:
     repository: "{{ github }}/{{ item.repo }}"
@@ -7,6 +10,7 @@
       - push
     user: "{{ github_user }}"
     password: "{{ github_password }}"
+    state: "{{ github_hook_state }}"
   with_items: "{{ microservices }}"
 
 - name:  create a new webhook for test {{ item.test_repo }}
@@ -17,5 +21,6 @@
       - push
     user: "{{ github_user }}"
     password: "{{ github_password }}"
+    state: "{{ github_hook_state }}"
   when: item.test_repo is defined
   with_items: "{{ environments.stages }}"  
