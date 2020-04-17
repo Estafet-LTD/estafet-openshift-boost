@@ -32,7 +32,7 @@
     name: "{{ item.name }}"
   vars:
     params: "{{ item }}"
-  with_items: "{{ microservice.roles | default([]) }}"
+  with_items: "{{ microservice.setup | default([]) }}"
 
 - name: Remove all aspects of the application so that we can rebuild from scratch
   shell: "oc delete all -l app={{ microservice.name }} -n {{ project }}"

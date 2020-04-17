@@ -51,7 +51,7 @@ microservices_boost_projects:
       repo: estafet-openshift-boost-console-api-environment
       expose: false
       test: false
-      roles:
+      setup:
         - name: create-postgres-db
           app: console-environment-api
           repo: estafet-openshift-boost-console-api-environment
@@ -72,7 +72,7 @@ microservices_boost_projects:
       repo: estafet-openshift-boost-console-api-jenkins
       expose: false
       test: false
-      roles:
+      setup:
         - name: create-postgres-db
           app: console-jenkins-api
           repo: estafet-openshift-boost-console-api-jenkins
@@ -123,7 +123,7 @@ microservices_boost_projects:
       repo: estafet-openshift-boost-console-api-feature
       expose: false       
       test: false
-      roles:
+      setup:
         - name: create-postgres-db
           app: console-feature-api
           repo: estafet-openshift-boost-console-api-feature
