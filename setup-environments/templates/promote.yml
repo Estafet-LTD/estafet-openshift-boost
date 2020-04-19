@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: promote-pipelines
+parameters:
+- description: Defines the location of the estafet github (change this if you have forked and want to use another github)
+  name: GITHUB
+  required: true
+- description: Defines name of the microservice
+  name: MICROSERVICE_NAME
+  required: true
+- description: Defines the git repository uri within which the microservice resides
+  name: MICROSERVICE_REPO_URI
+  required: true    
+- description: Defines the product that this pipeline is related to
+  name: PRODUCT
+  required: true   
+- description: Defines promote pipeline
+  name: PROMOTE_PIPELINE
+  required: true   
+- description: Defines the main repository that contains the infrastructor definition
+  name: ENVIRONMENTS_REPO_URI
+  required: true     
+- description: Defines the environment that this pipeline is related to
+  name: ENV
+  required: true    
+- description: Defines the project that this pipeline is related to
+  name: PROJECT
+  required: true
+objects:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: pipeline
+      name: "promote-${ENV}-${MICROSERVICE_NAME}"
+      type: promote
+      product: ${PRODUCT}
+    name: "promote-${ENV}-${MICROSERVICE_NAME}"
+  spec:
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: "https://github.com/${GITHUB}/${ENVIRONMENTS_REPO_URI}"
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+          - name: GITHUB
+            value: ${GITHUB}      
+          - name: PRODUCT
+            value: ${PRODUCT}               
+          - name: REPO
+            value: ${MICROSERVICE_REPO_URI}
+          - name: MICROSERVICE
+            value: ${MICROSERVICE_NAME}
+          - name: PROJECT
+            value: ${PROJECT}
+        jenkinsfilePath: "setup-environments/pipelines/${PROMOTE_PIPELINE}"
+      type: JenkinsPipeline
+  status:
+    lastVersion: 0

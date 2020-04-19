@@ -106,6 +106,18 @@
   tags:
     - openshift 
 
+- name: Delete promote pipelines for each microservice for each environment
+  shell: "oc delete bc/promote-{{ item[1].name }}-{{ item[0].name }} || true"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  when: item.name != 'build' and item.name != 'prod' and item.next != 'end' 
+  with_nested: 
+    - "{{ microservices }}"
+    - "{{ environments.stages }}"
+  tags:
+    - openshift
+
 - name: set_fact when for preprod
   set_fact: preprod_project="{{ product }}-{{ item.name }}"
   with_items: "{{ environments.stages }}"
@@ -120,7 +132,19 @@
   tags:
     - openshift       
 
-- name: Create promotion pipelines for the build environment
+- name: Create promote pipelines for each microservice for each environment
+  shell: "oc process -f {{ templates }}/promote.yml -p GITHUB={{ github }} -p MICROSERVICE_NAME={{ item[0].name }} -p MICROSERVICE_REPO_URI={{ item[0].repo }} -p PRODUCT={{ product}} -p ENVIRONMENTS_REPO_URI={{ environments.repo }} -p PROMOTE_PIPELINE={{ item[0].promote }} -p ENV={{ item[1].name }} -p PROJECT={{ product }}-{{ item[1].next }} | oc create -f -"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  when: item.name != 'build' and item.name != 'prod' and item.next != 'end' 
+  with_nested: 
+    - "{{ microservices }}"
+    - "{{ environments.stages }}"
+  tags:
+    - openshift  
+
+- name: Create promote all pipelines for each environment
   shell: "oc process -f {{ templates }}/promote-all.yml -p GITHUB={{ github }} -p PRODUCT={{ product }} -p ENV={{ item.name }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
