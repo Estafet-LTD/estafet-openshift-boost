@@ -60,15 +60,6 @@
   tags:
     - openshift 
 
-- name: Delete the promotion pipelines
-  shell: "oc delete bc/promote-{{ item.name }} || true"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"  
-  with_items: "{{ microservices }}"
-  tags:
-    - openshift 
-
 - name: Delete the promotion to prod pipelines
   shell: "oc delete bc/promote-to-prod-{{ item.name }} || true"
   register: command_result
