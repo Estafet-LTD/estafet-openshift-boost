@@ -22,9 +22,6 @@ parameters:
 - description: Defines promote pipeline
   name: RELEASE_PIPELINE
   required: true   
-- description: Defines promote to prod pipeline
-  name: PROMOTE_TO_PROD_PIPELINE
-  required: true   
 - description: Defines the main repository that contains the infrastructor definition
   name: ENVIRONMENTS_REPO_URI
   required: true     
