@@ -24,114 +24,18 @@
     volume_capacity: 30Gi
     memory_limit: 3Gi
 
-- name: Delete the build library pipelines
-  shell: "oc delete bc/build-{{ item.name }} || true"
+- name: Read the broker pod list
+  shell: "oc get bc -o json"
+  register: list_of_pipelines     
+
+- name: Delete the all pipelines
+  shell: "oc delete bc/{{ item.meta.name }} -n {{ cicd_project }} || true"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
-  with_items: "{{ libraries }}"
+  with_items: "{{ list_of_pipelines || default([]) }}"
   tags:
     - openshift 
-
-- name: Delete the release library pipelines
-  shell: "oc delete bc/release-{{ item.name }} || true"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"  
-  with_items: "{{ libraries }}"
-  tags:
-    - openshift 
-
-- name: Delete the build pipelines
-  shell: "oc delete bc/build-{{ item.name }} || true"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"  
-  with_items: "{{ microservices }}"
-  tags:
-    - openshift 
-
-- name: Delete the release pipelines
-  shell: "oc delete bc/release-{{ item.name }} || true"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"  
-  with_items: "{{ microservices }}"
-  tags:
-    - openshift 
-
-- name: Delete the promotion to prod pipelines
-  shell: "oc delete bc/promote-to-prod-{{ item.name }} || true"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"  
-  with_items: "{{ microservices }}"
-  tags:
-    - openshift 
-
-- name: Delete the test pipelines
-  shell: "oc delete bc/qa-{{ item.name }} || true"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"  
-  when: item.test_repo is defined
-  with_items: "{{ environments.stages }}"
-  tags:
-    - openshift 
-  
-- name: Delete the promote all pipelines
-  shell: "oc delete bc/promote-all-to-prod || true"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"  
-  tags:
-    - openshift 
-
-- name: Delete the promote all pipelines
-  shell: "oc delete bc/promote-all-{{ item.name }} || true"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"  
-  when: item.name != 'build' and item.name != 'prod' and item.next != 'end' 
-  with_items: "{{ environments.stages }}"
-  tags:
-    - openshift 
-
-- name: Delete the build all pipeline
-  shell: "oc delete bc/build-all || true"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"  
-  tags:
-    - openshift     
-
-- name: Delete the release all pipeline
-  shell: "oc delete bc/release-all || true"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"  
-  tags:
-    - openshift   
-
-- name: Delete the create environment pipeline
-  shell: "oc delete bc/create-environment || true"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"  
-  tags:
-    - openshift     
-
-- name: Delete promote pipelines for each microservice for each environment
-  shell: "oc delete bc/promote-{{ item[1].name }}-{{ item[0].name }} || true"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"
-  when: item[1].name != 'build' and item[1].name != 'prod' and item[1].next != 'end' 
-  with_nested: 
-    - "{{ microservices }}"
-    - "{{ environments.stages }}"
-  tags:
-    - openshift
 
 - name: set_fact when for preprod
   set_fact: preprod_project="{{ product }}-{{ item.name }}"

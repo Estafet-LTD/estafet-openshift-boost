@@ -1,8 +1,0 @@
----
-- name: Start the {{ microservice.name }} build
-  shell: 'oc start-build create-db -e PROJECT="{{ db_project }}" -e REPO={{ microservice.repo }} --wait -n {{ product }}-cicd'
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"
-  tags:
-    - openshift
