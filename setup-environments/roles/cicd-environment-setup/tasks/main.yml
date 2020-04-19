@@ -97,12 +97,36 @@
   tags:
     - openshift 
 
+- name: Delete the build all pipeline
+  shell: "oc delete bc/build-all || true"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  tags:
+    - openshift     
+
+- name: Delete the release all pipeline
+  shell: "oc delete bc/release-all || true"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  tags:
+    - openshift   
+
+- name: Delete the create environment pipeline
+  shell: "oc delete bc/create-environment || true"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  tags:
+    - openshift     
+
 - name: Delete promote pipelines for each microservice for each environment
   shell: "oc delete bc/promote-{{ item[1].name }}-{{ item[0].name }} || true"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
-  when: item.name != 'build' and item.name != 'prod' and item.next != 'end' 
+  when: item[1].name != 'build' and item[1].name != 'prod' and item[1].next != 'end' 
   with_nested: 
     - "{{ microservices }}"
     - "{{ environments.stages }}"
@@ -128,7 +152,7 @@
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
-  when: item.name != 'build' and item.name != 'prod' and item.next != 'end' 
+  when: item[1].name != 'build' and item[1].name != 'prod' and item[1].next != 'end' 
   with_nested: 
     - "{{ microservices }}"
     - "{{ environments.stages }}"
