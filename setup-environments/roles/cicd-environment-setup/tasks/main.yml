@@ -28,12 +28,19 @@
   shell: "oc get bc -o json"
   register: pipelines_json     
 
+- name: Parse the list of pipelines into a variable
+  set_fact: list_of_piplines="{{pipelines_json.stdout|from_json}}"
+
+- debug:
+    var: list_of_piplines
+    verbosity: 0
+
 - name: Delete the all pipelines
   shell: "oc delete bc/{{ item.meta.name }} -n {{ cicd_project }} || true"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
-  with_items: "{{ pipelines_json.json.data }}"
+  with_items: "{{ list_of_piplines }}"
   tags:
     - openshift 
 
