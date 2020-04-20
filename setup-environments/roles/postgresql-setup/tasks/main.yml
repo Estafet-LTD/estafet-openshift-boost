@@ -32,7 +32,7 @@
   set_fact: environment_variables=""
 
 - name: format the environment environments
-  set_fact: environment_variables='-p {{ item.name }}="{{ item.value }}" {{ environment_variables }}'
+  set_fact: environment_variables=' {{ item.name }}="{{ item.value }}" {{ environment_variables }}'
   with_items: "{{ params.environment_variables| default([]) }}"
 
 - name: Configure additional environment properties
