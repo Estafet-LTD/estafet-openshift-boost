@@ -1,4 +1,35 @@
 ---
+- name: Create the service account
+  shell: 'oc create serviceaccount useroot -n {{ project }}'
+  when: params.service_account
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
 
-- debug:
-    msg: System {{ inventory_hostname }} has uuid {{ ansible_product_uuid }}
+- name: Bind the service account to anyuid
+  shell: 'oc adm policy add-scc-to-user anyuid -z useroot'
+  when: params.service_account
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+
+- name: Install Couchbase
+  shell: "oc new-app arungupta/couchbase -n {{ project }}"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+      - openshift
+      - couchbase
+
+- name: Wait for the couchbase server to become available
+  shell : "oc rollout status dc/couchbase -n {{ project }}"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+      - openshift
