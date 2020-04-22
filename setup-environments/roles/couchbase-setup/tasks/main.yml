@@ -1,7 +1,6 @@
 ---
 - name: Create the service account
   shell: 'oc create serviceaccount useroot -n {{ project }}'
-  when: params.service_account
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
@@ -10,7 +9,6 @@
 
 - name: Bind the service account to anyuid
   shell: 'oc adm policy add-scc-to-user anyuid -z useroot'
-  when: params.service_account
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
@@ -26,10 +24,18 @@
       - openshift
       - couchbase
 
-- name: Wait for the couchbase server to become available
-  shell : "oc rollout status dc/couchbase -n {{ project }}"
+- name: Patch the service account for the deployment config
+  shell: 'oc patch dc/couchbase -p ''{"spec":{"template":{"spec":{"serviceAccountName": "useroot"}}}}'' -n {{ project }}'
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
   tags:
-      - openshift
+    - openshift   
+
+- name: Wait for the couchbase server to become available
+  shell : "oc rollout status dc/couchbase  -n {{ project }}"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift      
