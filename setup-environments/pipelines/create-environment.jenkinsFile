@@ -49,11 +49,12 @@ node {
 	     string(name: 'PRODUCT'),
 	     string(name: 'USER_ID'),
 	     string(name: 'USER_NAME'),
+		 string(name: 'OPENSHIFT_HOST_PORT'),
 	  ])
 	])
 	
 	stage ("connect as admin") {
-		sh "oc login --insecure-skip-tls-verify=true -u ${username()} -p ${password()}"
+		sh "oc login --insecure-skip-tls-verify=true -u ${username()} -p ${password()} ${params.OPENSHIFT_HOST_PORT}"
 	}
 	
 	stage ("create the namespace") {
