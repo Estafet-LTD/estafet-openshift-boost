@@ -127,8 +127,12 @@
   tags:
     - openshift
 
+- name: Load the variables from default-resources.yml
+  include_vars:
+    file: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/default-resources.yml"
+
 - name: Create the deployment config without environment variables
-  shell: 'oc process -n {{ project }} -f {{ workdir }}/{{ microservice.repo }}/openshift/templates/{{ microservice.name }}-config.yml -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ project }} -p DOCKER_IMAGE_LABEL=latest -p PRODUCT={{ product }} | oc apply -f -'
+  shell: 'oc process -n {{ project }} -f {{ workdir }}/{{ microservice.repo }}/openshift/templates/{{ microservice.name }}-config.yml -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ project }} -p DOCKER_IMAGE_LABEL=latest -p PRODUCT={{ product }} -p MAX_MEMORY={{ resources.max_memory }} -p MIN_MEMORY={{ resources.min_memory }} -p MAX_CPU={{ resources.max_cpu }} -p MIN_CPU={{ resources.min_cpu }} -p REPLICAS={{ resources.replicas }} | oc apply -f -'
   when: microservice.environment_variables is undefined
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
@@ -145,7 +149,7 @@
   with_items: "{{ microservice.environment_variables| default([]) }}"
 
 - name: Create the deployment config with environment variables
-  shell: 'oc process -n {{ project }} -f {{ workdir }}/{{ microservice.repo }}/openshift/templates/{{ microservice.name }}-config.yml -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ project }} -p DOCKER_IMAGE_LABEL=latest -p PRODUCT={{ product }} {{ variables }} | oc apply -f -'
+  shell: 'oc process -n {{ project }} -f {{ workdir }}/{{ microservice.repo }}/openshift/templates/{{ microservice.name }}-config.yml -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ project }} -p DOCKER_IMAGE_LABEL=latest -p PRODUCT={{ product }}  -p MAX_MEMORY={{ resources.max_memory }} -p MIN_MEMORY={{ resources.min_memory }} -p MAX_CPU={{ resources.max_cpu }} -p MIN_CPU={{ resources.min_cpu }} -p REPLICAS={{ resources.replicas }} {{ variables }} | oc apply -f -'
   when: microservice.environment_variables is defined
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
