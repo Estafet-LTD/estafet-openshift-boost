@@ -15,7 +15,7 @@ def username() {
 }
 
 def password() {
-    withCredentials([usernamePassword(credentialsId: 'cluster_admin-scrum', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+    withCredentials([usernamePassword(credentialsId: 'cluster_admin', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         return PASSWORD
     }
 }
