@@ -18,7 +18,7 @@
   vars:
     project: "{{ env_project }}"
     params: "{{ item }}"
-  with_items: "{{ env.roles | default([]) }}"
+  with_items: "{{ env.setup | default([]) }}"
 
 - name: Create the microservices
   include_role:
