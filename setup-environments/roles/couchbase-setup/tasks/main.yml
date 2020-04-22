@@ -39,3 +39,11 @@
   changed_when: "'exists' not in command_result.stderr"
   tags:
     - openshift      
+
+- name: Expose Service couchbase
+  shell: "oc expose service couchbase"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift    
