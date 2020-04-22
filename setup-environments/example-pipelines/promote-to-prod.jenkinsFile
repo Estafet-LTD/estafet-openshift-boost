@@ -128,7 +128,7 @@ node("maven") {
 		sh "oc create configmap ${env}${microservice} ${mapStr} -n ${project}"
 	}
 
-	if (fileExists("openshift/configuration/${env}-secret.yml")) {
+	if (fileExists("openshift/configuration/prod-${env}-secret.yml")) {
 		stage("create the secrets") {
 			def yml = readYaml file: "openshift/configuration/prod-${env}-secret.yml"
 			def secrets = yml.secrets

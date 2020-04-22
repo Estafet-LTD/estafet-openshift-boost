@@ -111,41 +111,6 @@ objects:
     creationTimestamp: null
     labels:
       app: pipeline
-      name: "promote-${MICROSERVICE_NAME}"
-      type: promote
-      product: ${PRODUCT}
-    name: "promote-${MICROSERVICE_NAME}"
-  spec:
-    output: {}
-    postCommit: {}
-    resources: {}
-    runPolicy: Serial
-    source:
-      git:
-        uri: "https://github.com/${GITHUB}/${ENVIRONMENTS_REPO_URI}"
-    strategy:
-      jenkinsPipelineStrategy:
-        env:
-          - name: GITHUB
-            value: ${GITHUB}      
-          - name: PRODUCT
-            value: ${PRODUCT}               
-          - name: REPO
-            value: ${MICROSERVICE_REPO_URI}
-          - name: MICROSERVICE
-            value: ${MICROSERVICE_NAME}
-          - name: PROJECT
-            value: "some_project"                         
-        jenkinsfilePath: "setup-environments/pipelines/${PROMOTE_PIPELINE}"
-      type: JenkinsPipeline
-  status:
-    lastVersion: 0
-- apiVersion: v1
-  kind: BuildConfig
-  metadata:
-    creationTimestamp: null
-    labels:
-      app: pipeline
       name: "promote-to-prod-${MICROSERVICE_NAME}"
       type: promote-to-prod
       product: ${PRODUCT}
