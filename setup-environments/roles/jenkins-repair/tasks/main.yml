@@ -1,4 +1,10 @@
 ---
+- include_role:
+  name: init
+
+- name: define the project  
+  set_fact: project="{{ product }}-cicd"
+
 - name: switch to the project {{ project }}
   shell: "oc project {{ project }}"
 
