@@ -1,6 +1,6 @@
 ---
 - include_role:
-  name: init
+    name: init
 
 - name: define the project  
   set_fact: project="{{ product }}-cicd"
