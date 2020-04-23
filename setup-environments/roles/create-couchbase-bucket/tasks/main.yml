@@ -7,10 +7,10 @@
 - name: Create the "{{ params.bucket }}" bucket on Couchbase Pod
   uri:
     url: http://couchbase-{{ project }}.{{ openshift_host }}/pools/default/buckets
-      user: "{{ couchbase_user }}"
-      password: "{{ couchbase_password }}"
-      method: POST
-      body_format: form-urlencoded
+    method: POST
+    user: "{{ couchbase_user }}"
+    password: "{{ couchbase_password }}"  
+    body_format: form-urlencoded
     body:
       name: "{{ project }}-{{ params.bucket }}"
       ramQuotaMB: '100'
