@@ -1,2 +1,21 @@
 ---
 
+- debug:
+    var: params
+    verbosity: 0
+
+- name: Create the "{{ params.bucket }}" bucket on Couchbase Pod
+  uri:
+    url: http://couchbase-{{ project }}.{{ openshift_host }}/pools/default/buckets
+      user: "{{ couchbase_user }}"
+      password: "{{ couchbase_password }}"
+      method: POST
+      body_format: form-urlencoded
+    body:
+      name: "{{ project }}-{{ params.bucket }}"
+      ramQuotaMB: '100'
+      bucketType: 'couchbase'
+      authType: 'sasl'
+      saslPassword: 'welcome1'
+    force_basic_auth: yes
+    status_code: 202
