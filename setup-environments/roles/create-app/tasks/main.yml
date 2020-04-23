@@ -19,6 +19,9 @@
 - set_fact: branch="{{ command_result.stdout }}"
   when: (microservice.test is defined and microservice.test) or (test is defined and test)
 
+- set_fact: branch="{{ microservice.branch }}"
+  when: microservice.branch is defined
+
 - name: Checkout {{ microservice.repo }} from github branch {{ branch }}
   git:
     repo: "https://github.com/{{ github }}/{{ microservice.repo }}.git"
