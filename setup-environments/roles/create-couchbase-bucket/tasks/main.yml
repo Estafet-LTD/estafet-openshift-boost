@@ -11,14 +11,6 @@
     password: "{{ couchbase_password }}"
     status_code: 200, 404
 
-  shell: 'curl -X DELETE -u {{ couchbase_user }}:{{ couchbase_password }} http://couchbase-{{ project }}.{{ openshift_host }}/pools/default/buckets/{{ params.bucket }} || true'
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"
-  tags:
-    - openshift
-    - couchbase  
-
 - name: Create the "{{ params.bucket }}" bucket on Couchbase Pod
   uri:
     url: http://couchbase-{{ project }}.{{ openshift_host }}/pools/default/buckets
