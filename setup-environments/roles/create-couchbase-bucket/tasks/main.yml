@@ -6,12 +6,10 @@
 - name: Delete "{{ params.bucket }}" bucket on Couchbase Pod
   uri:
     url: http://couchbase-{{ project }}.{{ openshift_host }}/pools/default/buckets/{{ params.bucket }}
+    method: DELETE
     user: "{{ couchbase_user }}"
     password: "{{ couchbase_password }}"
-    method: DELETE
-    status_code: 
-      - 200
-      - 404
+    status_code: 200, 404
 
   shell: 'curl -X DELETE -u {{ couchbase_user }}:{{ couchbase_password }} http://couchbase-{{ project }}.{{ openshift_host }}/pools/default/buckets/{{ params.bucket }} || true'
   register: command_result
