@@ -5,7 +5,7 @@
 
 - name: Delete "{{ params.bucket }}" bucket on Couchbase Pod
   uri:
-    url: http://couchbase-{{ project }}.{{ openshift_host }}/pools/default/buckets/{{ params.bucket }}
+    url: http://couchbase-{{ project }}.{{ openshift_host }}/pools/default/buckets/{{ project }}-{{ params.bucket }}
     method: DELETE
     user: "{{ couchbase_user }}"
     password: "{{ couchbase_password }}"
