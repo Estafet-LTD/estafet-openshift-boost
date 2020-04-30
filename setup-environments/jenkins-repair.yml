@@ -9,5 +9,5 @@
     - include_role:
         name: jenkins-repair    
       vars:
-        project: "{{ product }}-cicd" 
+        project: "{{ product.name }}-cicd" 
         

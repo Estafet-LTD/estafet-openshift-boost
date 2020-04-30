@@ -51,10 +51,10 @@
 
 - name: Create the maxBucketCount on Couchbase Pod
   uri:
-    url: http://couchbase-{{ project }}.{{ openshift_host }}/pools/default
+    url: http://couchbase-{{ project }}.{{ openshift.host }}/pools/default
     method: POST
-    user: "{{ couchbase_user }}"
-    password: "{{ couchbase_password }}"  
+    user: "{{ couchbase.user }}"
+    password: "{{ couchbase.password }}"  
     body_format: form-urlencoded
     body:
       maxBucketCount: params.maxBucketCount
@@ -64,10 +64,10 @@
     
 - name: Create the memoryQuota on Couchbase Pod
   uri:
-    url: http://couchbase-{{ project }}.{{ openshift_host }}/pools/default
+    url: http://couchbase-{{ project }}.{{ openshift.host }}/pools/default
     method: POST
-    user: "{{ couchbase_user }}"
-    password: "{{ couchbase_password }}"  
+    user: "{{ couchbase.user }}"
+    password: "{{ couchbase.password }}"  
     body_format: form-urlencoded
     body:
       memoryQuota: params.memoryQuota
@@ -77,10 +77,10 @@
   
 - name: Create the memoryQuota on Couchbase Pod
   uri:
-    url: http://couchbase-{{ project }}.{{ openshift_host }}/pools/default
+    url: http://couchbase-{{ project }}.{{ openshift.host }}/pools/default
     method: POST
-    user: "{{ couchbase_user }}"
-    password: "{{ couchbase_password }}"  
+    user: "{{ couchbase.user }}"
+    password: "{{ couchbase.password }}"  
     body_format: form-urlencoded
     body:
       indexMemoryQuota: params.indexMemoryQuota

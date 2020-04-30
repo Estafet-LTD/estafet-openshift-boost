@@ -1,6 +1,6 @@
 ---
 
-- set_fact: mq_project="{{ product }}-mq-{{ params.colour }}"
+- set_fact: mq_project="{{ product.name }}-mq-{{ params.colour }}"
 
 - include_role: 
     name: delete-namespace

@@ -3,14 +3,14 @@
     var: env
     verbosity: 0
 
-- set_fact: stage_project="{{ product }}-{{ env.name }}"
+- set_fact: stage_project="{{ product.name }}-{{ env.name }}"
 
 - include_role: 
     name: namespace-setup
   vars:
     project: "{{ stage_project }}"
-    project_description: "{{ env.display }}: {{ product_description }}"
-    next: "{{ product }}-{{ env.next }}"
+    project_description: "{{ env.display }}: {{ product.description }}"
+    next: "{{ product.name }}-{{ env.next }}"
     display: "{{ env.display }}"
 
 - include_role: 

@@ -2,7 +2,7 @@
 - include_role: 
     name : init
 
-- set_fact: build_project="{{ product }}-build"    
+- set_fact: build_project="{{ product.name }}-build"    
 - name: "Updating users for {{ build_project }}"
   include_role: 
     name: namespace-role-setup
@@ -10,7 +10,7 @@
     project: "{{ build_project }}"
     role: edit   
     
-- set_fact: test_project="{{ product }}-test"
+- set_fact: test_project="{{ product.name }}-test"
 - name: "Updating users for {{ test_project }}"
   include_role: 
     name: namespace-role-setup
@@ -18,7 +18,7 @@
     project: "{{ test_project }}"
     role: edit   
      
-- set_fact: cicd_project="{{ product }}-cicd"
+- set_fact: cicd_project="{{ product.name }}-cicd"
 - name: "Updating users for {{ cicd_project }}"
   include_role: 
     name: namespace-role-setup
@@ -26,7 +26,7 @@
     project: "{{ cicd_project }}"
     role: edit  
     
-- set_fact: monitoring_project="{{ product }}-monitoring"
+- set_fact: monitoring_project="{{ product.name }}-monitoring"
 - name: "Updating users for {{ monitoring_project }}"
   include_role: 
     name: namespace-role-setup

@@ -1,5 +1,5 @@
 ---
-- set_fact: prod_project="{{ product }}-prod"
+- set_fact: prod_project="{{ product.name }}-prod"
 
 - name: Switch to Namespace {{ prod_project }}
   shell: "oc project {{ prod_project }}"
@@ -7,7 +7,7 @@
     - openshift  
 
 - name: Create a routes to expose the application
-  shell: "oc process -f {{ templates }}/prod-route.yml -p MICROSERVICE_NAME={{ item.name }} -p PRODUCT={{ product}} | oc apply -f -"
+  shell: "oc process -f {{ templates }}/prod-route.yml -p MICROSERVICE_NAME={{ item.name }} -p PRODUCT={{ product.name }} | oc apply -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"

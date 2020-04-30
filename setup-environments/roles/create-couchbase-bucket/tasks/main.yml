@@ -5,18 +5,18 @@
 
 - name: Delete "{{ params.bucket }}" bucket on Couchbase Pod
   uri:
-    url: http://couchbase-{{ project }}.{{ openshift_host }}/pools/default/buckets/{{ project }}-{{ params.bucket }}
+    url: http://couchbase-{{ project }}.{{ openshift.host }}/pools/default/buckets/{{ project }}-{{ params.bucket }}
     method: DELETE
-    user: "{{ couchbase_user }}"
-    password: "{{ couchbase_password }}"
+    user: "{{ couchbase.user }}"
+    password: "{{ couchbase.password }}"
     status_code: 200, 404
 
 - name: Create the "{{ params.bucket }}" bucket on Couchbase Pod
   uri:
-    url: http://couchbase-{{ project }}.{{ openshift_host }}/pools/default/buckets
+    url: http://couchbase-{{ project }}.{{ openshift.host }}/pools/default/buckets
     method: POST
-    user: "{{ couchbase_user }}"
-    password: "{{ couchbase_password }}"  
+    user: "{{ couchbase.user }}"
+    password: "{{ couchbase.password }}"  
     body_format: form-urlencoded
     body:
       name: "{{ project }}-{{ params.bucket }}"

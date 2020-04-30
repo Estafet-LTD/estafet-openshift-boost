@@ -11,27 +11,27 @@
 - include_role: 
     name : delete-namespace
   vars:
-    project: "{{ product }}-cicd"
+    project: "{{ product.name }}-cicd"
 
 - include_role: 
     name: delete-namespace
   vars:
-    project: "{{ product }}-{{ item.name }}"     
+    project: "{{ product.name }}-{{ item.name }}"     
   with_items: "{{ environments.stages }}"
 
 - include_role: 
     name : delete-namespace
   vars:
-    project: "{{ product }}-console"
+    project: "{{ product.name }}-console"
 
 - include_role: 
     name : delete-namespace
   vars:
-    project: "{{ product }}-monitoring"
+    project: "{{ product.name }}-monitoring"
   when: environments.monitoring is defined
 
 - include_role: 
     name : delete-namespace
   vars:
-    project: "{{ product }}-database"
+    project: "{{ product.name }}-database"
   when: environments.monitoring is defined

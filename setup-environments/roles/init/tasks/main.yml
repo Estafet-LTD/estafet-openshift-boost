@@ -3,32 +3,21 @@
     dir: vars
     extensions: [yml]
     
-- set_fact: openshift="{{ openshift_host }}:{{ openshift_port }}"
+- set_fact: openshift_host_port="{{ openshift.host }}:{{ openshift.port }}"
+  when: openshift.port is defined
+
+- set_fact: openshift_host_port="{{ openshift.host }}"
+  when: openshift.port is not defined
     
 - name: Verify if openshift is set
   fail:
-    msg: "[OpenShift host] is not defined. Please edit inventory"
+    msg: "[OpenShift host] is not defined. Please edit project-vars.yml"
   when: openshift is undefined
-
-- name: Verify if openshift admin user is set
-  fail:
-    msg: "[Admin user] is not defined. Please edit inventory"
-  when: username is undefined
-
-- name: Verify if openshift admin password is set
-  fail:
-    msg: "[Admin password] is not defined. Please edit inventory"
-  when: password is undefined
 
 - name: Verify if product variable is set
   fail:
     msg: "[Product] is not defined. Please edit project-vars.yml"
   when: product is undefined
-
-- name: Verify if product variable is set
-  fail:
-    msg: "[Product Description] is not defined. Please edit project-vars.yml"
-  when: product_description is undefined
 
 - name: Verify if the microservices have been defined
   fail:
@@ -60,8 +49,8 @@
     msg: "[Task Manager Title] are not set. Please edit project-vars.yml"
   when: task_manager is undefined
 
-- name: Login in OpenShift as {{ username }}
-  shell: "oc login --insecure-skip-tls-verify=true -u {{ username }} -p {{ password }} {{ openshift }}"
+- name: Login in OpenShift as {{ openshift.username }}
+  shell: "oc login --insecure-skip-tls-verify=true -u {{ openshift.username }} -p {{ openshift.password }} {{ openshift_host_port }}"
   tags:
     - openshift
 

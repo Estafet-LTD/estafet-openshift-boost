@@ -17,11 +17,11 @@ microservices_boost_projects:
       test: false
       environment_variables:
         - name: PRODUCT_DESCRIPTION
-          value: "{{ product_description }}"
+          value: "{{ product.description }}"
         - name: OPENSHIFT_HOST
-          value: "{{ openshift_host }}"
+          value: "{{ openshift.host }}"
         - name: TASK_MANAGEMENT_TITLE
-          value: "{{ task_manager_title }}"
+          value: "{{ task_manager.title }}"
           
     - name: console-project-api
       repo: estafet-openshift-boost-console-api-project
@@ -29,7 +29,7 @@ microservices_boost_projects:
       test: false
       environment_variables:     
         - name: OPENSHIFT_HOST_PORT
-          value: "{{ openshift }}"
+          value: "{{ openshift_host_port }}"
           
     - name: console-user-api
       repo: estafet-openshift-boost-console-api-user
@@ -37,11 +37,11 @@ microservices_boost_projects:
       test: false
       environment_variables:     
         - name: OPENSHIFT_HOST_PORT
-          value: "{{ openshift }}"
+          value: "{{ openshift_host_port }}"
         - name: OPENSHIFT_USER
-          value: "{{ username }}"
+          value: "{{ openshift.username }}"
         - name: OPENSHIFT_PASSWORD
-          value: "{{ password }}"   
+          value: "{{ openshift.password }}"   
             
     - name: console-environment-api
       repo: estafet-openshift-boost-console-api-environment
@@ -54,15 +54,15 @@ microservices_boost_projects:
           reset_db: true          
       environment_variables:     
         - name: OPENSHIFT_HOST_PORT
-          value: "{{ openshift }}"
+          value: "{{ openshift_host_port }}"
         - name: OPENSHIFT_USER
-          value: "{{ username }}"
+          value: "{{ openshift.username }}"
         - name: OPENSHIFT_PASSWORD
-          value: "{{ password }}"    
+          value: "{{ openshift.password }}"    
         - name: PRODUCT_REPO
           value: "{{ environments.repo }}"   
         - name: GITHUB
-          value: "{{ github }}"                 
+          value: "{{ github.org }}"                 
                 
     - name: console-jenkins-api
       repo: estafet-openshift-boost-console-api-jenkins
@@ -75,11 +75,11 @@ microservices_boost_projects:
           reset_db: true    
       environment_variables:     
         - name: OPENSHIFT_HOST_PORT
-          value: "{{ openshift }}"
+          value: "{{ openshift_host_port }}"
         - name: OPENSHIFT_USER
-          value: "{{ username }}"
+          value: "{{ openshift.username }}"
         - name: OPENSHIFT_PASSWORD
-          value: "{{ password }}"    
+          value: "{{ openshift.password }}"    
           
     - name: console-gateway-api
       repo: estafet-openshift-boost-console-api-gateway
@@ -87,7 +87,7 @@ microservices_boost_projects:
       test: false
       environment_variables:   
         - name: PRODUCT_DESCRIPTION
-          value: "{{ product_description }}"  
+          value: "{{ product.description }}"  
                      
     - name: console-trello-api
       repo: estafet-openshift-boost-console-api-trello
@@ -95,11 +95,11 @@ microservices_boost_projects:
       test: false 
       environment_variables:        
         - name: TRELLO_ACCESS_TOKEN
-          value: "{{ trello_access_token }}"
+          value: "{{ trello.access_token }}"
         - name: TRELLO_API_KEY
-          value: "{{ trello_api_key }}"
+          value: "{{ trello.api_key }}"
         - name: TASK_MANAGER
-          value: "{{ task_manager }}"
+          value: "{{ task_manager.name }}"
 
     - name: console-jira-api
       repo: estafet-openshift-boost-console-api-jira
@@ -107,13 +107,13 @@ microservices_boost_projects:
       test: false
       environment_variables:
         - name: JIRA_ACCESS_TOKEN
-          value: "{{ jira_access_token }}"
+          value: "{{ jira.access_token }}"
         - name: JIRA_USERNAME
-          value: "{{ jira_username }}"
+          value: "{{ jira.username }}"
         - name: JIRA_BASE_URL
-          value: "{{ jira_base_url }}"
+          value: "{{ jira.base_url }}"
         - name: TASK_MANAGER
-          value: "{{ task_manager }}"
+          value: "{{ task_manager.name }}"
           
     - name: console-feature-api
       repo: estafet-openshift-boost-console-api-feature
@@ -126,14 +126,14 @@ microservices_boost_projects:
           reset_db: true          
       environment_variables:        
         - name: OPENSHIFT_HOST_PORT
-          value: "{{ openshift }}"
+          value: "{{ openshift_host_port }}"
         - name: OPENSHIFT_USER
-          value: "{{ username }}"
+          value: "{{ openshift.username }}"
         - name: OPENSHIFT_PASSWORD
-          value: "{{ password }}"           
+          value: "{{ openshift.password }}"           
         - name: GITHUB
-          value: "{{ github }}"          
+          value: "{{ github.org }}"          
         - name: GITHUB_USER
-          value: "{{ github_user }}"        
+          value: "{{ github.user }}"        
         - name: GITHUB_PASSWORD
-          value: "{{ github_password }}"
+          value: "{{ github.password }}"

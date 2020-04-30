@@ -5,7 +5,7 @@
 - name:  create a new webhook for microservice {{ item.name }}
   github_webhook:
     repository: "{{ github }}/{{ item.repo }}"
-    url: http://console-gateway-api-{{ product }}-console.{{ openshift_host }}/github/hooks/
+    url: http://console-gateway-api-{{ product.name }}-console.{{ openshift.host }}/github/hooks/
     content_type: json
     events:
       - push
@@ -17,7 +17,7 @@
 - name:  create a new webhook for test {{ item.test_repo }}
   github_webhook:
     repository: "{{ github }}/{{ item.test_repo }}"
-    url: http://console-gateway-api-{{ product }}-console.{{ openshift_host }}/github/hooks/
+    url: http://console-gateway-api-{{ product.name }}-console.{{ openshift.host }}/github/hooks/
     content_type: json
     events:
       - push

@@ -1,11 +1,11 @@
 ---
-- set_fact: monitoring_project="{{ product }}-monitoring"
+- set_fact: monitoring_project="{{ product.name }}-monitoring"
 
 - include_role: 
     name: namespace-setup
   vars:
     project: "{{ monitoring_project }}"
-    project_description: "Monitoring: {{ product_description }}"
+    project_description: "Monitoring: {{ product.description }}"
   when: environments.monitoring is defined
 
 - include_role: 
