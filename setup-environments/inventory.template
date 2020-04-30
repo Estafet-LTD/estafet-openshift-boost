@@ -1,25 +1,2 @@
 [local]
 localhost ansible_connection=local
-
-[local:vars]
-# The name of the github organisation
-github=Estafet-LTD
-
-# openshift host and port
-openshift_host=djddjdjdd
-openshift_port=8443
-
-# openshift credentials
-username=ddjdjdj
-password=djdjddjdj
-
-# extenral database host
-external_postgres_database=djdsjsjssjsjsjsjsjs
-
-# trello (cloud environment only)
-trello_access_token=djddjdjdjdj
-trello_api_key=fddkdfkdkddkdkd
-
-# github (cloud environment only)
-github_user=sjsjsjsjsj
-github_password=dkdskddkdkdkd
