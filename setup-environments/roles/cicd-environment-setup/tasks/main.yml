@@ -47,7 +47,7 @@
     - openshift       
 
 - name: Create promote pipelines for each microservice for each environment
-  shell: "oc process -f {{ templates }}/promote.yml -p GITHUB={{ github.org }} -p MICROSERVICE_NAME={{ item[0].name }} -p MICROSERVICE_REPO_URI={{ item[0].repo }} -p PRODUCT={{ product.name }} -p ENVIRONMENTS_REPO_URI={{ environments.repo }} -p PROMOTE_PIPELINE={{ item[0].promote }} -p ENV={{ item[1].name }} -p PROJECT={{ product }}-{{ item[1].next }} | oc create -f -"
+  shell: "oc process -f {{ templates }}/promote.yml -p GITHUB={{ github.org }} -p MICROSERVICE_NAME={{ item[0].name }} -p MICROSERVICE_REPO_URI={{ item[0].repo }} -p PRODUCT={{ product.name }} -p ENVIRONMENTS_REPO_URI={{ environments.repo }} -p PROMOTE_PIPELINE={{ item[0].promote }} -p ENV={{ item[1].name }} -p PROJECT={{ product.name }}-{{ item[1].next }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
