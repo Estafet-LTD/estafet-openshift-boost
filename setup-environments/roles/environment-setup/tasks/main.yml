@@ -1,7 +1,4 @@
 ---
-- include_role: 
-    name : init
-
 - name: Verify if the environments have been defined
   fail:
     msg: "[env_project ] is not defined."

@@ -1,7 +1,4 @@
 ---
-- include_role: 
-    name : init
-
 - set_fact: console_project="{{ product.name }}-console"
 
 - include_role: 

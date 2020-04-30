@@ -1,8 +1,5 @@
 ---
 # Define the name and description of the OpenShift project
-- include_role: 
-    name : init
-
 - set_fact: cicd_project="{{ product.name }}-cicd"
 
 - include_role: 
