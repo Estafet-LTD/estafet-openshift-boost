@@ -4,6 +4,11 @@
   vars:
     workdir: "~/.estafet"  
   tasks:
+
+    - name: load the variables
+      include_vars:
+        dir: vars
+        extensions: [yml]  
    
     - name: Create Workdir
       file:
