@@ -28,3 +28,8 @@
   changed_when: "'exists' not in command_result.stderr"  
   tags:
     - openshift 
+
+- include_role: 
+    name: boost-libraries-setup
+  vars:
+    project: "{{ boost_project }}"
