@@ -1,6 +1,6 @@
 ---
 # Define the name and description of the OpenShift project
-- set_fact: boost_project="boost-cicd"
+- set_fact: boost_project="boost-dev"
 
 - include_role: 
     name: namespace-setup
@@ -12,24 +12,14 @@
     name: namespace-role-setup
   vars:
     project: "{{ boost_project }}"
-    role: edit
 
 - include_role: 
-    name: jenkins-setup
+    name: amq-setup
   vars:
     project: "{{ boost_project }}"
-    volume_capacity: 30Gi
-    memory_limit: 3Gi
-
-- name: Delete the all pipelines
-  shell: "oc delete bc --all -n {{ boost_project }} || true"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"  
-  tags:
-    - openshift 
+    params: "{{ amq_params }}"
 
 - include_role: 
-    name: boost-libraries-setup
+    name: postgresql-setup
   vars:
     project: "{{ boost_project }}"

@@ -1,0 +1,156 @@
+---
+- set_fact: branch="master"
+
+- debug:
+    var: microservice
+    verbosity: 0
+
+- name: fetch latest tag for this repo
+  shell: "git describe --abbrev=0 --tags"
+  args:
+    chdir: "{{ workdir }}/{{ microservice.repo }}"
+  when: (microservice.test is defined and microservice.test == true) or (test is defined and test == true)
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - git  
+
+- set_fact: branch="{{ command_result.stdout }}"
+  when: (microservice.test is defined and microservice.test) or (test is defined and test)
+
+- set_fact: branch="{{ microservice.branch }}"
+  when: microservice.branch is defined
+
+- name: Checkout {{ microservice.repo }} from github branch {{ branch }}
+  git:
+    repo: "https://github.com/{{ github.org }}/{{ microservice.repo }}.git"
+    dest: "{{ workdir }}/{{ microservice.repo }}"
+    version: "{{ branch }}"
+    update: yes
+  tags:
+    - git  
+
+- include_role: 
+    name: "{{ item.name }}"
+  vars:
+    params: "{{ item }}"
+  with_items: "{{ microservice.setup | default([]) }}"
+
+- name: Remove all aspects of the application so that we can rebuild from scratch
+  shell: "oc delete all -l app={{ microservice.name }} -n {{ project }} || true"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift  
+
+- name: Delete the {{ microservice.name }} configmap
+  shell: 'oc delete configmap {{ microservice.name }} -n {{ project }} || true'
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+
+- name: Delete the {{ microservice.name }} secret
+  shell: 'oc delete secret {{ microservice.name }} -n {{ project }} || true'
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+
+- name: Load the variables from local-config.yml
+  include_vars:
+    file: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/local-config.yml"
+
+- name: Initialise config map variables
+  set_fact: mapStr=""
+
+- name: format the configmap variables
+  set_fact: mapStr='{{ mapStr }} --from-literal={{ item.name }}={{ item.value }}'
+  with_items: "{{ config_map }}"
+
+- name: Create the {{ microservice.name }} configmap
+  shell: 'oc create configmap {{ microservice.name }} {{ mapStr }} -n {{ project }}'
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+
+- name: Check that the local-secret.yml exists
+  stat:
+    path: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/local-secret.yml"
+  register: stat_result
+
+- name: Load the variables from local-secrets.yml
+  include_vars:
+    file: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/local-secret.yml"
+  when: stat_result.stat.exists
+
+- name: Initialise config map variables
+  set_fact: secretStr=""
+  when: stat_result.stat.exists
+
+- name: format the secrets variables
+  set_fact: secretStr='{{ secretStr }} --from-literal={{ item.name }}={{ item.value }}'
+  with_items: "{{ secrets }}"
+  when: stat_result.stat.exists
+
+- name: Create the {{ microservice.name }} secrets
+  shell: 'oc create secret generic {{ microservice.name }} {{ secretStr }} -n {{ project }}'
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  when: stat_result.stat.exists
+  tags:
+    - openshift
+
+- name: Load the variables from default-resources.yml
+  include_vars:
+    file: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/default-resources.yml"
+
+- name: Create the deployment config without environment variables
+  shell: 'oc process -n {{ project }} -f {{ workdir }}/{{ microservice.repo }}/openshift/templates/{{ microservice.name }}-config.yml -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ project }} -p DOCKER_IMAGE_LABEL=latest -p PRODUCT={{ product.name }} -p MAX_MEMORY={{ resources.max_memory }} -p MIN_MEMORY={{ resources.min_memory }} -p MAX_CPU={{ resources.max_cpu }} -p MIN_CPU={{ resources.min_cpu }} -p REPLICAS={{ resources.replicas }} | oc apply -f -'
+  when: microservice.environment_variables is undefined
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift     
+
+- name: Initialise environment variables
+  set_fact: variables=""
+  when: microservice.environment_variables is defined
+
+- name: format the environment environments
+  set_fact: variables='-p {{ item.name }}="{{ item.value }}" {{ variables }}'
+  with_items: "{{ microservice.environment_variables| default([]) }}"
+
+- name: Create the deployment config with environment variables
+  shell: 'oc process -n {{ project }} -f {{ workdir }}/{{ microservice.repo }}/openshift/templates/{{ microservice.name }}-config.yml -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ project }} -p DOCKER_IMAGE_LABEL=latest -p PRODUCT={{ product.name }}  -p MAX_MEMORY={{ resources.max_memory }} -p MIN_MEMORY={{ resources.min_memory }} -p MAX_CPU={{ resources.max_cpu }} -p MIN_CPU={{ resources.min_cpu }} -p REPLICAS={{ resources.replicas }} {{ variables }} | oc apply -f -'
+  when: microservice.environment_variables is defined
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift     
+
+- name: Wait for the microservice to become available {{ microservice.name }}
+  shell: "oc rollout status dc/{{ microservice.name }}"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+
+- name: Expose Service {{ microservice.name }}
+  shell: "oc expose service {{ microservice.name }}"
+  when: microservice.expose
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
