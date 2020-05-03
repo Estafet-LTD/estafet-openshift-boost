@@ -1,8 +1,14 @@
 ---
-- include_vars:
+- name: load product variables
+  include_vars:
     dir: vars
     extensions: [yml]
-    
+
+- name: load the boost variables
+  include_vars:
+    dir: "{{ workdir }}//estafet-openshift-boost/setup-environments/vars"
+    extensions: [yml]  
+
 - set_fact: openshift_host_port="{{ openshift.host }}:{{ openshift.port }}"
   when: openshift.port is defined
 
@@ -53,7 +59,3 @@
   shell: "oc login --insecure-skip-tls-verify=true -u {{ openshift.username }} -p {{ openshift.password }} {{ openshift_host_port }}"
   tags:
     - openshift
-
-- set_fact: boost_ddl={{ workdir }}/estafet-openshift-boost/setup-environments/ddl
-- set_fact: templates={{ workdir }}/estafet-openshift-boost/setup-environments/templates
-- set_fact: objects={{ workdir }}/estafet-openshift-boost/setup-environments/objects
