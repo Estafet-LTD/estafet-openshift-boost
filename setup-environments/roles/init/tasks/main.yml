@@ -6,7 +6,7 @@
 
 - name: load the boost variables
   include_vars:
-    dir: "{{ role_path }}/../vars"
+    dir: "/{{ workdir }}/estafet-openshift-boost/setup-environments/vars"
     extensions: [yml]  
 
 - set_fact: openshift_host_port="{{ openshift.host }}:{{ openshift.port }}"
