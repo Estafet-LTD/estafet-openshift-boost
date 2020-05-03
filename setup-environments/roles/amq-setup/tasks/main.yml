@@ -1,11 +1,22 @@
 ---
-
 - debug:
     var: params
     verbosity: 0
 
+- set_fact: templates_project="openshift"
+  when: params.templates_project is not defined
+
+- set_fact: templates_project="{{ params.templates_project }}"
+  when: params.templates_project is defined
+
+- set_fact: application_name="broker"
+  when: params.application_name is not defined
+
+- set_fact: application_name="{{ params.application_name }}"
+  when: params.application_name is defined
+
 - name: Install the JBoss A-MQ Message Broker
-  shell: "oc process amq63-basic -n {{ params.templates_project }} -p IMAGE_STREAM_NAMESPACE={{ params.templates_project }} -p MQ_USERNAME={{ params.amq_user }} -p MQ_PASSWORD={{ params.amq_password }} | oc create -f -"
+  shell: "oc process amq63-basic -p APPLICATION_NAME={{ application_name }} -p IMAGE_STREAM_NAMESPACE={{ templates_project }} -p MQ_USERNAME={{ params.amq_user }} -p MQ_PASSWORD={{ params.amq_password }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
@@ -14,7 +25,7 @@
     - a-mq        
 
 - name: Remove the readiness probe as some OS implements with ipv4 only stop this from working correctly
-  shell: "oc set probe dc/broker-amq --readiness --remove"
+  shell: "oc set probe dc/{{ application_name }}-amq --readiness --remove"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
@@ -23,7 +34,7 @@
     - a-mq     
 
 - name: Wait for the a-mq to become available
-  shell : "oc rollout status dc/broker-amq"
+  shell : "oc rollout status dc/{{ application_name }}-amq"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"

@@ -1,0 +1,10 @@
+---
+- name: Create the an amq instance for each microservice
+  include_role:
+    name: amq-setup
+  vars:
+    params: "{{ item }}"
+  when: item.messaging 
+  with_items: "{{ microservices }}"
+  tags:
+    - openshift

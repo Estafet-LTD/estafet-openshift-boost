@@ -1,7 +1,4 @@
 ---
-# Define the name and description of the OpenShift project
-- set_fact: boost_project="boost-cicd"
-
 - include_role: 
     name: namespace-setup
   vars:

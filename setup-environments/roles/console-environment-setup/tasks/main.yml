@@ -1,6 +1,4 @@
 ---
-- set_fact: console_project="{{ product.name }}-console"
-
 - include_role: 
     name: namespace-setup
   vars:

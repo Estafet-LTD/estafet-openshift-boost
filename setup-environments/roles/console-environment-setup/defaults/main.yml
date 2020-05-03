@@ -1,4 +1,7 @@
 ---
+console_project: "{{ product.name }}-console"
+
+
 # Project definition - add new microservices here
 amq_params:
   amq_user: amq
