@@ -3,7 +3,11 @@
   include_role:
     name: amq-setup
   vars:
-    params: "{{ item }}"
+    params: 
+      application_name: "{{ item.name }}"
+      amq_user: amq
+      amq_password: amq
+      templates_project: openshift
   when: item.messaging 
   with_items: "{{ microservices }}"
   tags:
