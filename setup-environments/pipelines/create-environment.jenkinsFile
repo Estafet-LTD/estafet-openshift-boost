@@ -33,12 +33,6 @@ def getNextProjectName(product) {
 	}
 }
 
-def getDatabaseEndPoint() {
-	sh "oc get service postgresql -o json -n ${params.PRODUCT}-build > db.json"
-	def db = readFile('db.json')	
-	return getDataBaseExternalName(db)
-}
-
 node("jenkins-slave-ansible") {
 	
 	def project
@@ -50,6 +44,8 @@ node("jenkins-slave-ansible") {
 	     string(name: 'USER_ID'),
 	     string(name: 'USER_NAME'),
 		 string(name: 'OPENSHIFT_HOST_PORT'),
+		 string(name: 'GITHUB'), 
+		 string(name: 'REPO'),
 	  ])
 	])
 	
@@ -67,8 +63,18 @@ node("jenkins-slave-ansible") {
 		sh "oc policy add-role-to-user edit ${params.USER_NAME} -n $project"
 	}
 
-	stage ("execute playbook") {
-		sh "ansible --version"
+	stage("checkout") {
+		git branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
+	}
+
+	stage ("update the roles") {
+		sh "ansible-playbook -i hosts.ini setup-environments/update.yml"
 	}		
 	
+	stage ("build the environment") {
+		withCredentials([file(credentialsId: 'ansible_vault', variable: 'vault')]) {
+			sh "ansible-playbook -i hosts.ini --vault-password-file ${vault} setup-environments/developer-environment-setup.yml -e env_project=${project}"
+    	}
+	}		
+
 }

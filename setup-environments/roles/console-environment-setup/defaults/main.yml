@@ -33,7 +33,11 @@ microservices_boost_projects:
       environment_variables:     
         - name: OPENSHIFT_HOST_PORT
           value: "{{ openshift_host_port }}"
-          
+        - name: PRODUCT_REPO
+          value: "{{ environments.repo }}"   
+        - name: GITHUB
+          value: "{{ github.org }}"   
+
     - name: console-user-api
       repo: estafet-openshift-boost-console-api-user
       expose: false
