@@ -1,0 +1,11 @@
+---
+- set_fact: branch="master"
+
+- name: Checkout redhat quickstarts
+  git:
+    repo: "https://github.com/redhat-cop/containers-quickstarts.git"
+    dest: "{{ workdir }}/containers-quickstarts"
+    version: "{{ branch }}"
+    update: yes
+  tags:
+    - git  

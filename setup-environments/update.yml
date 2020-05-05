@@ -1,8 +1,6 @@
 ---
 - name: Preparing the ansible roles for openshift boost 
   hosts: local   
-  vars:
-    workdir: "~/.estafet"  
   tasks:
 
     - name: load the variables

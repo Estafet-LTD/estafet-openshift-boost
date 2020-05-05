@@ -99,3 +99,6 @@
   tags:
     - openshift      
     
+- include_role: 
+    name: jenkins-ansible-slave-setup
+    

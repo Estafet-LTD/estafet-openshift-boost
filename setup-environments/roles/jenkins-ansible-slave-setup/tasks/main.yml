@@ -1,0 +1,8 @@
+---
+- name: Create the jenkins ansible slave
+  shell: "oc process -f {{ workdir }}/.openshift/templates/jenkins-slave-generic-template.yml -p NAME=jenkins-slave-ansible -p SOURCE_CONTEXT_DIR=jenkins-slaves/jenkins-slave-ansible | oc create -f -"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  tags:
+    - openshift       
