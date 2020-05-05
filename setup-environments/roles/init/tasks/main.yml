@@ -1,7 +1,7 @@
 ---
 - name: load product variables
   include_vars:
-    dir: vars
+    dir: "{{ playbook_dir }}/vars"
     extensions: [yml]
 
 - name: load the boost variables
