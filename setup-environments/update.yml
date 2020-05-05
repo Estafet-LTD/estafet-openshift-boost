@@ -45,6 +45,6 @@
 
     - name: Updating product roles
       copy:
-        src: "./setup-environments/roles"
+        src: "roles"
         dest: "~/.ansible"
         force: yes        
