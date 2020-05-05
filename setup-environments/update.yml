@@ -29,8 +29,22 @@
       with_fileglob:
       - "{{ workdir }}/estafet-openshift-boost/setup-environments/*.yml"
 
-    - name: Updating roles
+    - name: Updating inventory
+      copy:
+        src: "{{ item }}"
+        dest: . 
+        force: yes       
+      with_fileglob:
+      - "{{ workdir }}/estafet-openshift-boost/setup-environments/*.ini"
+
+    - name: Updating boost roles
       copy:
         src: "{{ workdir }}/estafet-openshift-boost/setup-environments/roles"
         dest: "~/.ansible"
         force: yes
+
+    - name: Updating product roles
+      copy:
+        src: "./setup-environments/roles"
+        dest: "~/.ansible"
+        force: yes        
