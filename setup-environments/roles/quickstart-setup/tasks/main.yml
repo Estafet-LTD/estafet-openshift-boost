@@ -9,3 +9,5 @@
     update: yes
   tags:
     - git  
+
+- set_fact: quickstarts="{{ workdir }}/containers-quickstarts"
