@@ -1,0 +1,6 @@
+boost_project: boost-test
+
+amq_params:
+  amq_user: amq
+  amq_password: amq
+  templates_project: openshift

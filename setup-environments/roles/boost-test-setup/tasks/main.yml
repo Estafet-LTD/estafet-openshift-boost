@@ -1,0 +1,23 @@
+---
+- include_role: 
+    name: namespace-setup
+  vars:
+    project: "{{ boost_project }}"
+    project_description: "Boost Test"
+
+- include_role: 
+    name: amq-setup
+  vars:
+    project: "{{ boost_project }}"
+    params: "{{ amq_params }}"
+
+- include_role: 
+    name: postgresql-setup
+  vars:
+    project: "{{ boost_project }}"
+    
+- include_role: 
+    name: add-boost-jenkins-role
+  vars:
+    project: "{{ boost_project }}"
+    role: edit    

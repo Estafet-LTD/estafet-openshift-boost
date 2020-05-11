@@ -3,131 +3,47 @@ boost_ddl: "{{ workdir }}/estafet-openshift-boost/setup-environments/ddl"
 templates: "{{ workdir }}/estafet-openshift-boost/setup-environments/templates"
 objects: "{{ workdir }}/estafet-openshift-boost/setup-environments/objects"
 
-microservices_boost_roles:
+boost_microservices:
   
     - name: console-ui-react
       repo: estafet-openshift-boost-console-ui-react
-      expose: true
-      test: false
-      environment_variables:
-        - name: PRODUCT_DESCRIPTION
-          value: "{{ product.description }}"
-        - name: OPENSHIFT_HOST
-          value: "{{ openshift.host }}"
-        - name: TASK_MANAGEMENT_TITLE
-          value: "{{ task_manager.title }}"
+      build: build-boost-react.jenkinsFile
+      release: release-boost-react.jenkinsFile
           
     - name: console-project-api
       repo: estafet-openshift-boost-console-api-project
-      expose: false
-      test: false
-      environment_variables:     
-        - name: OPENSHIFT_HOST_PORT
-          value: "{{ openshift_host_port }}"
+      build: build-boost-java.jenkinsFile
+      release: release-boost-java.jenkinsFile      
           
     - name: console-user-api
       repo: estafet-openshift-boost-console-api-user
-      expose: false
-      test: false
-      environment_variables:     
-        - name: OPENSHIFT_HOST_PORT
-          value: "{{ openshift_host_port }}"
-        - name: OPENSHIFT_USER
-          value: "{{ openshift.username }}"
-        - name: OPENSHIFT_PASSWORD
-          value: "{{ openshift.password }}"   
+      build: build-boost-java.jenkinsFile
+      release: release-boost-java.jenkinsFile          
             
     - name: console-environment-api
-      repo: estafet-openshift-boost-console-api-environment
-      expose: false
-      test: false
-      setup:
-        - name: create-postgres-db
-          app: console-environment-api
-          repo: estafet-openshift-boost-console-api-environment
-          reset_db: true          
-      environment_variables:     
-        - name: OPENSHIFT_HOST_PORT
-          value: "{{ openshift_host_port }}"
-        - name: OPENSHIFT_USER
-          value: "{{ openshift.username }}"
-        - name: OPENSHIFT_PASSWORD
-          value: "{{ openshift.password }}"    
-        - name: PRODUCT_REPO
-          value: "{{ environments.repo }}"   
-        - name: GITHUB
-          value: "{{ github.org }}"                 
+      repo: estafet-openshift-boost-console-api-environment      
                 
     - name: console-jenkins-api
       repo: estafet-openshift-boost-console-api-jenkins
-      expose: false
-      test: false
-      setup:
-        - name: create-postgres-db
-          app: console-jenkins-api
-          repo: estafet-openshift-boost-console-api-jenkins
-          reset_db: true    
-      environment_variables:     
-        - name: OPENSHIFT_HOST_PORT
-          value: "{{ openshift_host_port }}"
-        - name: OPENSHIFT_USER
-          value: "{{ openshift.username }}"
-        - name: OPENSHIFT_PASSWORD
-          value: "{{ openshift.password }}"    
+      build: build-boost-java.jenkinsFile
+      release: release-boost-java.jenkinsFile        
           
     - name: console-gateway-api
       repo: estafet-openshift-boost-console-api-gateway
-      expose: true  
-      test: false
-      environment_variables:   
-        - name: PRODUCT_DESCRIPTION
-          value: "{{ product.description }}"  
-                     
+      build: build-boost-java.jenkinsFile
+      release: release-boost-java.jenkinsFile
+                           
     - name: console-trello-api
       repo: estafet-openshift-boost-console-api-trello
-      expose: false      
-      test: false 
-      environment_variables:        
-        - name: TRELLO_ACCESS_TOKEN
-          value: "{{ trello.access_token }}"
-        - name: TRELLO_API_KEY
-          value: "{{ trello.api_key }}"
-        - name: TASK_MANAGER
-          value: "{{ task_manager.name }}"
+      build: build-boost-java.jenkinsFile
+      release: release-boost-java.jenkinsFile        
 
     - name: console-jira-api
       repo: estafet-openshift-boost-console-api-jira
-      expose: false
-      test: false
-      environment_variables:
-        - name: JIRA_ACCESS_TOKEN
-          value: "{{ jira.access_token }}"
-        - name: JIRA_USERNAME
-          value: "{{ jira.username }}"
-        - name: JIRA_BASE_URL
-          value: "{{ jira.base_url }}"
-        - name: TASK_MANAGER
-          value: "{{ task_manager.name }}"
+      build: build-boost-java.jenkinsFile
+      release: release-boost-java.jenkinsFile        
           
     - name: console-feature-api
       repo: estafet-openshift-boost-console-api-feature
-      expose: false       
-      test: false
-      setup:
-        - name: create-postgres-db
-          app: console-feature-api
-          repo: estafet-openshift-boost-console-api-feature
-          reset_db: true          
-      environment_variables:        
-        - name: OPENSHIFT_HOST_PORT
-          value: "{{ openshift_host_port }}"
-        - name: OPENSHIFT_USER
-          value: "{{ openshift.username }}"
-        - name: OPENSHIFT_PASSWORD
-          value: "{{ openshift.password }}"           
-        - name: GITHUB
-          value: "{{ github.org }}"          
-        - name: GITHUB_USER
-          value: "{{ github.user }}"        
-        - name: GITHUB_PASSWORD
-          value: "{{ github.password }}"
+      build: build-boost-java.jenkinsFile
+      release: release-boost-java.jenkinsFile        

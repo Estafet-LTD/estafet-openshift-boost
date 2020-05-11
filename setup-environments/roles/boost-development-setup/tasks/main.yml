@@ -1,25 +1,9 @@
 ---
-# Define the name and description of the OpenShift project
-- set_fact: boost_project="boost-dev"
+- include_role: 
+    name: boost-cicd-setup
 
 - include_role: 
-    name: namespace-setup
-  vars:
-    project: "{{ boost_project }}"
-    project_description: "Boost Development"
+    name: boost-build-setup
 
 - include_role: 
-    name: namespace-role-setup
-  vars:
-    project: "{{ boost_project }}"
-
-- include_role: 
-    name: amq-setup
-  vars:
-    project: "{{ boost_project }}"
-    params: "{{ amq_params }}"
-
-- include_role: 
-    name: postgresql-setup
-  vars:
-    project: "{{ boost_project }}"
+    name: boost-test-setup
