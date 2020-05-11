@@ -9,43 +9,52 @@ boost_microservices:
       repo: estafet-openshift-boost-console-ui-react
       build: build-boost-react.jenkinsFile
       release: release-boost-react.jenkinsFile
+      messaging: false
           
     - name: console-project-api
       repo: estafet-openshift-boost-console-api-project
       build: build-boost-java.jenkinsFile
-      release: release-boost-java.jenkinsFile      
+      release: release-boost-java.jenkinsFile
+      messaging: true      
           
     - name: console-user-api
       repo: estafet-openshift-boost-console-api-user
       build: build-boost-java.jenkinsFile
-      release: release-boost-java.jenkinsFile          
+      release: release-boost-java.jenkinsFile
+      messaging: false          
             
     - name: console-environment-api
       repo: estafet-openshift-boost-console-api-environment      
       build: build-boost-java.jenkinsFile
-      release: release-boost-java.jenkinsFile   
+      release: release-boost-java.jenkinsFile
+      messaging: true   
                 
     - name: console-jenkins-api
       repo: estafet-openshift-boost-console-api-jenkins
       build: build-boost-java.jenkinsFile
-      release: release-boost-java.jenkinsFile        
+      release: release-boost-java.jenkinsFile
+      messaging: true        
           
     - name: console-gateway-api
       repo: estafet-openshift-boost-console-api-gateway
       build: build-boost-java.jenkinsFile
       release: release-boost-java.jenkinsFile
+      messaging: true
                            
     - name: console-trello-api
       repo: estafet-openshift-boost-console-api-trello
       build: build-boost-java.jenkinsFile
-      release: release-boost-java.jenkinsFile        
+      release: release-boost-java.jenkinsFile
+      messaging: true        
 
     - name: console-jira-api
       repo: estafet-openshift-boost-console-api-jira
       build: build-boost-java.jenkinsFile
-      release: release-boost-java.jenkinsFile        
+      release: release-boost-java.jenkinsFile      
+      messaging: true  
           
     - name: console-feature-api
       repo: estafet-openshift-boost-console-api-feature
       build: build-boost-java.jenkinsFile
-      release: release-boost-java.jenkinsFile        
+      release: release-boost-java.jenkinsFile    
+      messaging: true    
