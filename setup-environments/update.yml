@@ -37,11 +37,13 @@
       with_fileglob:
       - "{{ workdir }}/estafet-openshift-boost/setup-environments/*.ini"
 
+    - name: Ensure the roles directory exists
+      shell: "mkdir ~/.ansible/roles || true"
+
     - name: Updating boost roles
-      copy:
+      synchronize:
         src: "{{ workdir }}/estafet-openshift-boost/setup-environments/roles"
-        dest: "~/.ansible"
-        force: yes
+        dest: "~/.ansible/roles"    
 
     - name: Updating product roles
       copy:
