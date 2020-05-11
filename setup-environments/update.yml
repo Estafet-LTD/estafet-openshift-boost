@@ -43,7 +43,7 @@
     - name: Updating boost roles
       synchronize:
         src: "{{ workdir }}/estafet-openshift-boost/setup-environments/roles"
-        dest: "~/.ansible/roles"    
+        dest: "~/.ansible"    
 
     - name: Updating product roles
       copy:
