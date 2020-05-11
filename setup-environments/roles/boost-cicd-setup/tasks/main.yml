@@ -6,11 +6,6 @@
     project_description: "Boost Development"
 
 - include_role: 
-    name: namespace-role-setup
-  vars:
-    project: "{{ boost_project }}"
-
-- include_role: 
     name: jenkins-setup
   vars:
     project: "{{ boost_project }}"
