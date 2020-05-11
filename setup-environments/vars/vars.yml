@@ -22,6 +22,8 @@ boost_microservices:
             
     - name: console-environment-api
       repo: estafet-openshift-boost-console-api-environment      
+      build: build-boost-java.jenkinsFile
+      release: release-boost-java.jenkinsFile   
                 
     - name: console-jenkins-api
       repo: estafet-openshift-boost-console-api-jenkins
