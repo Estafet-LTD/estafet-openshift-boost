@@ -37,9 +37,6 @@
       with_fileglob:
       - "{{ workdir }}/estafet-openshift-boost/setup-environments/*.ini"
 
-    - name: Ensure the roles directory exists
-      shell: "mkdir ~/.ansible/roles || true"
-
     - name: Updating boost roles
       synchronize:
         src: "{{ workdir }}/estafet-openshift-boost/setup-environments/roles"
