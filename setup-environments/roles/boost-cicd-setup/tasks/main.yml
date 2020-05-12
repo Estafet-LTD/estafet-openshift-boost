@@ -14,6 +14,7 @@
 
 - include_role: 
     name: jaeger-setup
+    project: "{{ boost_project }}"
 
 - name: Delete the all pipelines
   shell: "oc delete bc --all -n {{ boost_project }} || true"
