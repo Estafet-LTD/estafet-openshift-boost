@@ -28,8 +28,6 @@
     name: "{{ item.name }}"
   vars:
     params: "{{ item }}"
-    app: "{{ microservice.name }}"
-    repo: "{{ microservice.repo }}"
   with_items: "{{ microservice.setup | default([]) }}"
 
 - name: Remove all aspects of the application so that we can rebuild from scratch
