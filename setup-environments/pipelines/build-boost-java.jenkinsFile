@@ -93,7 +93,7 @@ node("maven") {
 	}
 	
 	stage("create build config") {
-			sh "oc process -n ${project} -f openshift/templates/${microservice}-build-config.yml -p NAMESPACE=${project} -p GITHUB=${params.GITHUB} -p DOCKER_IMAGE_LABEL=latest -p PRODUCT=${params.PRODUCT} | oc apply -f -"
+		sh "oc process -n ${project} -f openshift/templates/${microservice}-build-config.yml -p NAMESPACE=${project} -p GITHUB=${params.GITHUB} -p DOCKER_IMAGE_LABEL=latest -p PRODUCT=${params.PRODUCT} | oc apply -f -"
 	}
 
 	stage("execute build") {
@@ -124,10 +124,8 @@ node("maven") {
 		}		
 	}
 	
-	
 	stage("promote the image to test") {
 		openshiftTag namespace: project, srcStream: microservice, srcTag: "latest", destinationNamespace: "boost-test", destinationStream: microservice, destinationTag: version
 	}		
-	
 
 }

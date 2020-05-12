@@ -12,6 +12,9 @@
     volume_capacity: 10Gi
     memory_limit: 2Gi
 
+- include_role: 
+    name: jaeger-setup
+
 - name: Delete the all pipelines
   shell: "oc delete bc --all -n {{ boost_project }} || true"
   register: command_result

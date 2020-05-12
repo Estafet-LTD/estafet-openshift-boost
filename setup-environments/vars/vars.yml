@@ -24,7 +24,7 @@ boost_microservices:
       messaging: false          
             
     - name: console-environment-api
-      repo: estafet-openshift-boost-console-api-environment      
+      repo: estafet-openshift-boost-console-api-environment
       build: build-boost-java.jenkinsFile
       release: release-boost-java.jenkinsFile
       messaging: true   
