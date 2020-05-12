@@ -9,6 +9,10 @@ node("jenkins-slave-ansible") {
 	def project = "boost-test"
 	def microservice = params.MICROSERVICE	
 
+	stage("install jmespath") {
+		sh "pip install jmespath"
+	}
+
 	stage("checkout") {
 		git branch: "master", url: "https://github.com/Estafet-LTD/estafet-blockchain-demo"
 	}
