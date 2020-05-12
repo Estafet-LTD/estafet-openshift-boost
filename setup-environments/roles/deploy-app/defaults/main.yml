@@ -1,2 +1,0 @@
-app: "{{ microservice.name }}"
-repo: "{{ microservice.repo }}"
