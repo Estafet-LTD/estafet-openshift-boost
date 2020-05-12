@@ -19,7 +19,7 @@ node("jenkins-slave-ansible") {
 	
 	stage ("build the console app") {
 		withCredentials([file(credentialsId: 'ansible_vault', variable: 'vault')]) {
-			sh "ansible-playbook -i setup-environments/hosts.ini --vault-password-file ${vault} setup-environments/build-console-app.yml -e env_project=${project} -e microservice=${microservice}"
+			sh "ansible-playbook -i setup-environments/hosts.ini --vault-password-file ${vault} setup-environments/build-console-app.yml -e env_project=${project} -e target_app=${microservice}"
     	}
 	}	
 

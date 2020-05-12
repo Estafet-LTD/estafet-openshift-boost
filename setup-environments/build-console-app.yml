@@ -15,12 +15,11 @@
 
     - name: Verify that the microservice variable is set
       fail:
-        msg: "[microservice variable definition] is not set."
-      when: microservice is undefined
+        msg: "[target_app variable definition] is not set."
+      when: target_app is undefined
 
     - include_role:
         name: build-console-app
       vars: 
-        target_app: "{{ microservice }}"
         project: "{{ env_project }}"
 
