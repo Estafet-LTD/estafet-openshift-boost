@@ -13,9 +13,6 @@ parameters:
 - description: Defines the git repository uri within which the microservice resides
   name: MICROSERVICE_REPO_URI
   required: true    
-- description: Defines the product that this pipeline is related to
-  name: PRODUCT
-  required: true   
 - description: Defines build pipeline
   name: BUILD_PIPELINE
   required: true   
@@ -39,16 +36,10 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        uri: "https://github.com/Estafet-LTD/estafet-openshift-boost"
     strategy:
       jenkinsPipelineStrategy:
         env:
-          - name: GITHUB
-            value: ${GITHUB}
-          - name: PRODUCT
-            value: ${PRODUCT}
-          - name: REPO
-            value: ${MICROSERVICE_REPO_URI}
           - name: MICROSERVICE
             value: ${MICROSERVICE_NAME}                                 
         jenkinsfilePath: setup-environments/pipelines/${BUILD_PIPELINE}
@@ -78,14 +69,12 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        uri: "https://github.com/Estafet-LTD/estafet-openshift-boost"
     strategy:
       jenkinsPipelineStrategy:
         env:
           - name: GITHUB
             value: ${GITHUB}
-          - name: PRODUCT
-            value: ${PRODUCT}
           - name: REPO
             value: ${MICROSERVICE_REPO_URI}
           - name: MICROSERVICE

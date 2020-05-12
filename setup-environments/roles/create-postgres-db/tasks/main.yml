@@ -15,8 +15,8 @@
    var: db_pod
    verbosity: 0    
 
-- name: Create the {{ params.app }} database on PostgreSQL Pod
-  shell: 'oc exec {{db_pod}} -- /bin/sh -i -c "createdb {{ project }}-{{ params.app }}"'
+- name: Create the {{ app }} database on PostgreSQL Pod
+  shell: 'oc exec {{db_pod}} -- /bin/sh -i -c "createdb {{ project }}-{{ app }}"'
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
@@ -25,7 +25,7 @@
     - postgresql
 
 - name: Copy ddl to PostgreSQL Pod
-  shell: 'oc rsync --no-perms=true --include="*.ddl" --exclude="*" {{ workdir }}/{{ params.repo }}/ddl/ {{db_pod}}:/tmp'
+  shell: 'oc rsync --no-perms=true --include="*.ddl" --exclude="*" {{ workdir }}/{{ repo }}/ddl/ {{db_pod}}:/tmp'
   register: command_result
   when: params.reset_db 
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
@@ -45,7 +45,7 @@
     - postgresql  
 
 - name: Execute Drop ddl on PostgreSQL Pod
-  shell: 'oc exec {{db_pod}} -- /bin/sh -i -c "psql -d {{ project }}-{{ params.app }} -U postgres -f /tmp/drop-{{ params.app }}-db.ddl"'
+  shell: 'oc exec {{db_pod}} -- /bin/sh -i -c "psql -d {{ project }}-{{ app }} -U postgres -f /tmp/drop-{{ app }}-db.ddl"'
   register: command_result
   when: params.reset_db
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
@@ -55,7 +55,7 @@
     - postgresql
     
 - name: Drop liquibase on PostgreSQL Pod
-  shell: 'oc exec {{db_pod}} -- /bin/sh -i -c "psql -d {{ project }}-{{ params.app }} -U postgres -f /tmp/drop-liquibase-db.ddl"'
+  shell: 'oc exec {{db_pod}} -- /bin/sh -i -c "psql -d {{ project }}-{{ app }} -U postgres -f /tmp/drop-liquibase-db.ddl"'
   register: command_result
   when: params.reset_db
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"

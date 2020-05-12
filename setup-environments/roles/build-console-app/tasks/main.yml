@@ -1,0 +1,12 @@
+---
+- name: Build and Deploy the microservices
+  include_role:
+    name: create-app
+  vars:
+    microservice: "{{ item }}" 
+    docker_registry: "{{ console_environment.docker_registry }}"
+    maven_mirror_url: "{{ console_environment.maven_mirror_url }}"     
+  with_items: "{{ boost_microservices }}"
+  when: item.name == target_app
+  tags:
+    - openshift

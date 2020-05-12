@@ -8,18 +8,6 @@ def getProjects(json) {
 	return projects.sort()
 }
 
-def username() {
-    withCredentials([usernamePassword(credentialsId: 'cluster_admin', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        return USERNAME
-    }
-}
-
-def password() {
-    withCredentials([usernamePassword(credentialsId: 'cluster_admin', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        return PASSWORD
-    }
-}
-
 def getNextProjectName(product) {
 	sh "oc get projects -l type=${product}-dq -o json > projects.json"
 	def json = readFile('projects.json')	
@@ -50,7 +38,9 @@ node("jenkins-slave-ansible") {
 	])
 	
 	stage ("connect as admin") {
-		sh "oc login --insecure-skip-tls-verify=true -u ${username()} -p ${password()} ${params.OPENSHIFT_HOST_PORT}"
+		withCredentials([usernamePassword(credentialsId: 'cluster_admin', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+			sh "oc login --insecure-skip-tls-verify=true -u ${USERNAME} -p ${PASSWORD} ${params.OPENSHIFT_HOST_PORT}"
+    	}
 	}
 	
 	stage ("create the namespace") {

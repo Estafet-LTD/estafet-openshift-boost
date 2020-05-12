@@ -1,0 +1,26 @@
+---
+- name: Build and Deploy console app
+  hosts: local  
+  tasks:   
+  
+    - name: load the variables
+      include_vars:
+        dir: vars
+        extensions: [yml]  
+
+    - name: Verify that the env_project variable is set
+      fail:
+        msg: "[env_project variable definition] is not set."
+      when: env_project is undefined
+
+    - name: Verify that the microservice variable is set
+      fail:
+        msg: "[microservice variable definition] is not set."
+      when: microservice is undefined
+
+    - include_role:
+        name: build-console-app
+      vars: 
+        target_app: "{{ microservice }}"
+        project: "{{ env_project }}"
+
