@@ -43,3 +43,6 @@
   with_items: "{{ boost_microservices }}"
   tags:
     - openshift      
+
+- include_role: 
+    name: jenkins-ansible-slave-setup    
