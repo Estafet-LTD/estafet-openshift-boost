@@ -68,7 +68,9 @@ node('maven') {
 	boolean skipStages = false
 	
 	stage("checkout") {
-		git branch: "master", url: "https://${username('microservices-scrum')}:${password('microservices-scrum')}@github.com/${params.GITHUB}/${params.REPO}"
+		withCredentials([usernamePassword(credentialsId: 'git', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+			git branch: "master", url: "https://${USERNAME}:${PASSWORD}@github.com/${params.GITHUB}/${params.REPO}"			
+		}
 	}
 
 	stage("read the pipeline definition") {
