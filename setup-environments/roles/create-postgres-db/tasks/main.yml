@@ -15,6 +15,14 @@
    var: db_pod
    verbosity: 0    
 
+- debug:
+   var: app
+   verbosity: 0
+
+- debug:
+   var: repo
+   verbosity: 0
+
 - name: Create the {{ app }} database on PostgreSQL Pod
   shell: 'oc exec {{db_pod}} -n {{ project }} -- /bin/sh -i -c "createdb {{ project }}-{{ app }}"'
   register: command_result
