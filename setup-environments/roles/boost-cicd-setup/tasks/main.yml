@@ -12,11 +12,21 @@
     volume_capacity: 10Gi
     memory_limit: 2Gi
 
-- name: Delete the all pipelines
-  shell: "oc delete bc --all -n {{ boost_project }} || true"
+- name: Delete the all build pipelines
+  shell: "oc delete bc build-boost-{{ item.name }} -n {{ boost_project }} || true"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
+  with_items: "{{ boost_microservices }}"
+  tags:
+    - openshift 
+
+- name: Delete the all release pipelines
+  shell: "oc delete bc release-boost-{{ item.name }} -n {{ boost_project }} || true"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  with_items: "{{ boost_microservices }}"
   tags:
     - openshift 
 
