@@ -21,7 +21,11 @@ node('maven') {
 	def microservice = params.MICROSERVICE
 	def developmentVersion
 	def releaseVersion
-	
+
+	stage("install docker") {
+		sh "pip install docker"
+	}
+
 	stage("checkout") {
 		withCredentials([usernamePassword(credentialsId: 'git', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
 			git branch: "master", url: "https://${USERNAME}:${PASSWORD}@github.com/${params.GITHUB}/${params.REPO}"			
@@ -48,11 +52,11 @@ node('maven') {
 
 	stage("publish the image") {
 		def repo = "${getImageRepo(project, microservice)}"
-		sh "sudo docker pull ${repo}:latest"
-		sh "sudo docker tag ${repo}:latest estafetboost/${microservice}:${releaseVersion}"
+		sh "docker pull ${repo}:latest"
+		sh "docker tag ${repo}:latest estafetboost/${microservice}:${releaseVersion}"
 		withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-			sh "sudo docker login --username ${USERNAME} --password ${PASSWORD}"
-			sh "sudo docker push estafetboost/${microservice}:${releaseVersion}"
+			sh "docker login --username ${USERNAME} --password ${PASSWORD}"
+			sh "docker push estafetboost/${microservice}:${releaseVersion}"
 		}
 	}
 
