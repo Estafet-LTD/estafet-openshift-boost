@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: publish-image-pipeline  
+parameters:
+- description: Defines the location of the estafet dockerhub
+  name: DOCKERHUB
+  required: true  
+objects:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: pipeline
+      name: "publish-image"
+      type: build
+    name: "publish-image"
+  spec:
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: "https://github.com/Estafet-LTD/estafet-openshift-boost"
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+          - name: DOCKERHUB
+            value: ${DOCKERHUB}
+          - name: VERSION
+            value: version
+          - name: MICROSERVICE
+            value: microservice                                             
+        jenkinsfilePath: setup-environments/pipelines/publish-image.jenkinsFile
+      type: JenkinsPipeline
+    triggers:
+    - github:
+        secret: secret101
+      type: GitHub
+    - generic:
+        secret: secret101
+      type: Generic
+  status:
+    lastVersion: 0

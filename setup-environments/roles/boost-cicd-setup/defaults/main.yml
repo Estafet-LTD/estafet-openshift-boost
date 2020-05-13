@@ -1,1 +1,3 @@
 boost_project: boost-cicd
+dockerhub:
+  org: estafetboost
