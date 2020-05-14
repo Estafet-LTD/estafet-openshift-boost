@@ -12,10 +12,15 @@
     params: "{{ amq_params }}"
 
 - include_role: 
+    name: jaeger-setup
+  vars:
+    project: "{{ boost_project }}"
+
+- include_role: 
     name: postgresql-setup
   vars:
     project: "{{ boost_project }}"
-    
+
 - include_role: 
     name: add-boost-jenkins-role
   vars:

@@ -22,6 +22,11 @@
   vars:
     project: "{{ console_project }}"
 
+- include_role: 
+    name: jaeger-setup
+  vars:
+    project: "{{ console_project }}"
+
 - name: Deploy the microservices
   include_role:
     name: deploy-app
