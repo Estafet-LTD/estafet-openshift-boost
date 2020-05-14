@@ -2,8 +2,10 @@ def updateProperties(version) {
 	properties['version'] = version
 	def contents = ""
 	properties.each { key, value ->
+		println "$key=$value"
        	contents += "$key=$value\n"
     }
+	println contents
 	writeFile file: '.boost/application.properties', text: contents	
 }
 
@@ -40,12 +42,11 @@ node {
 		updateProperties developmentVersion
 		sh "git add .boost/application.properties"
 		sh "git commit -m \"boost update version ${developmentVersion}\""
-		sh "git push origin master"		
-		sh "git checkout -B master origin/master"		
+		sh "git push origin master"			
+		sh "git tag ${releaseVersion}"
 		updateProperties releaseVersion
 		sh "git add .boost/application.properties"
 		sh "git commit -m \"boost release version ${releaseVersion}\""
-		sh "git tag ${releaseVersion}"
 		sh "git push origin ${releaseVersion}"
 	}	
 
