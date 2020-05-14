@@ -1,3 +1,14 @@
+@NonCPS
+def getDockerImageRepo(json) {
+	return new groovy.json.JsonSlurper().parseText(json).status.dockerImageRepository
+}
+
+def getImageRepo(project, microservice) {
+	sh "oc get is ${microservice} -o json -n ${project} > image.json"
+	def image = readFile('image.json')
+	return getDockerImageRepo(image)
+}
+
 node('maven') {
 
 	properties([
@@ -10,6 +21,7 @@ node('maven') {
 	def microservice = params.MICROSERVICE
 	def developmentVersion
 	def releaseVersion
+	def dockerhub = params.DOCKERHUB
 
 	stage("checkout") {
 		withCredentials([usernamePassword(credentialsId: 'git', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
@@ -33,6 +45,10 @@ node('maven') {
 			sh "git tag ${releaseVersion}"
 			sh "git push origin ${releaseVersion}"
 		} 
+	}	
+
+	stage("publish the image") {
+		sh "oc image mirror ${getImageRepo(project, microservice)}:latest docker.io/${dockerhub}/${microservice}:${releaseVersion}"
 	}	
 
 }
