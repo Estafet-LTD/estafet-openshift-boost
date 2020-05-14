@@ -48,7 +48,7 @@ node('maven') {
 	}	
 
 	stage("publish the image") {
-		sh "oc image mirror ${getImageRepo(project, microservice)}:latest docker.io/${dockerhub}/${microservice}:${releaseVersion}"
+		sh "oc image mirror ${getImageRepo(project, microservice)}:latest docker.io/${dockerhub}/${microservice}:${releaseVersion} --insecure=true"
 	}	
 
 }
