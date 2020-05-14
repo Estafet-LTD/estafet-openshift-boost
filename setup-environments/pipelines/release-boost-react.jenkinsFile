@@ -4,7 +4,7 @@ def updateProperties(version) {
 	properties.each { key, value ->
        	contents += "$key=$value\n"
     }
-	writeFile file: file: '.boost/application.properties', text: contents	
+	writeFile file: '.boost/application.properties', text: contents	
 }
 
 node {
