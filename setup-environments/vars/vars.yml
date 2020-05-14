@@ -40,7 +40,7 @@ boost_microservices:
         - name: create-postgres-db
           app: console-environment-api
           repo: estafet-openshift-boost-console-api-environment
-          reset_db: true   
+          reset_db: false   
                 
     - name: console-jenkins-api
       repo: estafet-openshift-boost-console-api-jenkins
@@ -52,7 +52,7 @@ boost_microservices:
         - name: create-postgres-db
           app: console-jenkins-api
           repo: estafet-openshift-boost-console-api-jenkins
-          reset_db: true   
+          reset_db: false   
           
     - name: console-gateway-api
       repo: estafet-openshift-boost-console-api-gateway
@@ -85,4 +85,4 @@ boost_microservices:
         - name: create-postgres-db
           app: console-feature-api
           repo: estafet-openshift-boost-console-api-feature
-          reset_db: true    
+          reset_db: false    
