@@ -30,7 +30,7 @@ node {
 	stage("increment version") {
 		properties = readProperties  file: '.boost/application.properties'
 		def matcher = properties['version'] =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
-		developmentVersion = "${matcher[0][1]}${matcher[0][2].toInteger()+1}-SNAPSHOT"
+		developmentVersion = "${matcher[0][1]}${matcher[0][2].toInteger()+1}-SNAPSHOT".toString()
 		releaseVersion = "${matcher[0][1]}${matcher[0][2]}"
 	}
 
@@ -41,6 +41,7 @@ node {
 		sh "git add .boost/application.properties"
 		sh "git commit -m \"boost update version ${developmentVersion}\""
 		sh "git push origin master"		
+		sh "git checkout -B master origin/master"		
 		updateProperties releaseVersion
 		sh "git add .boost/application.properties"
 		sh "git commit -m \"boost release version ${releaseVersion}\""
