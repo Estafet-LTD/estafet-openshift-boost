@@ -2,11 +2,6 @@
 - name: Build and Deploy console app
   hosts: local  
   tasks:   
-  
-    - name: load the variables
-      include_vars:
-        dir: vars
-        extensions: [yml]  
 
     - name: Verify that the env_project variable is set
       fail:
