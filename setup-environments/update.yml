@@ -8,6 +8,9 @@
         dir: vars
         extensions: [yml]  
    
+    - set_fact: 
+        workdir: "{{ ansible_env.HOME }}/.boost"
+
     - name: Create Workdir
       file:
         path: "{{ workdir }}"

@@ -14,26 +14,49 @@ def getValue(name, configs) {
 	return returnValue
 }
 
-node("maven") {
+node("jenkins-slave-ansible") {
 
 	properties([
 	  parameters([
-	     string(name: 'GITHUB'), string(name: 'PRODUCT'), string(name: 'REPO'), string(name: 'MICROSERVICE'),
+	     string(name: 'GITHUB'), 
+		 string(name: 'PRODUCT'), 
+		 string(name: 'PRODUCT_REPO'), 
+		 string(name: 'REPO'), 
+		 string(name: 'MICROSERVICE'),
 	  ])
 	])
 
 	def project = "${params.PRODUCT}-build"
 	def microservice = params.MICROSERVICE	
 	def version
-	def pipelines
-	def resources
-	
-	currentBuild.description = "Build a container from the source, then execute unit and container integration tests before promoting the container as a release candidate for acceptance testing."
 
-	stage("checkout") {
-		git branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
+	stage("checkout ${params.PRODUCT_REPO}") {
+		git branch: "master", url: "https://github.com/${params.GITHUB}/${params.PRODUCT_REPO}"
 	}
+
+	stage("checkout ${params.REPO}") {
+		checkout scm: [$class: 'GitSCM', 
+				userRemoteConfigs: [[url: "https://github.com/${params.GITHUB}/${params.REPO}"]], 
+				extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '~/.boost']],
+      			branches: [[name: '*/master']]], changelog: false, poll: false
+	}
+
+	stage("reset the promoted image stream") {
+		def pom = readFile('pom.xml')
+		version = getVersion(pom)
+		sh "oc tag -d ${microservice}:${version} -n ${params.PRODUCT}-cicd || true"
+	}	
+
+	stage ("install boost") {
+		sh "ansible-playbook -i setup-environments/hosts.ini setup-environments/update.yml"
+	}		
 	
+	stage ("build the microservice") {
+		withCredentials([file(credentialsId: 'ansible_vault', variable: 'vault')]) {
+			sh "ansible-playbook -i setup-environments/hosts.ini --vault-password-file ${vault} setup-environments/build-microservice.yml -e env_project=${project}"
+    	}
+	}	
+
 	stage("read the pipeline definition") {
 		pipelines = readYaml file: "openshift/pipelines/pipelines.yml"
 	}
@@ -103,12 +126,6 @@ node("maven") {
 			}
 		}		
 	}
-	
-	stage("reset the promoted image stream") {
-		def pom = readFile('pom.xml')
-		version = getVersion(pom)
-		sh "oc tag -d ${microservice}:${version} -n ${params.PRODUCT}-cicd || true"
-	}	
 	
 	stage("create build config") {
 			sh "oc process -n ${project} -f openshift/templates/${microservice}-build-config.yml -p NAMESPACE=${project} -p GITHUB=${params.GITHUB} -p DOCKER_IMAGE_LABEL=latest -p PRODUCT=${params.PRODUCT} | oc apply -f -"

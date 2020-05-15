@@ -1,4 +1,4 @@
-
+workdir: "{{ ansible_env.HOME }}/.boost"
 boost_ddl: "{{ workdir }}/estafet-openshift-boost/setup-environments/ddl"
 templates: "{{ workdir }}/estafet-openshift-boost/setup-environments/templates"
 objects: "{{ workdir }}/estafet-openshift-boost/setup-environments/objects"
