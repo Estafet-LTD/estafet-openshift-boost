@@ -1,6 +1,6 @@
 ---
 - name: Delete a Openshift project {{ project }}
-  shell: "oc delete project {{ project }}"
+  shell: "oc delete project {{ project }} || true"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
