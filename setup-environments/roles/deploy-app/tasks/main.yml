@@ -68,7 +68,7 @@
   set_fact: mapStr=""
 
 - name: format the configmap variables
-  set_fact: mapStr='{{ mapStr }} --from-literal={{ item.name }}={{ item.value }}'
+  set_fact: mapStr="{{ mapStr }} --from-literal={{ item.name }}='{{ item.value }}'"
   with_items: "{{ config_map }}"
 
 - name: Create the {{ microservice.name }} configmap
@@ -94,7 +94,7 @@
   when: stat_result.stat.exists
 
 - name: format the secrets variables
-  set_fact: secretStr='{{ secretStr }} --from-literal={{ item.name }}={{ item.value }}'
+  set_fact: secretStr="{{ secretStr }} --from-literal={{ item.name }}='{{ item.value }}'"
   with_items: "{{ secrets }}"
   when: stat_result.stat.exists
 
