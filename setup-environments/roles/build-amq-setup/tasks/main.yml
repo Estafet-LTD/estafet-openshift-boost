@@ -8,7 +8,6 @@
       amq_user: amq
       amq_password: amq
       templates_project: openshift
-  when: item.messaging 
   with_items: "{{ microservices }}"
   tags:
     - openshift
