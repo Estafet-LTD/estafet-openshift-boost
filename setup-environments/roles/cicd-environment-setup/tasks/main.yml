@@ -83,7 +83,7 @@
     - openshift 
 
 - name: Create build and release pipelines for the libraries
-  shell: "oc process -f {{ templates }}/library-pipelines.yml -p GITHUB={{ github.org }} -p BUILD_PIPELINE={{ item.build }} -p RELEASE_PIPELINE={{ item.release }} -p LIBRARY_NAME={{ item.name }} -p LIBRARY_REPO_URI={{ item.repo }} -p PRODUCT={{ product.name }} | oc create -f -"
+  shell: "oc process -f {{ templates }}/library-pipelines.yml -p GITHUB={{ github.org }} -p BUILD_PIPELINE={{ item.build }} -p RELEASE_PIPELINE={{ item.release }} -p LIBRARY_NAME={{ item.name }} -p LIBRARY_REPO_URI={{ item.repo }} -p PRODUCT={{ product.name }} -p ENVIRONMENTS_REPO_URI={{ product.repo }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
