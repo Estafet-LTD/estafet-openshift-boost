@@ -20,6 +20,7 @@
       git:
         repo: "https://github.com/{{ github.org }}/estafet-openshift-boost.git"
         dest: "{{ workdir }}/estafet-openshift-boost"
+        version: "{{ boost.version }}"
         update: yes
       tags:
         - git  
