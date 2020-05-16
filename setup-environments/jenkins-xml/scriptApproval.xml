@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+<scriptApproval plugin="script-security@1.66">
+    <approvedScriptHashes />
+    <approvedSignatures>
+        <string>method groovy.lang.GroovyObject getProperty java.lang.String</string>
+        <string>method groovy.util.XmlSlurper parseText java.lang.String</string>
+        <string>new groovy.util.XmlSlurper</string>
+        <string>staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods sort java.util.Collection boolean groovy.lang.Closure</string>
+        <string>staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods transpose java.util.List</string>
+    </approvedSignatures>
+    <aclApprovedSignatures />
+    <approvedClasspathEntries />
+    <pendingScripts />
+    <pendingSignatures />
+    <pendingClasspathEntries />
+</scriptApproval>

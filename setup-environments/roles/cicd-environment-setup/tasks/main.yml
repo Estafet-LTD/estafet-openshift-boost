@@ -98,7 +98,10 @@
   changed_when: "'exists' not in command_result.stderr"  
   tags:
     - openshift      
-    
+
+- include_role: 
+    name: jenkins-script-approval
+
 - include_role: 
     name: jenkins-ansible-slave-setup
     
