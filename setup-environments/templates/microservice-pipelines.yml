@@ -16,14 +16,11 @@ parameters:
 - description: Defines the product that this pipeline is related to
   name: PRODUCT
   required: true   
-- description: Defines build pipeline
-  name: BUILD_PIPELINE
+- description: Defines boost version
+  name: VERSION
   required: true   
-- description: Defines release pipeline
-  name: RELEASE_PIPELINE
-  required: true   
-- description: Defines promote to prod pipeline
-  name: PROMOTE_TO_PROD_PIPELINE
+- description: Defines test pipeline
+  name: TEST_PIPELINE
   required: true   
 - description: Defines the main repository that contains the infrastructor definition
   name: ENVIRONMENTS_REPO_URI
@@ -49,7 +46,8 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/${ENVIRONMENTS_REPO_URI}"
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
         env:
@@ -61,15 +59,41 @@ objects:
             value: ${MICROSERVICE_REPO_URI}
           - name: MICROSERVICE
             value: ${MICROSERVICE_NAME}                                 
-        jenkinsfilePath: "setup-environments/pipelines/${BUILD_PIPELINE}"
+        jenkinsfilePath: "setup-environments/pipelines/build.jenkinsFile"
       type: JenkinsPipeline
-    triggers:
-    - github:
-        secret: secret101
-      type: GitHub
-    - generic:
-        secret: secret101
-      type: Generic
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: pipeline
+      name: "test-${MICROSERVICE_NAME}"
+      type: test
+      product: ${PRODUCT}
+    name: "test-${MICROSERVICE_NAME}"
+  spec:
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: "https://github.com/${GITHUB}/$ENVIRONMENTS_REPO_URI}"
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+          - name: GITHUB
+            value: ${GITHUB}
+          - name: PRODUCT
+            value: ${PRODUCT}
+          - name: REPO
+            value: ${MICROSERVICE_REPO_URI}
+          - name: MICROSERVICE
+            value: ${MICROSERVICE_NAME}                                 
+        jenkinsfilePath: "setup-environments/pipelines/${TEST_PIPELINE}"
+      type: JenkinsPipeline
   status:
     lastVersion: 0
 - apiVersion: v1
@@ -89,7 +113,8 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/${ENVIRONMENTS_REPO_URI}"
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
         env:
@@ -101,7 +126,7 @@ objects:
             value: ${MICROSERVICE_REPO_URI}
           - name: MICROSERVICE
             value: ${MICROSERVICE_NAME}                              
-        jenkinsfilePath: "setup-environments/pipelines/${RELEASE_PIPELINE}"
+        jenkinsfilePath: "setup-environments/pipelines/release.jenkinsFile"
       type: JenkinsPipeline
   status:
     lastVersion: 0
@@ -122,7 +147,8 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/${ENVIRONMENTS_REPO_URI}"
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
         env:
@@ -136,7 +162,7 @@ objects:
             value: ${MICROSERVICE_NAME}
           - name: PROJECT
             value: ${PREPROD_PROJECT}                         
-        jenkinsfilePath: "setup-environments/pipelines/${PROMOTE_TO_PROD_PIPELINE}"
+        jenkinsfilePath: "setup-environments/pipelines/promote-to-prod.jenkinsFile"
       type: JenkinsPipeline
   status:
     lastVersion: 0    

@@ -16,12 +16,9 @@ parameters:
 - description: Defines the product that this pipeline is related to
   name: PRODUCT
   required: true   
-- description: Defines promote pipeline
-  name: PROMOTE_PIPELINE
-  required: true   
-- description: Defines the main repository that contains the infrastructor definition
-  name: ENVIRONMENTS_REPO_URI
-  required: true     
+- description: Defines boost version
+  name: VERSION
+  required: true      
 - description: Defines the environment that this pipeline is related to
   name: ENV
   required: true    
@@ -46,7 +43,8 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/${ENVIRONMENTS_REPO_URI}"
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
         env:
@@ -60,7 +58,7 @@ objects:
             value: ${MICROSERVICE_NAME}
           - name: PROJECT
             value: ${PROJECT}
-        jenkinsfilePath: "setup-environments/pipelines/${PROMOTE_PIPELINE}"
+        jenkinsfilePath: "setup-environments/pipelines/promote.jenkinsFile"
       type: JenkinsPipeline
   status:
     lastVersion: 0

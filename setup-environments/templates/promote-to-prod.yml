@@ -10,6 +10,9 @@ parameters:
 - description: Defines the product that this pipeline is related to
   name: PRODUCT
   required: true
+- description: Defines boost version
+  name: VERSION
+  required: true      
 - description: Defines the environment that this pipeline is related to
   name: ENV
   required: true      
@@ -31,6 +34,7 @@ objects:
     source:
       git:
         uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
         env:

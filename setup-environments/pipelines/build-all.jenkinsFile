@@ -2,7 +2,9 @@ node {
 	
 	properties([
 	  parameters([
-	     string(name: 'GITHUB'), string(name: 'PRODUCT'), string(name: 'REPO'),
+	     string(name: 'GITHUB'), 
+		 string(name: 'PRODUCT'), 
+		 string(name: 'REPO'),
 	  ]),
 	  disableConcurrentBuilds()
 	])	
