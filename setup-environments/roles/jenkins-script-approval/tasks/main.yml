@@ -16,7 +16,6 @@
 - name: Copy script approval to the jenkins Pod
   shell: 'oc rsync --no-perms=true --include="*.xml" --exclude="*" {{ jenkins_xml }}/ {{jenkins_pod}}:/var/lib/jenkins -n {{ project }}'
   register: command_result
-  when: params.reset_db 
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
   tags:
