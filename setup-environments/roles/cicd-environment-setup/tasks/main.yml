@@ -26,6 +26,45 @@
   tags:
     - openshift 
 
+- name: Delete the all build pipelines
+  shell: "oc delete bc build-{{ item.name }} -n {{ cicd_project }} || true"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  with_items: "{{ microservices }}"
+  tags:
+    - openshift 
+
+- name: Delete the all release pipelines
+  shell: "oc delete bc release-{{ item.name }} -n {{ cicd_project }} || true"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  with_items: "{{ microservices }}"
+  tags:
+    - openshift 
+
+- name: Delete the all release pipelines
+  shell: "oc delete bc promote-to-prod-{{ item.name }} -n {{ cicd_project }} || true"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  with_items: "{{ microservices }}"
+  tags:
+    - openshift 
+
+- name: Delete the all promotion pipelines
+  shell: "oc delete bc promote-{{ item[1].name }}-{{ item[0].name }} -n {{ cicd_project }} || true"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  when: item[1].name != 'build' and item[1].name != 'prod' and item[1].next != 'end' 
+  with_nested: 
+    - "{{ microservices }}"
+    - "{{ environments.stages }}"
+  tags:
+    - openshift 
+
 - name: set_fact when for preprod
   set_fact: preprod_project="{{ product.name }}-{{ item.name }}"
   with_items: "{{ environments.stages }}"
