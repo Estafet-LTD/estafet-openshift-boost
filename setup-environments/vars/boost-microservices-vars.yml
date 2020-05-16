@@ -1,13 +1,4 @@
-workdir: "{{ ansible_env.HOME }}/.boost"
-boost_ddl: "{{ workdir }}/estafet-openshift-boost/setup-environments/ddl"
-templates: "{{ workdir }}/estafet-openshift-boost/setup-environments/templates"
-objects: "{{ workdir }}/estafet-openshift-boost/setup-environments/objects"
-jenkins_xml: "{{ workdir }}/estafet-openshift-boost/setup-environments/jenkins-xml"
-  
-console_environment:
-  maven_mirror_url: http://nexus.nexus.svc:8081/nexus/content/groups/public
-  docker_registry: docker-registry.default.svc:5000
-
+---
 boost_microservices:
   
     - name: console-ui-react
@@ -35,7 +26,7 @@ boost_microservices:
       test: false          
             
     - name: console-environment-api
-      version: 0.0.8
+      version: 0.0.9
       repo: estafet-openshift-boost-console-api-environment
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile

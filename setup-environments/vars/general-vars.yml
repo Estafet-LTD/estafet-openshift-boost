@@ -1,0 +1,11 @@
+---
+workdir: "{{ ansible_env.HOME }}/.boost"
+boost_ddl: "{{ workdir }}/estafet-openshift-boost/setup-environments/ddl"
+templates: "{{ workdir }}/estafet-openshift-boost/setup-environments/templates"
+objects: "{{ workdir }}/estafet-openshift-boost/setup-environments/objects"
+jenkins_xml: "{{ workdir }}/estafet-openshift-boost/setup-environments/jenkins-xml"
+  
+console_environment:
+  maven_mirror_url: http://nexus.nexus.svc:8081/nexus/content/groups/public
+  docker_registry: docker-registry.default.svc:5000
+

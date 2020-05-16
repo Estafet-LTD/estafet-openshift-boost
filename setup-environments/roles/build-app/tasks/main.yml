@@ -5,15 +5,6 @@
     var: microservice
     verbosity: 0
 
-- name: Checkout {{ microservice.repo }} from github branch {{ branch }}
-  git:
-    repo: "https://github.com/{{ github.org }}/{{ microservice.repo }}.git"
-    dest: "{{ workdir }}/{{ microservice.repo }}"
-    version: "{{ branch }}"
-    update: yes
-  tags:
-    - git  
-
 - name: Check that the build-setup.yml exists
   stat:
     path: "{{ workdir }}/{{ microservice.repo }}/openshift/setup/build-setup.yml"
