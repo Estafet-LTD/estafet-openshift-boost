@@ -101,7 +101,9 @@
 
 - include_role: 
     name: jenkins-script-approval
-
+  vars:
+    project: "{{ cicd_project }}"
+    
 - include_role: 
     name: jenkins-ansible-slave-setup
     
