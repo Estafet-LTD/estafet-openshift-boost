@@ -138,7 +138,10 @@ node {
 	
 	properties([
 	  parameters([
-	     string(name: 'PRODUCT'), string(name: 'PROJECT'), string(name: 'GITHUB'), string(name: 'REPO'),
+	     string(name: 'PRODUCT'), 
+	     string(name: 'PROJECT'), 
+	     string(name: 'GITHUB'), 
+	     string(name: 'REPO'),
 	  ])
 	])	
 	
@@ -169,7 +172,7 @@ node {
 			if (!deploymentConfigExists(project, microservice.name) || 
 				!isRunning(project, microservice.name) || 
 				!isVersion(prevProject, project, microservice.name, version)) {
-				openshiftBuild namespace: "${product}-cicd", buildConfig: "promote-${env}-${microservice.name}", env : [ [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'REPO', value : microservice.repo ], [ name : 'MICROSERVICE', value : microservice.name ], [ name : 'PROJECT', value : params.PROJECT ] ], waitTime: "1800000"
+				openshiftBuild namespace: "${product}-cicd", buildConfig: "promote-${env}-${microservice.name}", env : [ [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'PRODUCT_REPO', value : params.REPO ], [ name : 'REPO', value : microservice.repo ], [ name : 'MICROSERVICE', value : microservice.name ], [ name : 'PROJECT', value : params.PROJECT ] ], waitTime: "1800000"
 				openshiftVerifyBuild namespace: "${product}-cicd", buildConfig: "promote-${env}-${microservice.name}", waitTime: "1800000" 
 			}
 		}		

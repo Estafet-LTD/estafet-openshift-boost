@@ -3,10 +3,9 @@ node {
 	properties([
 	  parameters([
 	     string(name: 'GITHUB'), 
-		 string(name: 'PRODUCT'), 
+		 string(name: 'PRODUCT'),
 		 string(name: 'REPO'),
-	  ]),
-	  disableConcurrentBuilds()
+	  ])
 	])	
 
 	def microservices		
@@ -22,7 +21,7 @@ node {
 
 	stage ('build all microservices') {
 		microservices.each { microservice ->
-			openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "build-${microservice.name}", env : [ [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'REPO', value : "${microservice.repo}" ], [ name : 'MICROSERVICE', value : "${microservice.name}" ] ], waitTime: "1800000"
+			openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "build-${microservice.name}", env : [ [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'REPO', value : "${microservice.repo}" ], [ name : 'PRODUCT_REPO', value : params.REPO ], [ name : 'MICROSERVICE', value : "${microservice.name}" ] ], waitTime: "1800000"
 			openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "build-${microservice.name}", waitTime: "1800000" 
 	  }	
 	}
