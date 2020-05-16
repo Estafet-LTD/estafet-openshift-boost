@@ -80,7 +80,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/$ENVIRONMENTS_REPO_URI}"
+        uri: "https://github.com/${GITHUB}/${ENVIRONMENTS_REPO_URI}"
     strategy:
       jenkinsPipelineStrategy:
         env:
