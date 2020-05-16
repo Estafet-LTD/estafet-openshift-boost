@@ -1,6 +1,6 @@
 ---
 - set_fact:
-  workdir: "{{ ansible_env.HOME }}/.boost"
+    workdir: "{{ ansible_env.HOME }}/.boost"
 
 - name: load product variables
   include_vars:
