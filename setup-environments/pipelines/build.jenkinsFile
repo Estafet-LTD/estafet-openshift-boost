@@ -54,8 +54,8 @@ node("jenkins-slave-ansible") {
 	}	
 
 	stage("execute build test") {
-		openshiftBuild namespace: project, buildConfig: "test-${microservice}"
-		openshiftVerifyBuild namespace: project, buildConfig: "test-${microservice}", waitTime: "300000" 
+		openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "test-${microservice}"
+		openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "test-${microservice}", waitTime: "300000" 
 	}
 
 	stage("promote the image to cicd") {
