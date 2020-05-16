@@ -18,6 +18,7 @@ node("jenkins-slave-ansible") {
 
 	def project = "${params.PRODUCT}-build"
 	def microservice = params.MICROSERVICE	
+	def workDir = "~/.boost/${params.REPO}"
 	def version
 
 	stage("checkout ${params.PRODUCT_REPO}") {
@@ -29,15 +30,18 @@ node("jenkins-slave-ansible") {
 	}		
 
 	stage("checkout ${params.REPO}") {
-		git credentialsId: "git", url: "https://github.com/${params.GITHUB}/${params.REPO}"
+		checkout scm: [$class: 'GitSCM', 
+				userRemoteConfigs: [[url: "https://github.com/${params.GITHUB}/${params.REPO}"]], 
+				extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: workDir]],
+      			branches: [[name: '*/master']]], changelog: false, poll: false
 	}
 
 	stage("reset the promoted image stream") {
-		if (fileExists("pom.xml")) {
-			def pom = readFile("pom.xml")
+		if (fileExists("${workDir}/pom.xml")) {
+			def pom = readFile("${workDir}/pom.xml")
 			version = getVersion(pom)
 		} else {
-			def properties = readProperties  file: ".boost/application.properties"
+			def properties = readProperties  file: "${workDir}/.boost/application.properties"
 			version = properties['version']
 		}
 		sh "oc tag -d ${microservice}:${version} -n ${params.PRODUCT}-cicd || true"
