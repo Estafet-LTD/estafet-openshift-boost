@@ -51,36 +51,29 @@ node("jenkins-slave-ansible") {
 
 	def project = "${params.PRODUCT}-test"
 	def microservice = params.MICROSERVICE	
-	def workDir = "~/.boost/${params.REPO}"
 
 	String version
 	def developmentVersion
 	def releaseVersion
-	def pipelines
-	def resources
+	def properties
 	boolean skipStages = false
 	
-	stage("checkout ${params.PRODUCT_REPO}") {
-		git credentialsId: "git", url: "https://github.com/${params.GITHUB}/${params.PRODUCT_REPO}"
-	}
-
-	stage ("install boost") {
-		sh "ansible-playbook -i setup-environments/hosts.ini setup-environments/update.yml"
-	}		
-
-	stage("checkout ${params.REPO}") {
-		checkout scm: [$class: 'GitSCM', 
-				userRemoteConfigs: [[url: "https://github.com/${params.GITHUB}/${params.REPO}"]], 
-				extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: workDir]],
-      			branches: [[name: '*/master']]], changelog: false, poll: false
+	stage("checkout") {
+		git branch: "master", credentialsId: "git", url: "https://github.com/${params.GITHUB}/${params.REPO}"			
 	}
 
 	stage ("verify build image") {
 		version = getLatestVersion(params.PRODUCT, microservice)
 		println "latest version is $version"
-		def pom = readFile('pom.xml')
-		def matcher = new XmlSlurper().parseText(pom).version =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
-		String pomVersion = "${matcher[0][1]}${matcher[0][2].toInteger()}-SNAPSHOT"
+		String pomVersion
+		if (fileExists("pom.xml")) {
+			def pom = readFile('pom.xml')
+			def matcher = new XmlSlurper().parseText(pom).version =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
+			pomVersion = "${matcher[0][1]}${matcher[0][2].toInteger()}-SNAPSHOT"
+		} else {
+			properties = readProperties  file: ".boost/application.properties"
+			pomVersion = properties['version']			
+		}
 		if (!version.equals(pomVersion)) {
 			println "Source version ${pomVersion} does not match last build image version ${version}. Perhaps ${pomVersion} has already been released?"
 			currentBuild.result = 'SUCCESS'
@@ -90,62 +83,44 @@ node("jenkins-slave-ansible") {
 
 	if (!skipStages) {
 
-		stage("remove the deployment, configuration map and secrets") {
-			sh "oc delete dc ${microservice} -n ${project} || true"	
-			sh "oc delete configmap ${microservice} -n ${project} || true"
-			sh "oc delete secret ${microservice} -n ${project} || true"	
-		}
-
-		stage("create the configuration map") {
-			def yml = readYaml file: "openshift/configuration/test-config.yml"
-			def configMap = yml.config_map
-			def mapStr = ""
-			configMap.each { config ->
-				mapStr = "${mapStr} --from-literal=${config.name}=${config.value}"
-			}
-			sh "oc create configmap ${microservice} ${mapStr} -n ${project}"
-		}
-
-		if (fileExists("openshift/configuration/test-secret.yml")) {
-			stage("create the secrets") {
-				def yml = readYaml file: "openshift/configuration/test-secret.yml"
-				def secrets = yml.secrets
-				def mapStr = ""
-				secrets.each { secret ->
-					mapStr = "${mapStr} --from-literal=${secret.name}=${secret.value}"
-				}
-				sh "oc create secret generic ${microservice} ${mapStr} -n ${project}"
-			}
-		}
-
-		if (pipelines.release.db) {
-			stage("prepare the database") {
-				withCredentials([usernamePassword(credentialsId: 'couchbase', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-					def yml = readYaml file: "openshift/configuration/test-secret.yml"
-					def saslPassword = getValue "COUCHBASE_PASSWORD", yml.secrets
-					def body = "-d name=${project}-${microservice} -d ramQuotaMB=100 -d authType=sasl -d bucketType=couchbase -d saslPassword=${saslPassword}"
-					sh "curl -X POST -u ${USERNAME}:${PASSWORD} http://couchbase.${project}.svc:8091/pools/default/buckets ${body}"					
-				}
-			}	
-		}	
-
 		stage("increment version") {
-			def pom = readFile('pom.xml');
-			def matcher = new XmlSlurper().parseText(pom).version =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
-			developmentVersion = "${matcher[0][1]}${matcher[0][2].toInteger()+1}-SNAPSHOT"
-			releaseVersion = "${matcher[0][1]}${matcher[0][2]}"
+			if (fileExists("pom.xml")) {
+				def pom = readFile('pom.xml');
+				def matcher = new XmlSlurper().parseText(pom).version =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
+				developmentVersion = "${matcher[0][1]}${matcher[0][2].toInteger()+1}-SNAPSHOT"
+				releaseVersion = "${matcher[0][1]}${matcher[0][2]}"
+			} else {
+				def properties = readProperties  file: '.boost/application.properties'
+				def matcher = properties['version'] =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
+				developmentVersion = "${matcher[0][1]}${matcher[0][2].toInteger()+1}-SNAPSHOT"
+				releaseVersion = "${matcher[0][1]}${matcher[0][2]}"
+			}
 		}
 
 		stage("perform release") {
-	    sh "git config --global user.email \"jenkins@estafet.com\""
-	  	sh "git config --global user.name \"jenkins\""
-	    withMaven(mavenSettingsConfig: 'maven') {
-				sh "mvn release:clean release:prepare release:perform -DreleaseVersion=${releaseVersion} -DdevelopmentVersion=${developmentVersion} -DpushChanges=false -DlocalCheckout=true -DpreparationGoals=initialize -B"
-				sh "git push origin master"
+			sh "git config --global user.email \"jenkins@estafet.com\""
+			sh "git config --global user.name \"jenkins\""
+			if (fileExists("pom.xml")) {
+				withMaven(mavenSettingsConfig: 'maven') {
+					sh "mvn release:clean release:prepare release:perform -DreleaseVersion=${releaseVersion} -DdevelopmentVersion=${developmentVersion} -DpushChanges=false -DlocalCheckout=true -DpreparationGoals=initialize -B"
+					sh "git push origin master"
+					sh "git tag ${releaseVersion}"
+					sh "git push origin ${releaseVersion}"
+				} 
+			} else {
+				properties['version'] = developmentVersion
+				def contents = ""
+				properties.each { key, value ->
+					contents += "$key=$value\n"
+				}
+				writeFile file: '.boost/application.properties', text: contents
+				sh "git add .boost/application.properties"
+				sh "git commit -m \"boost update version ${developmentVersion}\""
+				sh "git push origin master"			
 				sh "git tag ${releaseVersion}"
 				sh "git push origin ${releaseVersion}"
-			} 
-		}	
+			}
+		}
 
 		stage("promote the image from ${params.PRODUCT}-cicd to ${project}") {
 			openshiftTag namespace: "${params.PRODUCT}-cicd", srcStream: microservice, srcTag: version, destinationNamespace: project, destinationStream: microservice, destinationTag: releaseVersion
@@ -156,20 +131,19 @@ node("jenkins-slave-ansible") {
 			sh "oc label namespace ${project} test-passed=false --overwrite=true"	
 		}
 
-		stage("read the resource definition") {
-			if (fileExists("openshift/config/test-resources.yml")) {
-				def yml = readYaml file: "openshift/configuration/test-resources.yml"
-				resources = yml.resources
-			} else {
-				def yml = readYaml file: "openshift/configuration/default-resources.yml"
-				resources = yml.resources
-			}
+		stage("checkout ${params.PRODUCT_REPO}") {
+			git credentialsId: "git", url: "https://github.com/${params.GITHUB}/${params.PRODUCT_REPO}"
 		}
 
-		stage("execute deployment") {
-			sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} -p DOCKER_NAMESPACE=${project} -p DOCKER_IMAGE_LABEL=${releaseVersion} -p PRODUCT=${params.PRODUCT} -p MAX_MEMORY=${resources.max_memory} -p MIN_MEMORY=${resources.min_memory} -p MAX_CPU=${resources.max_cpu} -p MIN_CPU=${resources.min_cpu} -p REPLICAS=${resources.replicas} | oc apply -f -"
-			openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000" 
-		}
+		stage ("install boost") {
+			sh "ansible-playbook -i setup-environments/hosts.ini setup-environments/update.yml"
+		}		
+
+		stage ("build the microservice") {
+			withCredentials([file(credentialsId: 'ansible_vault', variable: 'vault')]) {
+				sh "ansible-playbook -i setup-environments/hosts.ini --vault-password-file ${vault} setup-environments/release-microservice.yml -e env_project=${project} -e target_app=${microservice} -e release_version=${releaseVersion}"
+			}
+		}	
 
 	}
 
