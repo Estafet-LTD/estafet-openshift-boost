@@ -37,12 +37,13 @@ def getLatestVersion(product, microservice) {
 	return "${recentVersion(versions)}-SNAPSHOT"
 }
 
-node('maven') {
+node("jenkins-slave-ansible") {
 
 	properties([
 		parameters([
 	    	string(name: 'GITHUB'), 
 			string(name: 'PRODUCT'), 
+			string(name: 'PRODUCT_REPO'), 
 			string(name: 'REPO'), 
 			string(name: 'MICROSERVICE'),
 	  	])
@@ -50,6 +51,7 @@ node('maven') {
 
 	def project = "${params.PRODUCT}-test"
 	def microservice = params.MICROSERVICE	
+	def workDir = "~/.boost/${params.REPO}"
 
 	String version
 	def developmentVersion
@@ -58,12 +60,19 @@ node('maven') {
 	def resources
 	boolean skipStages = false
 	
-	stage("checkout") {
-		git branch: "master", credentialsId: "git", url: "https://github.com/${params.GITHUB}/${params.REPO}"			
+	stage("checkout ${params.PRODUCT_REPO}") {
+		git credentialsId: "git", url: "https://github.com/${params.GITHUB}/${params.PRODUCT_REPO}"
 	}
 
-	stage("read the pipeline definition") {
-		pipelines = readYaml file: "openshift/pipelines/pipelines.yml"
+	stage ("install boost") {
+		sh "ansible-playbook -i setup-environments/hosts.ini setup-environments/update.yml"
+	}		
+
+	stage("checkout ${params.REPO}") {
+		checkout scm: [$class: 'GitSCM', 
+				userRemoteConfigs: [[url: "https://github.com/${params.GITHUB}/${params.REPO}"]], 
+				extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: workDir]],
+      			branches: [[name: '*/master']]], changelog: false, poll: false
 	}
 
 	stage ("verify build image") {
