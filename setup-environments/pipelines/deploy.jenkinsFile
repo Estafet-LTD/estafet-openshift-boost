@@ -1,0 +1,31 @@
+node("jenkins-slave-ansible") {
+
+	properties([
+		parameters([
+			string(name: 'PROJECT'), 
+			string(name: 'PRODUCT_REPO'), 
+			string(name: 'MICROSERVICE'),
+			string(name: 'VERSION'),
+	  	])
+	])
+
+	def project = params.PROJECT
+	def microservice = params.MICROSERVICE	
+	def version = params.VERSION
+
+	stage("checkout ${params.PRODUCT_REPO}") {
+		git credentialsId: "git", url: "https://github.com/${params.GITHUB}/${params.PRODUCT_REPO}"
+	}
+
+	stage ("install boost") {
+		sh "ansible-playbook -i setup-environments/hosts.ini setup-environments/update.yml"
+	}		
+
+	stage ("build the microservice") {
+		withCredentials([file(credentialsId: 'ansible_vault', variable: 'vault')]) {
+			sh "ansible-playbook -i setup-environments/hosts.ini --vault-password-file ${vault} setup-environments/release-microservice.yml -e env_project=${project} -e target_app=${microservice} -e release_version=${version}"
+		}
+	}	
+
+}
+

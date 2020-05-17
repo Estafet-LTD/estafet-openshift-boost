@@ -150,3 +150,35 @@ objects:
       type: JenkinsPipeline
   status:
     lastVersion: 0             
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: pipeline
+      name: deploy
+    name: deploy
+  spec:
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        ref: ${VERSION}
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+          - name: PROJECT
+            value: project
+          - name: PRODUCT_REPO
+            value: repo
+          - name: MICROSERVICE
+            value: microservice
+          - name: VERSION
+            value: version
+        jenkinsfilePath: setup-environments/pipelines/deploy.jenkinsFile
+      type: JenkinsPipeline
+  status:
+    lastVersion: 0                 
