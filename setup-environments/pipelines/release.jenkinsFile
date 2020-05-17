@@ -90,7 +90,6 @@ node("jenkins-slave-ansible") {
 				developmentVersion = "${matcher[0][1]}${matcher[0][2].toInteger()+1}-SNAPSHOT"
 				releaseVersion = "${matcher[0][1]}${matcher[0][2]}"
 			} else {
-				def properties = readProperties  file: '.boost/application.properties'
 				def matcher = properties['version'] =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
 				developmentVersion = "${matcher[0][1]}${matcher[0][2].toInteger()+1}-SNAPSHOT"
 				releaseVersion = "${matcher[0][1]}${matcher[0][2]}"
