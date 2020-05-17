@@ -54,7 +54,7 @@ node("jenkins-slave-ansible") {
 	}	
 
 	stage("execute build test") {
-		openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "test-${microservice}"
+		openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "test-${microservice}", env : [ [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'REPO', value : "${microservice.repo}" ], [ name : 'MICROSERVICE', value : "${microservice.name}" ] ], waitTime: "300000"
 		openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "test-${microservice}", waitTime: "300000" 
 	}
 
