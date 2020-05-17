@@ -45,7 +45,7 @@ node("jenkins-slave-ansible") {
 			version = properties['version']
 		}
 		sh "oc tag -d ${microservice}:${version} -n ${params.PRODUCT}-cicd || true"
-	}	
+	}
 
 	stage ("build the microservice") {
 		withCredentials([file(credentialsId: 'ansible_vault', variable: 'vault')]) {
