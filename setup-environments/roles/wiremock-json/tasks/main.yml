@@ -1,0 +1,11 @@
+---
+- debug:
+    var: params
+    verbosity: 0
+
+- name: Load Json to wiremock
+  uri:
+    url: http://wiremock-docker.{{ project }}.svc:8080/__admin/mappings/new
+    method: POST
+    src: "{{ json }}"
+    status_code: 201
