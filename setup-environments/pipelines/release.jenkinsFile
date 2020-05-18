@@ -133,7 +133,7 @@ node("maven") {
 		}
 
 		stage("deploy ${microservice}") {
-			openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "deploy", env : [ [ name : 'PROJECT', value : project ], [ name : 'PRODUCT_REPO', value : params.PRODUCT_REPO ], [ name : 'MICROSERVICE', value : microservice ], [ name : 'VERSION', value : releaseVersion ] ], waitTime: "300000"
+			openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "deploy", env : [ [ name : 'PROJECT', value : project ], [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT_REPO', value : params.PRODUCT_REPO ], [ name : 'MICROSERVICE', value : microservice ], [ name : 'VERSION', value : releaseVersion ] ], waitTime: "300000"
 			openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "deploy", waitTime: "300000" 
 		}
 
