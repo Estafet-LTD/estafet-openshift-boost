@@ -77,9 +77,9 @@
     path: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/{{ stage }}-secret.yml"
   register: stat_result
 
-- name: Load the variables {{ stage }} local-secrets.yml
+- name: Load the variables {{ stage }}-secrets.yml
   include_vars:
-    file: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/local-secret.yml"
+    file: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/{{ stage }}-secret.yml"
   when: stat_result.stat.exists
 
 - name: Initialise secret variables
