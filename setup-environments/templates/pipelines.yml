@@ -172,6 +172,8 @@ objects:
         env:
           - name: PROJECT
             value: project
+          - name: GITHUB
+            value: ${GITHUB}
           - name: PRODUCT_REPO
             value: repo
           - name: MICROSERVICE
