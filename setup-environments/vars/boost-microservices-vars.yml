@@ -26,7 +26,7 @@ boost_microservices:
       test: false          
             
     - name: console-environment-api
-      version: 0.0.15
+      version: 0.0.16
       repo: estafet-openshift-boost-console-api-environment
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
