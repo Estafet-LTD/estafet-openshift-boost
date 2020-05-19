@@ -10,6 +10,7 @@
     user: "{{ couchbase.user }}"
     password: "{{ couchbase.password }}"
     status_code: 200, 404
+  when: reset is defined and reset == true
 
 - name: Create the "{{ params.bucket }}" bucket on Couchbase Pod
   uri:
