@@ -13,7 +13,6 @@
   vars:
     microservice: "{{ item }}" 
     project: "{{ env_project }}"
-    stage: test
   with_items: "{{ microservices }}"
   when: item.name == target_app
   tags:

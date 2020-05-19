@@ -25,6 +25,9 @@ parameters:
 - description: Defines the project that this pipeline is related to
   name: PROJECT
   required: true
+- description: Defines the main repository that contains the infrastructor definition
+  name: ENVIRONMENTS_REPO_URI
+  required: true       
 objects:
 - apiVersion: v1
   kind: BuildConfig
@@ -51,7 +54,9 @@ objects:
           - name: GITHUB
             value: ${GITHUB}      
           - name: PRODUCT
-            value: ${PRODUCT}               
+            value: ${PRODUCT}       
+          - name: PRODUCT_REPO
+            value: ${ENVIRONMENTS_REPO_URI}                    
           - name: REPO
             value: ${MICROSERVICE_REPO_URI}
           - name: MICROSERVICE

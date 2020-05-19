@@ -17,9 +17,14 @@
       fail:
         msg: "[release_version variable definition] is not set."
       when: release_version is undefined
-      
+
+    - name: Verify that the stage variable is set
+      fail:
+        msg: "[stage variable definition] is not set."
+      when: stage is undefined
+
     - include_role:
-        name: release-microservice
+        name: deploy
       vars: 
         project: "{{ env_project }}"
 

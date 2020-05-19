@@ -174,6 +174,8 @@ objects:
             value: project
           - name: GITHUB
             value: ${GITHUB}
+          - name: PRODUCT
+            value: ${PRODUCT}            
           - name: PRODUCT_REPO
             value: repo
           - name: MICROSERVICE

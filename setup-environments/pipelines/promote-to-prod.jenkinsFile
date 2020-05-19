@@ -64,7 +64,12 @@ node("maven") {
 
 	properties([
 	  parameters([
-	     string(name: 'GITHUB'), string(name: 'PRODUCT'), string(name: 'REPO'), string(name: 'MICROSERVICE'), string(name: 'PROJECT'),
+	     string(name: 'GITHUB'), 
+		 string(name: 'PRODUCT'), 
+		 string(name: 'PRODUCT_REPO'), 
+		 string(name: 'REPO'), 
+		 string(name: 'MICROSERVICE'), 
+		 string(name: 'PROJECT'),
 	  ])
 	])
 	
@@ -103,14 +108,12 @@ node("maven") {
 	}
 
 	stage("checkout release version") {
-		checkout scm: [$class: 'GitSCM', 
-      userRemoteConfigs: [[url: "https://github.com/${params.GITHUB}/${params.REPO}"]], 
-      branches: [[name: "refs/tags/${version}"]]], changelog: false, poll: false
+		withCredentials([usernamePassword(credentialsId: 'git', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+			checkout scm: [	$class: 'GitSCM', 
+						   	userRemoteConfigs: [[url: "https://${USERNAME}:${PASSWORD}@github.com/${params.GITHUB}/${params.REPO}"]], 
+							branches: [[name: "refs/tags/${version}"]]], changelog: false, poll: false
+		}
 	}
-
-	stage("read the pipeline definition") {
-		pipelines = readYaml file: "openshift/pipelines/pipelines.yml"
-	}	
 	
 	stage("reset test flag for ${project}") {
 		sh "oc label namespace ${project} test-passed=false --overwrite=true"	
@@ -120,59 +123,10 @@ node("maven") {
 		openshiftTag namespace: params.PROJECT, srcStream: microservice, srcTag: version, destinationNamespace: project, destinationStream: microservice, destinationTag: version
 		sh "oc patch is/${microservice} -p '{\"metadata\":{\"labels\":{\"product\":\"${params.PRODUCT}\"}}}' -n ${project}"
 	}	
+
+	stage("deploy ${microservice} to ${project}") {
+		openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "deploy", env : [ [ name : 'PROJECT', value : project ], [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'PRODUCT_REPO', value : params.PRODUCT_REPO ], [ name : 'MICROSERVICE', value : microservice ], [ name : 'VERSION', value : version ] ], waitTime: "900000"
+		openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "deploy", waitTime: "900000" 
+	}
 	
-	stage("remove the deployment, configuration map and secrets") {
-		sh "oc delete dc ${env}${microservice} -n ${project} || true"	
-		sh "oc delete configmap ${env}${microservice} -n ${project} || true"
-		sh "oc delete secret ${env}${microservice} -n ${project} || true"	
-	}
-
-	stage("create the configuration map") {
-		def yml = readYaml file: "openshift/configuration/prod-${env}-config.yml"
-		def configMap = yml.config_map
-		def mapStr = ""
-		configMap.each { config ->
-			mapStr = "${mapStr} --from-literal=${config.name}=${config.value}"
-		}
-		sh "oc create configmap ${env}${microservice} ${mapStr} -n ${project}"
-	}
-
-	if (fileExists("openshift/configuration/prod-${env}-secret.yml")) {
-		stage("create the secrets") {
-			def yml = readYaml file: "openshift/configuration/prod-${env}-secret.yml"
-			def secrets = yml.secrets
-			def mapStr = ""
-			secrets.each { secret ->
-				mapStr = "${mapStr} --from-literal=${secret.name}=${secret.value}"
-			}
-			sh "oc create secret generic ${env}${microservice} ${mapStr} -n ${project}"
-		}
-	}
-
-	if (pipelines.promote.db) {
-		stage("prepare the database") {
-			withCredentials([usernamePassword(credentialsId: 'couchbase', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-				def yml = readYaml file: "openshift/configuration/prod-${env}-secret.yml"
-				def saslPassword = getValue "COUCHBASE_PASSWORD", yml.secrets
-				def body = "-d name=${project}-${microservice} -d ramQuotaMB=100 -d authType=sasl -d bucketType=couchbase -d saslPassword=${saslPassword}"
-				sh "curl -X POST -u ${USERNAME}:${PASSWORD} http://couchbase.${project}.svc:8091/pools/default/buckets ${body}"				
-			}
-		}	
-	}
-
-	stage("read the resource definition") {
-		if (fileExists("openshift/configuration/prod-${env}-resources.yml")) {
-			def yml = readYaml file: "openshift/configuration/prod-${env}-resources.yml"
-			resources = yml.resources
-		} else {
-			def yml = readYaml file: "openshift/configuration/default-resources.yml"
-			resources = yml.resources
-		}
-	}
-
-	stage("execute deployment") {
-		sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} -p ENV=${env} -p DOCKER_NAMESPACE=${project} -p DOCKER_IMAGE_LABEL=${version} -p PRODUCT=${params.PRODUCT} -p MAX_MEMORY=${resources.max_memory} -p MIN_MEMORY=${resources.min_memory} -p MAX_CPU=${resources.max_cpu} -p MIN_CPU=${resources.min_cpu} -p REPLICAS=${resources.replicas} | oc apply -f -"
-		openshiftVerifyDeployment namespace: project, depCfg: "${env}${microservice}", replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000" 
-	}
-
 }

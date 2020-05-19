@@ -55,6 +55,8 @@ objects:
             value: ${GITHUB}
           - name: PRODUCT
             value: ${PRODUCT}
+          - name: PRODUCT_REPO
+            value: ${ENVIRONMENTS_REPO_URI}
           - name: REPO
             value: ${MICROSERVICE_REPO_URI}
           - name: MICROSERVICE
@@ -121,7 +123,9 @@ objects:
           - name: GITHUB
             value: ${GITHUB}      
           - name: PRODUCT
-            value: ${PRODUCT}     
+            value: ${PRODUCT}  
+          - name: PRODUCT_REPO
+            value: ${ENVIRONMENTS_REPO_URI}               
           - name: REPO
             value: ${MICROSERVICE_REPO_URI}
           - name: MICROSERVICE
@@ -155,7 +159,9 @@ objects:
           - name: GITHUB
             value: ${GITHUB}      
           - name: PRODUCT
-            value: ${PRODUCT}               
+            value: ${PRODUCT}  
+          - name: PRODUCT_REPO
+            value: ${ENVIRONMENTS_REPO_URI}                         
           - name: REPO
             value: ${MICROSERVICE_REPO_URI}
           - name: MICROSERVICE

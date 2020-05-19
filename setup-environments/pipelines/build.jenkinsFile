@@ -40,7 +40,7 @@ node("jenkins-slave-ansible") {
 	}
 
 	stage ("install boost") {
-		sh "ansible-playbook -i setup-environments/hosts.ini setup-environments/update.yml"
+		sh "ansible-playbook -i setup-environments/hosts.ini setup-environments/install.yml"
 	}		
 
 	stage ("build the microservice") {
