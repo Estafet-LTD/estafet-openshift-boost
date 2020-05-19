@@ -60,7 +60,7 @@ def getLatestVersion(project, microservice) {
 	return recentVersion(versions)
 }
 
-node("maven") {
+node() {
 
 	properties([
 	  parameters([

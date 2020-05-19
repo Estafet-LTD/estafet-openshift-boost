@@ -59,7 +59,7 @@ def getLatestVersion(product, microservice) {
 	return "${recentVersion(versions)}"
 }
 
-node("jenkins-slave-ansible") {
+node() {
 
 	properties([
 	  parameters([
