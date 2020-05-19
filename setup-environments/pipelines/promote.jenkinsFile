@@ -79,7 +79,12 @@ node("jenkins-slave-ansible") {
 	def label
 
 	String version
-	
+
+	stage("determine which image is to be deployed") {
+		version = getLatestVersion prevProject, microservice
+		println "latest version is $version"
+	}
+
 	stage("checkout release version") {
 		withCredentials([usernamePassword(credentialsId: 'git', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
 			checkout scm: [	$class: 'GitSCM', 
@@ -99,11 +104,6 @@ node("jenkins-slave-ansible") {
 		label = project.substring(product.length()+1)
 		println "the promotion project is ${project}"
 		println "the label ${label}"
-	}
-
-	stage("determine which image is to be deployed") {
-		version = getLatestVersion prevProject, microservice
-		println "latest version is $version"
 	}
 
 	stage("promote the image from ${prevProject} to ${project}") {
