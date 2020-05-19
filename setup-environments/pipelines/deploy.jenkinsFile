@@ -17,7 +17,7 @@ node("jenkins-slave-ansible") {
 	def version = params.VERSION
 	def stage = project.substring(product.length()+1)
 
-	stage("checkout ${params.PRODUCT_REPO}") {
+	stage("checkout") {
 		git credentialsId: "git", url: "https://github.com/${params.GITHUB}/${params.PRODUCT_REPO}"
 	}
 
