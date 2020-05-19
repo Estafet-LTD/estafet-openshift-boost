@@ -64,7 +64,7 @@ node("maven") {
 		}
 	}
 
-	stage ("verify build image") {
+	stage ("check build image") {
 		version = getLatestVersion(params.PRODUCT, microservice)
 		println "latest version is $version"
 		String pomVersion
@@ -78,65 +78,61 @@ node("maven") {
 		}
 		if (!version.equals(pomVersion)) {
 			println "Source version ${pomVersion} does not match last build image version ${version}. Perhaps ${pomVersion} has already been released?"
-			currentBuild.result = 'SUCCESS'
-			skipStages = true
+			//currentBuild.result = 'SUCCESS'
+			//skipStages = true
 		}
 	}
 
-	if (!skipStages) {
-
-		stage("increment version") {
-			if (fileExists("pom.xml")) {
-				def pom = readFile('pom.xml');
-				def matcher = new XmlSlurper().parseText(pom).version =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
-				developmentVersion = "${matcher[0][1]}${matcher[0][2].toInteger()+1}-SNAPSHOT"
-				releaseVersion = "${matcher[0][1]}${matcher[0][2]}"
-			} else {
-				def matcher = properties['version'] =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
-				developmentVersion = "${matcher[0][1]}${matcher[0][2].toInteger()+1}-SNAPSHOT"
-				releaseVersion = "${matcher[0][1]}${matcher[0][2]}"
-			}
+	stage("increment version") {
+		if (fileExists("pom.xml")) {
+			def pom = readFile('pom.xml');
+			def matcher = new XmlSlurper().parseText(pom).version =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
+			developmentVersion = "${matcher[0][1]}${matcher[0][2].toInteger()+1}-SNAPSHOT"
+			releaseVersion = "${matcher[0][1]}${matcher[0][2]}"
+		} else {
+			def matcher = properties['version'] =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
+			developmentVersion = "${matcher[0][1]}${matcher[0][2].toInteger()+1}-SNAPSHOT"
+			releaseVersion = "${matcher[0][1]}${matcher[0][2]}"
 		}
+	}
 
-		stage("perform release") {
-			sh "git config --global user.email \"jenkins@estafet.com\""
-			sh "git config --global user.name \"jenkins\""
-			if (fileExists("pom.xml")) {
-				withMaven(mavenSettingsConfig: 'maven') {
-					sh "mvn release:clean release:prepare release:perform -DreleaseVersion=${releaseVersion} -DdevelopmentVersion=${developmentVersion} -DpushChanges=false -DlocalCheckout=true -DpreparationGoals=initialize -B"
-					sh "git push origin master"
-					sh "git tag ${releaseVersion}"
-					sh "git push origin ${releaseVersion}"
-				} 
-			} else {
-				properties['version'] = developmentVersion
-				def contents = ""
-				properties.each { key, value ->
-					contents += "$key=$value\n"
-				}
-				writeFile file: '.boost/application.properties', text: contents
-				sh "git add .boost/application.properties"
-				sh "git commit -m \"boost update version ${developmentVersion}\""
-				sh "git push origin master"			
+	stage("perform release") {
+		sh "git config --global user.email \"jenkins@estafet.com\""
+		sh "git config --global user.name \"jenkins\""
+		if (fileExists("pom.xml")) {
+			withMaven(mavenSettingsConfig: 'maven') {
+				sh "mvn release:clean release:prepare release:perform -DreleaseVersion=${releaseVersion} -DdevelopmentVersion=${developmentVersion} -DpushChanges=false -DlocalCheckout=true -DpreparationGoals=initialize -B"
+				sh "git push origin master"
 				sh "git tag ${releaseVersion}"
 				sh "git push origin ${releaseVersion}"
+			} 
+		} else {
+			properties['version'] = developmentVersion
+			def contents = ""
+			properties.each { key, value ->
+				contents += "$key=$value\n"
 			}
+			writeFile file: '.boost/application.properties', text: contents
+			sh "git add .boost/application.properties"
+			sh "git commit -m \"boost update version ${developmentVersion}\""
+			sh "git push origin master"			
+			sh "git tag ${releaseVersion}"
+			sh "git push origin ${releaseVersion}"
 		}
+	}
 
-		stage("promote the image from ${params.PRODUCT}-cicd to ${project}") {
-			openshiftTag namespace: "${params.PRODUCT}-cicd", srcStream: microservice, srcTag: version, destinationNamespace: project, destinationStream: microservice, destinationTag: releaseVersion
-			sh "oc patch is/${microservice} -p '{\"metadata\":{\"labels\":{\"product\":\"${params.PRODUCT}\"}}}' -n ${project}"
-		}
+	stage("promote the image from ${params.PRODUCT}-cicd to ${project}") {
+		openshiftTag namespace: "${params.PRODUCT}-cicd", srcStream: microservice, srcTag: version, destinationNamespace: project, destinationStream: microservice, destinationTag: releaseVersion
+		sh "oc patch is/${microservice} -p '{\"metadata\":{\"labels\":{\"product\":\"${params.PRODUCT}\"}}}' -n ${project}"
+	}
 
-		stage("reset test flags for ${project}") {
-			sh "oc label namespace ${project} test-passed=false --overwrite=true"	
-		}
+	stage("reset test flags for ${project}") {
+		sh "oc label namespace ${project} test-passed=false --overwrite=true"	
+	}
 
-		stage("deploy ${microservice} to ${project}") {
-			openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "deploy", env : [ [ name : 'PROJECT', value : project ], [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'PRODUCT_REPO', value : params.PRODUCT_REPO ], [ name : 'MICROSERVICE', value : microservice ], [ name : 'VERSION', value : releaseVersion ] ], waitTime: "900000"
-			openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "deploy", waitTime: "900000" 
-		}
-
+	stage("deploy ${microservice} to ${project}") {
+		openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "deploy", env : [ [ name : 'PROJECT', value : project ], [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'PRODUCT_REPO', value : params.PRODUCT_REPO ], [ name : 'MICROSERVICE', value : microservice ], [ name : 'VERSION', value : releaseVersion ] ], waitTime: "900000"
+		openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "deploy", waitTime: "900000" 
 	}
 
 }
