@@ -10,7 +10,7 @@
     user: "{{ couchbase.user }}"
     password: "{{ couchbase.password }}"
     status_code: 200, 404
-  when: reset is defined and reset == true
+  when: reset is defined and reset
 
 - name: Create the "{{ params.bucket }}" bucket on Couchbase Pod
   uri:
@@ -26,4 +26,4 @@
       authType: 'sasl'
       saslPassword: "{{ params.bucket_password }}"
     force_basic_auth: yes
-    status_code: 202
+    status_code: 200, 400 
