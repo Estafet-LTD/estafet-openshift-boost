@@ -29,7 +29,7 @@
 
 - name: Deploy the microservices
   include_role:
-    name: deploy-app
+    name: deploy-console-app
   vars:
     microservice: "{{ item }}"     
     docker_registry: "{{ console_environment.docker_registry }}"
