@@ -71,4 +71,9 @@
 #    - openshift    
 
 - include_role: 
+    name: jenkins-script-approval
+  vars:
+    project: "{{ boost_project }}"
+
+- include_role: 
     name: jenkins-ansible-slave-setup    
