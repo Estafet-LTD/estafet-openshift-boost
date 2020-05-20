@@ -47,13 +47,6 @@ objects:
             value: ${MICROSERVICE_NAME}                                 
         jenkinsfilePath: setup-environments/pipelines/${BUILD_PIPELINE}
       type: JenkinsPipeline
-    triggers:
-    - github:
-        secret: secret101
-      type: GitHub
-    - generic:
-        secret: secret101
-      type: Generic
   status:
     lastVersion: 0
 - apiVersion: v1
@@ -86,12 +79,5 @@ objects:
             value: ${MICROSERVICE_NAME}                                 
         jenkinsfilePath: setup-environments/pipelines/${RELEASE_PIPELINE}
       type: JenkinsPipeline
-    triggers:
-    - github:
-        secret: secret101
-      type: GitHub
-    - generic:
-        secret: secret101
-      type: Generic
   status:
     lastVersion: 0    

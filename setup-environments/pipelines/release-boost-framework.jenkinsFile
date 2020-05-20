@@ -1,0 +1,43 @@
+node {
+
+	properties([
+	  parameters([
+	     string(name: 'GITHUB'),
+	  ])
+	])
+
+	def developmentVersion
+	def releaseVersion
+	def properties
+
+	stage("checkout") {
+		withCredentials([usernamePassword(credentialsId: 'git', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+			git branch: "master", url: "https://${USERNAME}:${PASSWORD}@github.com/${params.GITHUB}/estafet-openshift-boost"			
+		}
+	}
+
+	stage("increment version") {
+		properties = readProperties  file: '.boost/application.properties'
+		def matcher = properties['version'] =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
+		developmentVersion = "${matcher[0][1]}${matcher[0][2].toInteger()+1}-SNAPSHOT"
+		releaseVersion = "${matcher[0][1]}${matcher[0][2]}"
+	}
+
+	stage("perform release") {
+		sh "git config --global user.email \"jenkins@estafet.com\""
+		sh "git config --global user.name \"jenkins\""
+		properties['version'] = developmentVersion
+		def contents = ""
+		properties.each { key, value ->
+			contents += "$key=$value\n"
+		}
+		writeFile file: '.boost/application.properties', text: contents
+		sh "git add .boost/application.properties"
+		sh "git commit -m \"boost update version ${developmentVersion}\""
+		sh "git push origin master"			
+		sh "git tag ${releaseVersion}"
+		sh "git push origin ${releaseVersion}"
+	}	
+
+}
+
