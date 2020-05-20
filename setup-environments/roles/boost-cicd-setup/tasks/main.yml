@@ -53,7 +53,7 @@
     - openshift      
 
 - name: Create release pipeline for the boost framework
-  shell: "oc process -f {{ templates }}/release-boost-framework.yml -p GITHUB={{ github.org }} | oc create -f -"
+  shell: "oc process -f {{ templates }}/boost-release-pipeline.yml -p GITHUB={{ github.org }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
