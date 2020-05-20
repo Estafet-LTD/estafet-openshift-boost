@@ -167,7 +167,7 @@ node {
 	def env
 	
 	stage("checkout") {
-		git branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
+		git credentialsId: "git", branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
 	}
 	
 	stage("read the microservices definition") {
@@ -197,4 +197,10 @@ node {
 			}
 	  	}		
 	}
+
+	stage ('trigger stage gate') {
+		openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "test-${microservice}", env : [ [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'REPO', value : params.REPO ], [ name : 'MICROSERVICE', value : microservice ] ], waitTime: "300000"
+		openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "test-${microservice}", waitTime: "300000" 
+	}
+
 }

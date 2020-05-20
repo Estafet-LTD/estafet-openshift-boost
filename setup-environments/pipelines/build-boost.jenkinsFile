@@ -10,7 +10,7 @@ node("jenkins-slave-ansible") {
 	def microservice = params.MICROSERVICE	
 
 	stage("checkout") {
-		git branch: "master", url: "https://github.com/Estafet-LTD/estafet-blockchain-demo"
+		git credentialsId: "git", branch: "master", url: "https://github.com/Estafet-LTD/estafet-blockchain-demo"
 	}
 	
 	stage ("update the roles") {

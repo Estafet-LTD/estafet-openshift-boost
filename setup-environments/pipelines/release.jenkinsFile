@@ -78,8 +78,6 @@ node("maven") {
 		}
 		if (!version.equals(pomVersion)) {
 			println "Source version ${pomVersion} does not match last build image version ${version}. Perhaps ${pomVersion} has already been released?"
-			//currentBuild.result = 'SUCCESS'
-			//skipStages = true
 		}
 	}
 

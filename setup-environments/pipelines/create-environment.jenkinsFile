@@ -54,7 +54,7 @@ node("jenkins-slave-ansible") {
 	}
 
 	stage("checkout") {
-		git branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
+		git credentialsId: "git", branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
 	}
 
 	stage ("update the roles") {
