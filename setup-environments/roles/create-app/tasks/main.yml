@@ -17,7 +17,7 @@
     - git  
 
 - set_fact: branch="{{ command_result.stdout }}"
-  when: (microservice.test is defined and microservice.test) or (test is defined and test)
+  when: (microservice.test is defined and microservice.test == true) or (test is defined and test == true)
 
 - set_fact: branch="{{ microservice.branch }}"
   when: microservice.branch is defined
