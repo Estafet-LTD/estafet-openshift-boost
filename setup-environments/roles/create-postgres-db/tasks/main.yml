@@ -13,7 +13,7 @@
   when: params.db_project is defined
 
 - name: Read the database pod list
-  shell: "oc get pods --selector app=postgresql -o json -n {{ db_project }}"
+  shell: "oc get pods --selector name=postgresql -o json -n {{ db_project }}"
   register: list_of_db_pods
     
 - name: Get the name of the PostgreSQL Pod
