@@ -20,12 +20,12 @@
     
 - name: Verify if openshift is set
   fail:
-    msg: "[OpenShift host] is not defined. Please edit project-vars.yml"
+    msg: "[OpenShift host] is not defined. Please edit openshift-vars.yml"
   when: openshift is undefined
 
 - name: Verify if product variable is set
   fail:
-    msg: "[Product] is not defined. Please edit project-vars.yml"
+    msg: "[Product] is not defined. Please edit product-vars.yml"
   when: product is undefined
 
 - name: Verify if the microservices have been defined
