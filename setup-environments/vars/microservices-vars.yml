@@ -42,7 +42,7 @@ boost_microservices:
       test: false
           
     - name: console-gateway-api
-      version: 0.0.2
+      version: 0.0.3
       repo: estafet-openshift-boost-console-api-gateway
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
