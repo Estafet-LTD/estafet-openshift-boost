@@ -2,7 +2,7 @@
 boost_microservices:
   
     - name: console-ui-react
-      version: 0.0.7
+      version: 0.0.8
       repo: estafet-openshift-boost-console-ui-react
       build: build-boost.jenkinsFile
       release: release-boost-react.jenkinsFile
