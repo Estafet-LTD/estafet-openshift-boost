@@ -17,6 +17,7 @@
 
 - name: Get the image stream name used by the dc
   set_fact: image_stream="{{list_of_dcs.stdout|from_json|json_query('items[0].spec.triggers[0].imageChangeParams.from.name')}}"
+  ignore_errors: yes
 
 - debug:
     var: image_stream
