@@ -3,6 +3,14 @@
   hosts: local  
   tasks:   
 
+    - name: determine the version of oc
+      shell: oc version
+      register: version
+    
+    - debug: msg="{{ version.stdout }}"
+    
+    - debug: msg="{{ version.stderr }}"
+
     - name: Verify that the env_project variable is set
       fail:
         msg: "[env_project variable definition] is not set."

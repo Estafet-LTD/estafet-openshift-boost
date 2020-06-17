@@ -1,0 +1,12 @@
+---
+- name: Preparing the ansible roles for openshift boost 
+  hosts: local   
+  tasks:
+
+    - name: determine the version of oc
+      shell: oc version
+      register: version
+    
+    - debug: msg="{{ version.stdout }}"
+    
+    - debug: msg="{{ version.stderr }}"
