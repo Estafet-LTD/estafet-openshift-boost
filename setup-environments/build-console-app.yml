@@ -3,12 +3,18 @@
   hosts: local  
   tasks:   
 
+    - name: determine where oc is installed
+      shell: which oc
+      register: which
+    
+    - debug: msg="{{ which.stdout }}"
+    - debug: msg="{{ which.stderr }}"
+
     - name: determine the version of oc
       shell: oc version
       register: version
     
     - debug: msg="{{ version.stdout }}"
-    
     - debug: msg="{{ version.stderr }}"
 
     - name: Verify that the env_project variable is set
