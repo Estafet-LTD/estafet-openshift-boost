@@ -2,7 +2,7 @@
 boost_microservices:
   
     - name: console-ui-react
-      version: 0.0.8
+      version: 0.0.9
       repo: estafet-openshift-boost-console-ui-react
       build: build-boost.jenkinsFile
       release: release-boost-react.jenkinsFile
@@ -10,7 +10,7 @@ boost_microservices:
       test: false
           
     - name: console-project-api
-      version: 0.0.2
+      version: 0.0.3
       repo: estafet-openshift-boost-console-api-project
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
@@ -18,7 +18,7 @@ boost_microservices:
       test: false
           
     - name: console-user-api
-      version: 0.0.2
+      version: 0.0.3
       repo: estafet-openshift-boost-console-api-user
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
@@ -26,7 +26,7 @@ boost_microservices:
       test: false          
             
     - name: console-environment-api
-      version: 0.0.17
+      version: 0.1.1
       repo: estafet-openshift-boost-console-api-environment
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
@@ -34,7 +34,7 @@ boost_microservices:
       test: false
                 
     - name: console-jenkins-api
-      version: 0.0.3
+      version: 0.0.4
       repo: estafet-openshift-boost-console-api-jenkins
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
@@ -42,7 +42,7 @@ boost_microservices:
       test: false
           
     - name: console-gateway-api
-      version: 0.0.3
+      version: 0.0.4
       repo: estafet-openshift-boost-console-api-gateway
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
@@ -50,7 +50,7 @@ boost_microservices:
       test: false
                            
     - name: console-trello-api
-      version: 0.0.2
+      version: 0.0.3
       conditional: trello
       repo: estafet-openshift-boost-console-api-trello
       build: build-boost.jenkinsFile
@@ -59,7 +59,7 @@ boost_microservices:
       test: false        
 
     - name: console-jira-api
-      version: 0.0.2
+      version: 0.0.3
       conditional: jira
       repo: estafet-openshift-boost-console-api-jira
       build: build-boost.jenkinsFile
@@ -68,7 +68,7 @@ boost_microservices:
       test: false  
           
     - name: console-feature-api
-      version: 0.0.3
+      version: 0.0.4
       repo: estafet-openshift-boost-console-api-feature
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile    
