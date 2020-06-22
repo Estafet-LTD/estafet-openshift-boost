@@ -26,7 +26,7 @@ node('maven') {
         sh "git config --global user.email \"jenkins@estafet.com\""
         sh "git config --global user.name \"jenkins\""
         withMaven(mavenSettingsConfig: 'maven') {
-			sh "mvn release:clean release:prepare release:perform -DreleaseVersion=${releaseVersion} -DdevelopmentVersion=${developmentVersion} -DpushChanges=false -DlocalCheckout=true -DpreparationGoals=initialize -B -DskipTests"
+			sh "mvn release:clean release:prepare release:perform -DreleaseVersion=${releaseVersion} -DdevelopmentVersion=${developmentVersion} -Darguments=\"-Dmaven.javadoc.skip=true\" -DpushChanges=false -DlocalCheckout=true -DpreparationGoals=initialize -B -DskipTests"
 			sh "git push origin master"
 			sh "git tag ${releaseVersion}"
 			sh "git push origin ${releaseVersion}"
