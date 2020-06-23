@@ -37,7 +37,7 @@ node('maven') {
 	}	
 
 	stage("publish the image") {
-		openshiftBuild namespace: "boost-cicd", buildConfig: "publish-image", env : [ [ name : 'DOCKERHUB', value : params.DOCKERHUB ], [ name : 'VERSION', value : releaseVersion ], [ name : 'MICROSERVICE', value : microservice.name ] ], waitTime: "1800000"
+		openshiftBuild namespace: "boost-cicd", buildConfig: "publish-image", env : [ [ name : 'DOCKERHUB', value : params.DOCKERHUB ], [ name : 'VERSION', value : releaseVersion ], [ name : 'MICROSERVICE', value : microservice ] ], waitTime: "1800000"
 		openshiftVerifyBuild namespace: "boost-cicd", buildConfig: "publish-image", waitTime: "1800000" 
 	}
 
