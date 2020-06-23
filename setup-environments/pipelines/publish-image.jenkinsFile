@@ -9,7 +9,7 @@ def getImageRepo(project, microservice) {
 	return getDockerImageRepo(image)
 }
 
-node {
+node('jenkins-slave-image-mgmt') { 
 
 	properties([
 	  parameters([
@@ -23,12 +23,11 @@ node {
 	def dockerhub = params.DOCKERHUB
 
 	stage("publish the image") {
-		def repo = "${getImageRepo(project, microservice)}"
-		sh "docker pull ${repo}:latest"
-		sh "docker tag ${repo}:latest estafetboost/${microservice}:${releaseVersion}"
-		withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-			sh "docker login --username ${USERNAME} --password ${PASSWORD}"
-			sh "docker push ${dockerhub}/${microservice}:${releaseVersion}"
+		withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DH_USERNAME', passwordVariable: 'DH_PASSWORD')]) {
+			withCredentials([usernamePassword(credentialsId: 'cluster_admin', usernameVariable: 'CA_USERNAME', passwordVariable: 'CA_PASSWORD')]) {
+				def repo = "${getImageRepo(project, microservice)}"
+				sh "skopeo copy --src-creds=${CA_USERNAME}:${CA_PASSWORD} --dest-creds=${DH_USERNAME}:${DH_PASSWORD} ${repo}:latest estafetboost/${microservice}:${releaseVersion} docker://docker.io/${dockerhub}/${microservice}:${releaseVersion}"
+			}
 		}
 	}
 
