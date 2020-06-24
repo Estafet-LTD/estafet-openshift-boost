@@ -24,10 +24,10 @@ node('jenkins-slave-image-mgmt') {
 
 	stage("publish the image") {
 		withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DH_USERNAME', passwordVariable: 'DH_PASSWORD')]) {
-			withCredentials([usernamePassword(credentialsId: 'cluster_admin', usernameVariable: 'CA_USERNAME', passwordVariable: 'CA_PASSWORD')]) {
-				def repo = "${getImageRepo(project, microservice)}"
-				sh "skopeo copy --src-creds=${CA_USERNAME}:${CA_PASSWORD} --dest-creds=${DH_USERNAME}:${DH_PASSWORD} ${repo}:latest estafetboost/${microservice}:${releaseVersion} docker://docker.io/${dockerhub}/${microservice}:${releaseVersion}"
-			}
+			sh "skopeo login -u ${DH_USERNAME} -p ${DH_PASSWORD} docker://docker.io/${dockerhub}"
+		}
+		withCredentials([usernamePassword(credentialsId: 'cluster_admin', usernameVariable: 'CA_USERNAME', passwordVariable: 'CA_PASSWORD')]) {
+			sh "skopeo copy --src-creds=${CA_USERNAME}:${CA_PASSWORD} ${getImageRepo(project, microservice)}:latest docker://docker.io/${dockerhub}/${microservice}:${releaseVersion}"
 		}
 	}
 

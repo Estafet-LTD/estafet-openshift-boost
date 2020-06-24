@@ -107,7 +107,7 @@ node() {
 	}
 
 	stage("promote the image from ${prevProject} to ${project}") {
-		openshiftTag namespace: prevProject, srcStream: microservice, srcTag: version, destinationNamespace: project, destinationStream: microservice, destinationTag: version
+		sh "oc tag ${prevProject}/${microservice}:${version} ${project}/${microservice}:${version}"
 		sh "oc patch is/${microservice} -p '{\"metadata\":{\"labels\":{\"product\":\"${product}\"}}}' -n ${project}"
 	}
 
@@ -116,8 +116,7 @@ node() {
 	}
 
 	stage("deploy ${microservice} to ${project}") {
-		openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "deploy", env : [ [ name : 'PROJECT', value : project ], [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'PRODUCT_REPO', value : params.PRODUCT_REPO ], [ name : 'MICROSERVICE', value : microservice ], [ name : 'VERSION', value : version ] ], waitTime: "900000"
-		openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "deploy", waitTime: "900000" 
+		sh "oc start-build deploy -e PROJECT=${project} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e PRODUCT_REPO=${params.PRODUCT_REPO} -e MICROSERVICE=${microservice} -e VERSION=${version} --wait -n ${params.PRODUCT}-cicd"
 	}
 	
 }

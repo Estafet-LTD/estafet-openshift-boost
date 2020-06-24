@@ -50,13 +50,12 @@ node("jenkins-slave-ansible") {
 	}	
 
 	stage("promote the image to cicd") {
-		openshiftTag namespace: project, srcStream: microservice, srcTag: "latest", destinationNamespace: "${params.PRODUCT}-cicd", destinationStream: microservice, destinationTag: version
+		sh "oc tag ${project}/${microservice}:latest ${params.PRODUCT}-cicd/${microservice}:${version}"
 		sh "oc patch is/${microservice} -p '{\"metadata\":{\"labels\":{\"product\":\"${params.PRODUCT}\"}}}' -n ${params.PRODUCT}-cicd"
 	}	
 
 	stage("execute build test") {
-		openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "test-${microservice}", env : [ [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'REPO', value : params.REPO ], [ name : 'MICROSERVICE', value : microservice ] ], waitTime: "300000"
-		openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "test-${microservice}", waitTime: "300000" 
+		sh "oc start-build test-${microservice} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e REPO=${params.REPO} -e MICROSERVICE=${microservice} --wait -n ${params.PRODUCT}-cicd"
 	}
 
 }

@@ -21,8 +21,7 @@ node {
 
 	stage ('build all microservices') {
 		microservices.each { microservice ->
-			openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "release-${microservice.name}", env : [ [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'PRODUCT_REPO', value : params.REPO ], [ name : 'REPO', value : "${microservice.repo}" ], [ name : 'MICROSERVICE', value : "${microservice.name}" ] ], waitTime: "1800000"
-			openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "release-${microservice.name}", waitTime: "1800000" 
+			sh "oc start-build release-${microservice.name} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e PRODUCT_REPO=${params.REPO} -e REPO=${microservice.repo} -e MICROSERVICE=${microservice.name} --wait -n ${params.PRODUCT}-cicd"
 	  }	
 	}
 }

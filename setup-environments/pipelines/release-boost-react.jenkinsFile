@@ -42,9 +42,8 @@ node {
 	}	
 
 	stage("publish the image") {
-		openshiftBuild namespace: "boost-cicd", buildConfig: "publish-image", env : [ [ name : 'DOCKERHUB', value : params.DOCKERHUB ], [ name : 'VERSION', value : releaseVersion ], [ name : 'MICROSERVICE', value : microservice ] ], waitTime: "1800000"
-		openshiftVerifyBuild namespace: "boost-cicd", buildConfig: "publish-image", waitTime: "1800000" 
-	}	
+		sh "oc start-build publish-image -e DOCKERHUB=${params.DOCKERHUB} -e VERSION=${releaseVersion} -e MICROSERVICE=${microservice} --wait -n boost-cicd"
+	}
 
 }
 

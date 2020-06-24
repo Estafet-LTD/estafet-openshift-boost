@@ -120,7 +120,7 @@ node("maven") {
 	}
 
 	stage("promote the image from ${params.PRODUCT}-cicd to ${project}") {
-		openshiftTag namespace: "${params.PRODUCT}-cicd", srcStream: microservice, srcTag: version, destinationNamespace: project, destinationStream: microservice, destinationTag: releaseVersion
+		sh "oc tag ${params.PRODUCT}-cicd/${microservice}:${version} ${project}/${microservice}:${releaseVersion}"
 		sh "oc patch is/${microservice} -p '{\"metadata\":{\"labels\":{\"product\":\"${params.PRODUCT}\"}}}' -n ${project}"
 	}
 
@@ -129,8 +129,7 @@ node("maven") {
 	}
 
 	stage("deploy ${microservice} to ${project}") {
-		openshiftBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "deploy", env : [ [ name : 'PROJECT', value : project ], [ name : 'GITHUB', value : params.GITHUB ], [ name : 'PRODUCT', value : params.PRODUCT ], [ name : 'PRODUCT_REPO', value : params.PRODUCT_REPO ], [ name : 'MICROSERVICE', value : microservice ], [ name : 'VERSION', value : releaseVersion ] ], waitTime: "900000"
-		openshiftVerifyBuild namespace: "${params.PRODUCT}-cicd", buildConfig: "deploy", waitTime: "900000" 
+		sh "oc start-build deploy -e PROJECT=${project} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e PRODUCT_REPO=${params.PRODUCT_REPO} -e MICROSERVICE=${microservice} -e VERSION=${releaseVersion} --wait -n ${params.PRODUCT}-cicd"
 	}
 
 }
