@@ -24,10 +24,9 @@ node('jenkins-slave-image-mgmt') {
 
 	stage("publish the image") {
 		withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DH_USERNAME', passwordVariable: 'DH_PASSWORD')]) {
-			sh "sudo skopeo login -u ${DH_USERNAME} -p ${DH_PASSWORD} docker.io/${dockerhub}"
-		}
-		withCredentials([usernamePassword(credentialsId: 'cluster_admin', usernameVariable: 'CA_USERNAME', passwordVariable: 'CA_PASSWORD')]) {
-			sh "skopeo copy --src-creds=${CA_USERNAME}:${CA_PASSWORD} docker://${getImageRepo(project, microservice)}:latest docker://docker.io/${dockerhub}/${microservice}:${releaseVersion}"
+			withCredentials([usernamePassword(credentialsId: 'cluster_admin', usernameVariable: 'CA_USERNAME', passwordVariable: 'CA_PASSWORD')]) {
+				sh "skopeo copy --src-creds=${CA_USERNAME}:${CA_PASSWORD} --dest-cred=${DH_USERNAME}:${DH_PASSWORD} docker://${getImageRepo(project, microservice)}:latest docker://docker.io/${dockerhub}/${microservice}:${releaseVersion}"
+			}
 		}
 	}
 
