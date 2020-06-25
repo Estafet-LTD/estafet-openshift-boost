@@ -3,37 +3,12 @@
     var: microservice
     verbosity: 0
 
-- set_fact:
-    image_deployed: false
-    image: "{{ microservice.name }}:{{ microservice.version }}"
-
-- debug:
-    var: image
-    verbosity: 0
-
-- name: Retrieve the deployment config descriptor
-  shell: "oc get dc --selector app={{ microservice.name }} -o json -n {{ project }}"
-  register: list_of_dcs
-
-- name: Get the image stream name used by the dc
-  set_fact: image_stream="{{list_of_dcs.stdout|from_json|json_query('items[0].spec.triggers[0].imageChangeParams.from.name')}}"
-  ignore_errors: yes
-
-- debug:
-    var: image_stream
-    verbosity: 0
-
-- set_fact:
-    image_deployed: true
-  when: image == image_stream
-
 - name: Checkout {{ microservice.repo }} from github branch {{ microservice.version }}
   git:
     repo: "https://github.com/{{ github.org }}/{{ microservice.repo }}.git"
     dest: "{{ workdir }}/{{ microservice.repo }}"
     version: "{{ microservice.version }}"
     update: yes
-  when: image_deployed == false
   tags:
     - git  
 
@@ -59,36 +34,14 @@
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
-  when: image_deployed == false
   tags:
     - openshift  
-
-- set_fact: imagestream_namespace="openshift"
-
-- name: Create the {{ microservice.name }} build config from {{ branch }} branch
-  shell: 'oc process -n {{ project }} -f {{ workdir }}/{{ microservice.repo }}/openshift/templates/{{ microservice.name }}-build-config.yml -p NAMESPACE={{ project }} -p IMAGESTREAM_NAMESPACE={{ imagestream_namespace }} -p GITHUB={{ github.org }} -p DOCKER_IMAGE_LABEL={{ microservice.version }} -p PRODUCT={{ product.name }} -p MAVEN_MIRROR_URL={{ maven_mirror_url }} -p DOCKER_REGISTRY={{ docker_registry }} -p SOURCE_REPOSITORY_REF={{ microservice.version }} | oc apply -f -'
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"
-  when: image_deployed == false
-  tags:
-    - openshift             
-
-- name: Start the {{ microservice.name }} build
-  shell: 'oc start-build {{ microservice.name }} --wait -n {{ project }}'
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"
-  when: image_deployed == false
-  tags:
-    - openshift
 
 - name: Delete the {{ microservice.name }} configmap
   shell: 'oc delete configmap {{ microservice.name }} -n {{ project }} || true'
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
-  when: image_deployed == false
   tags:
     - openshift
 
@@ -97,7 +50,6 @@
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
-  when: image_deployed == false
   tags:
     - openshift
 
@@ -117,7 +69,6 @@
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
-  when: image_deployed == false
   tags:
     - openshift
 
@@ -154,11 +105,10 @@
     file: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/default-resources.yml"
 
 - name: Create the deployment config
-  shell: "oc process -n {{ project }} -f {{ workdir }}/{{ microservice.repo }}/openshift/templates/{{ microservice.name }}-config.yml -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ project }} -p DOCKER_IMAGE_LABEL={{ microservice.version }} -p DOCKER_REGISTRY={{ docker_registry }} -p PRODUCT={{ product.name }} -p MAX_MEMORY={{ resources.max_memory }} -p MIN_MEMORY={{ resources.min_memory }} -p MAX_CPU={{ resources.max_cpu }} -p MIN_CPU={{ resources.min_cpu }} -p REPLICAS={{ resources.replicas }} | oc apply -f -"
+  shell: "oc process -n {{ project }} -f {{ workdir }}/{{ microservice.repo }}/openshift/templates/{{ microservice.name }}-config.yml -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ dockerhub.org }} -p DOCKER_IMAGE_LABEL={{ microservice.version }} -p DOCKER_REGISTRY={{ dockerhub.url }} -p PRODUCT={{ product.name }} -p MAX_MEMORY={{ resources.max_memory }} -p MIN_MEMORY={{ resources.min_memory }} -p MAX_CPU={{ resources.max_cpu }} -p MIN_CPU={{ resources.min_cpu }} -p REPLICAS={{ resources.replicas }} | oc apply -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
-  when: image_deployed == false
   tags:
     - openshift     
 
@@ -167,7 +117,6 @@
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
-  when: image_deployed == false
   tags:
     - openshift
 

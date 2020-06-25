@@ -1,0 +1,3 @@
+dockerhub:
+  org: boostcd
+  url: docker.io
