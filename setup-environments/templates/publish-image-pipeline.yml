@@ -7,6 +7,9 @@ parameters:
 - description: Defines the location of the estafet dockerhub
   name: DOCKERHUB
   required: true  
+- description: Defines host and port of the openshift cluster
+  name: OPENSHIFT_HOST_PORT
+  required: true 
 objects:
 - apiVersion: v1
   kind: BuildConfig
@@ -33,7 +36,9 @@ objects:
           - name: VERSION
             value: version
           - name: MICROSERVICE
-            value: microservice                                             
+            value: microservice   
+          - name: OPENSHIFT_HOST_PORT
+            value: ${OPENSHIFT_HOST_PORT}                                          
         jenkinsfilePath: setup-environments/pipelines/publish-image.jenkinsFile
       type: JenkinsPipeline
     triggers:

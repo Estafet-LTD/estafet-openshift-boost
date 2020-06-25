@@ -2,7 +2,11 @@ node {
 
 	properties([
 	  parameters([
-	     string(name: 'GITHUB'), string(name: 'REPO'), string(name: 'MICROSERVICE'), string(name: 'DOCKERHUB'),
+	     string(name: 'GITHUB'), 
+		 string(name: 'REPO'), 
+		 string(name: 'MICROSERVICE'), 
+		 string(name: 'DOCKERHUB'),
+		 string(name: 'OPENSHIFT_HOST_PORT'),
 	  ])
 	])
 
@@ -42,7 +46,7 @@ node {
 	}	
 
 	stage("publish the image") {
-		sh "oc start-build publish-image -e DOCKERHUB=${params.DOCKERHUB} -e VERSION=${releaseVersion} -e MICROSERVICE=${microservice} --wait -n boost-cicd"
+		sh "oc start-build publish-image -e OPENSHIFT_HOST_PORT=${params.OPENSHIFT_HOST_PORT} -e DOCKERHUB=${params.DOCKERHUB} -e VERSION=${releaseVersion} -e MICROSERVICE=${microservice} --wait -n boost-cicd"
 	}
 
 }
