@@ -30,7 +30,7 @@ node('jenkins-slave-image-mgmt') {
 			withCredentials([usernamePassword(credentialsId: 'cluster_admin', usernameVariable: 'CA_USERNAME', passwordVariable: 'CA_PASSWORD')]) {
 				sh "oc login --insecure-skip-tls-verify=true -u ${CA_USERNAME} -p ${CA_PASSWORD} ${params.OPENSHIFT_HOST_PORT}"
 				sh "oc whoami -t > token.data"
-				def token = readFile('token.data')
+				def token = readFile('token.data').trim()
 				sh "skopeo copy --src-creds=${CA_USERNAME}:${token} --dest-creds=${DH_USERNAME}:${DH_PASSWORD} --src-tls-verify=false docker://${getImageRepo(project, microservice)}:latest docker://docker.io/${dockerhub}/${microservice}:${releaseVersion}"
 			}
 		}
