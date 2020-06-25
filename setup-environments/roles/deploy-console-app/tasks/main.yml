@@ -27,7 +27,7 @@
   vars:
     params: "{{ item }}"
   with_items: "{{ setup | default([]) }}"
-  when: stat_result.stat.exists and image_deployed == false
+  when: stat_result.stat.exists
 
 - name: Remove all aspects of the application so that we can rebuild from scratch
   shell: "oc delete all -l app={{ microservice.name }} -n {{ project }} || true"
@@ -96,7 +96,7 @@
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
-  when: stat_result.stat.exists and image_deployed == false
+  when: stat_result.stat.exists
   tags:
     - openshift
 
