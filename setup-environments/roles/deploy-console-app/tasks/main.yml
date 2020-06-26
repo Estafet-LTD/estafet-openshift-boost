@@ -3,12 +3,39 @@
     var: microservice
     verbosity: 0
 
+- set_fact:
+    image_deployed: false
+    image: "{{ dockerhub.url }}/{{ dockerhub.org }}/{{ microservice.name }}:{{ microservice.version }}"
+    dc_image: ""
+
+- debug:
+    var: image
+    verbosity: 0
+
+- name: Retrieve the deployment config descriptor
+  shell: "oc get dc --selector app={{ microservice.name }} -o json -n {{ project }}"
+  register: list_of_dcs
+
+- name: Get the image used by the dc
+  set_fact: 
+    dc_image: "{{list_of_dcs.stdout|from_json|json_query('items[0].spec.template.spec.containers[0].image')}}"
+  ignore_errors: yes
+
+- debug:
+    var: dc_image
+    verbosity: 0
+
+- set_fact:
+    image_deployed: true
+  when: image == dc_image
+
 - name: Checkout {{ microservice.repo }} from github branch {{ microservice.version }}
   git:
     repo: "https://github.com/{{ github.org }}/{{ microservice.repo }}.git"
     dest: "{{ workdir }}/{{ microservice.repo }}"
     version: "{{ microservice.version }}"
     update: yes
+  when: image_deployed == false
   tags:
     - git  
 
@@ -27,13 +54,14 @@
   vars:
     params: "{{ item }}"
   with_items: "{{ setup | default([]) }}"
-  when: stat_result.stat.exists
+  when: stat_result.stat.exists and image_deployed == false
 
 - name: Remove all aspects of the application so that we can rebuild from scratch
   shell: "oc delete all -l app={{ microservice.name }} -n {{ project }} || true"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
+  when: image_deployed == false
   tags:
     - openshift  
 
@@ -42,6 +70,7 @@
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
+  when: image_deployed == false
   tags:
     - openshift
 
@@ -50,6 +79,7 @@
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
+  when: image_deployed == false
   tags:
     - openshift
 
@@ -69,6 +99,7 @@
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
+  when: image_deployed == false
   tags:
     - openshift
 
@@ -96,7 +127,7 @@
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
-  when: stat_result.stat.exists
+  when: stat_result.stat.exists and image_deployed == false
   tags:
     - openshift
 
@@ -109,6 +140,7 @@
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
+  when: image_deployed == false
   tags:
     - openshift     
 
@@ -117,12 +149,13 @@
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
+  when: image_deployed == false
   tags:
     - openshift
 
 - name: Expose Service {{ microservice.name }}
   shell: "oc expose service {{ microservice.name }}"
-  when: microservice.expose
+  when: microservice.expose and image_deployed == false
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
