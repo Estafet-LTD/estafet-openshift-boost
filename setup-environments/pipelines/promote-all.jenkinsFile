@@ -134,6 +134,16 @@ boolean isVersion(prevProject, project, microservice, version) {
 	return matched
 }
 
+def getTestRepo(env) {
+	def yml = readYaml file: "setup-environments/vars/environments-vars.yml"
+	yml.environments.stages.each { stage ->
+		if (stage.name.equals(env)) {
+			return stage.test_repo
+		}
+	}
+	error ("cannot find test repo for $env")
+}
+
 node {
 	
 	properties([
@@ -148,7 +158,8 @@ node {
 	def prevProject = params.PROJECT
 	def product = params.PRODUCT
 	def project
-	def microservices		
+	def microservices	
+	def env	
 	
 	stage("checkout") {
 		git credentialsId: "git", branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
@@ -162,6 +173,8 @@ node {
 	stage("determine the environment to promote to") {
 		project = nextProject prevProject
 		println "the promotion project is ${project}"
+		env = project.substring(product.length() + 1)
+		println "the promotion environment is ${env}"
 	}	
 
 	stage ('promote each microservice') {
@@ -174,4 +187,9 @@ node {
 			}
 		}		
 	}
+
+	stage ('trigger next stage gate') {
+		sh "oc start-build qa-${env} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e REPO=${getTestRepo(env)} -e PROJECT=${project} -n ${params.PRODUCT}-cicd"
+	}
+
 }

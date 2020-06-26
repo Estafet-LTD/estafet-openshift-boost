@@ -148,6 +148,16 @@ boolean isVersion(prevProject, project, env, microservice, version) {
 	return matched
 }
 
+def getTestRepo(env) {
+	def yml = readYaml file: "setup-environments/vars/environments-vars.yml"
+	yml.environments.stages.each { stage ->
+		if (stage.name.equals(env)) {
+			return stage.test_repo
+		}
+	}
+	error ("cannot find test repo for $env")
+}
+
 node {
 	
 	properties([
@@ -197,8 +207,8 @@ node {
 	  	}		
 	}
 
-	stage ('trigger stage gate') {
-		sh "oc start-build test-${microservice} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e REPO=${params.REPO} -e MICROSERVICE=${microservice} --wait -n ${params.PRODUCT}-cicd"
+	stage ('trigger prod stage gate') {
+		sh "oc start-build qa-prod -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e REPO=${getTestRepo('prod')} -e PROJECT=${project} -n ${params.PRODUCT}-cicd"
 	}
 
 }
