@@ -21,6 +21,7 @@
     body_format: form-urlencoded
     body:
       name: "{{ project }}-{{ params.bucket }}"
+      flushEnabled: '1'
       ramQuotaMB: '100'
       bucketType: 'couchbase'
       authType: 'sasl'
