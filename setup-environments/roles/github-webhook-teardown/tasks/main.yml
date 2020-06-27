@@ -1,5 +1,19 @@
 ---
-- include_role: 
-    name: github-webhook
-  vars:
-      github_hook_state: absent
+- name:  delete the new webhook for microservice {{ item.name }}
+  github_webhook:
+    repository: "{{ github.org }}/{{ item.repo }}"
+    url: http://console-gateway-api-{{ product.name }}-console.{{ openshift.apps }}/github/hooks/
+    user: "{{ github.user }}"
+    password: "{{ github.password }}"
+    state: absent
+  with_items: "{{ microservices }}"
+
+- name:  delete the new webhook for test {{ item.test_repo }}
+  github_webhook:
+    repository: "{{ github.org }}/{{ item.test_repo }}"
+    url: http://console-gateway-api-{{ product.name }}-console.{{ openshift.apps }}/github/hooks/
+    user: "{{ github.user }}"
+    password: "{{ github.password }}"
+    state: absent
+  when: item.test_repo is defined
+  with_items: "{{ environments.stages }}"  
