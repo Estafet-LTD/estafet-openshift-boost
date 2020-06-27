@@ -12,7 +12,7 @@
     status_code: 200, 202, 404
   when: reset is defined and reset
 
-- name: Create the "{{ params.bucket }}" bucket on Couchbase Pod
+- name: Create the "{{ params.bucket }}" bucket on Couchbase Pod (flush enabled)
   uri:
     url: http://couchbase.{{ project }}.svc:8091/pools/default/buckets
     method: POST
