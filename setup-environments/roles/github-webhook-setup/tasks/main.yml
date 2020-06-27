@@ -2,4 +2,9 @@
 - include_role: 
     name: github-webhook
   vars:
+      github_hook_state: absent
+      
+- include_role: 
+    name: github-webhook
+  vars:
       github_hook_state: present
