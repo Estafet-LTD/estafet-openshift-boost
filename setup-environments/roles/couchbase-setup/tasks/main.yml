@@ -45,12 +45,13 @@
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
+  when: params.expose is defined and params.expose
   tags:
     - openshift    
 
 - name: Create the maxBucketCount on Couchbase Pod
   uri:
-    url: http://couchbase-{{ project }}.{{ openshift.host }}/pools/default
+    url: http://couchbase.{{ project }}.svc/pools/default
     method: POST
     user: "{{ couchbase.user }}"
     password: "{{ couchbase.password }}"  
@@ -63,7 +64,7 @@
     
 - name: Create the memoryQuota on Couchbase Pod
   uri:
-    url: http://couchbase-{{ project }}.{{ openshift.host }}/pools/default
+    url: http://couchbase.{{ project }}.svc/pools/default
     method: POST
     user: "{{ couchbase.user }}"
     password: "{{ couchbase.password }}"  
@@ -76,7 +77,7 @@
   
 - name: Create the memoryQuota on Couchbase Pod
   uri:
-    url: http://couchbase-{{ project }}.{{ openshift.host }}/pools/default
+    url: http://couchbase.{{ project }}.svc/pools/default
     method: POST
     user: "{{ couchbase.user }}"
     password: "{{ couchbase.password }}"  
