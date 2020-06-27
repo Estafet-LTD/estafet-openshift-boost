@@ -2,7 +2,7 @@
 - name:  delete the new webhook for microservice {{ item.name }}
   github_webhook:
     repository: "{{ github.org }}/{{ item.repo }}"
-    url: http://console-gateway-api-{{ product.name }}-console.{{ openshift.apps }}/github/hooks/
+    url: http://console-gateway-api-{{ project }}.{{ openshift.subdomain }}/github/hooks/
     user: "{{ github.user }}"
     password: "{{ github.password }}"
     state: absent
@@ -11,7 +11,7 @@
 - name:  delete the new webhook for test {{ item.test_repo }}
   github_webhook:
     repository: "{{ github.org }}/{{ item.test_repo }}"
-    url: http://console-gateway-api-{{ product.name }}-console.{{ openshift.apps }}/github/hooks/
+    url: http://console-gateway-api-{{ project }}.{{ openshift.subdomain }}/github/hooks/
     user: "{{ github.user }}"
     password: "{{ github.password }}"
     state: absent
