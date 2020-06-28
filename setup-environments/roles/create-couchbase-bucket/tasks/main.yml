@@ -3,7 +3,7 @@
     var: params
     verbosity: 0
 
-- name: Delete "{{ params.bucket }}" bucket on Couchbase Pod
+- name: Delete "{{ params.bucket }}" bucket on Couchbase
   uri:
     url: http://couchbase.{{ project }}.svc:8091/pools/default/buckets/{{ project }}-{{ params.bucket }}
     method: DELETE
@@ -12,7 +12,7 @@
     status_code: 200, 202, 404
   when: reset is defined and reset
 
-- name: Create the "{{ params.bucket }}" bucket on Couchbase Pod
+- name: Create the "{{ params.bucket }}" bucket on Couchbase
   uri:
     url: http://couchbase.{{ project }}.svc:8091/pools/default/buckets
     method: POST
@@ -28,3 +28,17 @@
       saslPassword: "{{ params.bucket_password }}"
     force_basic_auth: yes
     status_code: 200, 202, 400 
+
+- name: Enable flush for "{{ params.bucket }}" bucket
+  uri:
+    url: http://couchbase.{{ project }}.svc:8091/pools/default/buckets/{{ project }}-{{ params.bucket }}
+    method: POST
+    user: "{{ couchbase.user }}"
+    password: "{{ couchbase.password }}"  
+    body_format: form-urlencoded
+    body:
+      name: "{{ project }}-{{ params.bucket }}"
+      flushEnabled: 1
+    force_basic_auth: yes
+    status_code: 200, 202, 400     
+  when: params.flush is defined and params.flush == true
