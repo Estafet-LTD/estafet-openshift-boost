@@ -10,7 +10,7 @@
     user: "{{ couchbase.user }}"
     password: "{{ couchbase.password }}"
     status_code: 200, 202, 404
-  when: reset is defined and reset
+  when: params.reset is defined and params.reset == true
 
 - name: Create the "{{ params.bucket }}" bucket on Couchbase
   uri:
@@ -21,7 +21,6 @@
     body_format: form-urlencoded
     body:
       name: "{{ project }}-{{ params.bucket }}"
-      flushEnabled: 1
       ramQuotaMB: 100
       bucketType: couchbase
       authType: sasl
