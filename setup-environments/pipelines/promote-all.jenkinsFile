@@ -186,9 +186,7 @@ node {
 	}
 
 	stage ("trigger ${project.substring(product.length()+1)} tests") {
-		def job = "qa-${project.substring(product.length()+1)}".toString()
-		println job.getClass() 
-		sh "oc start-build ${job} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e REPO=${getTestRepo(env)} -e PROJECT=${project} -n ${params.PRODUCT}-cicd"
+		println "oc start-build qa-${project.substring(product.length()+1)} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e REPO=${getTestRepo(env)} -e PROJECT=${project} -n ${params.PRODUCT}-cicd"
 	}
 
 }
