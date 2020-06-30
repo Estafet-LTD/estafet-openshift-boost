@@ -192,7 +192,7 @@ node {
 	}
 
 	stage ("trigger ${next} tests") {
-		println "oc start-build qa-${next} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e REPO=${getTestRepo(next)} -e PROJECT=${project} -n ${params.PRODUCT}-cicd"
+		sh "oc start-build qa-${next} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e REPO=${getTestRepo(next)} -e PROJECT=${project} -n ${params.PRODUCT}-cicd"
 	}
 
 }
