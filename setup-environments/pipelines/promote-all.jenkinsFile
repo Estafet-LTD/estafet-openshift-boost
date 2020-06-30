@@ -140,7 +140,7 @@ def getTestRepo(env) {
 		println "compare ${stage.name} to ${env}"
 		println stage.name.getClass()
 		println env.getClass()
-		if (stage.name == env)) {
+		if (stage.name == env) {
 			println "matched"
 			return stage.test_repo
 		}
