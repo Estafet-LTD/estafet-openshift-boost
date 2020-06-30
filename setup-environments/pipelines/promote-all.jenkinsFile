@@ -185,8 +185,9 @@ node {
 		}		
 	}
 
-	stage ("trigger next ${project.substring(product.length()+1)} gate") {
-		sh "oc start-build qa-${project.substring(product.length()+1)} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e REPO=${getTestRepo(env)} -e PROJECT=${project} -n ${params.PRODUCT}-cicd"
+	stage ("trigger ${project.substring(product.length()+1)} tests") {
+		def next = project.substring(product.length()+1)
+		sh "oc start-build qa-${next} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e REPO=${getTestRepo(env)} -e PROJECT=${project} -n ${params.PRODUCT}-cicd"
 	}
 
 }

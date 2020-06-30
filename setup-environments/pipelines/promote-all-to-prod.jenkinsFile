@@ -207,7 +207,7 @@ node {
 	  	}		
 	}
 
-	stage ('trigger prod stage gate') {
+	stage ('trigger prod tests') {
 		sh "oc start-build qa-prod -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e REPO=${getTestRepo('prod')} -e PROJECT=${project} -n ${params.PRODUCT}-cicd"
 	}
 
