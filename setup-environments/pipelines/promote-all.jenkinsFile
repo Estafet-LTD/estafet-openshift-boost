@@ -137,8 +137,10 @@ boolean isVersion(prevProject, project, microservice, version) {
 def getTestRepo(env) {
 	def yml = readYaml file: "setup-environments/vars/environments-vars.yml"
 	yml.environments.stages.each { stage ->
-		println stage.name
-		if (stage.name.equals(env.toString())) {
+		println "compare ${stage.name} to ${env}"
+		println stage.name.getClass()
+		println env.getClass()
+		if (stage.name.equals(env)) {
 			return stage.test_repo
 		}
 	}
