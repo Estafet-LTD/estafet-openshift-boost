@@ -159,6 +159,7 @@ node {
 	def product = params.PRODUCT
 	def project
 	def microservices	
+	def next
 	
 	stage("checkout") {
 		git credentialsId: "git", branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
@@ -172,6 +173,7 @@ node {
 	stage("determine the environment to promote to") {
 		project = nextProject prevProject
 		println "the promotion project is ${project}"
+		next = project.substring(product.length()+1)
 	}	
 
 	stage ('promote each microservice') {
@@ -185,8 +187,8 @@ node {
 		}		
 	}
 
-	stage ("trigger ${project.substring(product.length()+1)} tests") {
-		println "oc start-build qa-${project.substring(product.length()+1)} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e REPO=${getTestRepo(env)} -e PROJECT=${project} -n ${params.PRODUCT}-cicd"
+	stage ("trigger ${next} tests") {
+		println "oc start-build qa-${next} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e REPO=${getTestRepo(next)} -e PROJECT=${project} -n ${params.PRODUCT}-cicd"
 	}
 
 }
