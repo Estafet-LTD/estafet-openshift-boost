@@ -167,11 +167,21 @@
   tags:
     - openshift     
 
-- name: Wait for the microservice to become available {{ microservice.name }}
+- name: Wait for the non prod microservice to become available {{ microservice.name }}
   shell: "oc rollout status dc/{{ microservice.name }}"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
+  when: deploy_env is undefined
+  tags:
+    - openshift
+
+- name: Wait for the prod microservice to become available {{ deploy_env }}{{ microservice.name }}
+  shell: "oc rollout status dc/{{ deploy_env }}{{ microservice.name }}"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  when: deploy_env is defined
   tags:
     - openshift
 
