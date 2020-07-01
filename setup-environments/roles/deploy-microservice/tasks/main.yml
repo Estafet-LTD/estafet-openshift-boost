@@ -102,6 +102,11 @@
     secret_yml: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/{{ stage }}-{{ deploy_env }}-secret.yml"
   when: deploy_env is defined
 
+- name: Check that the {{ secret_yml }} exists
+  stat:
+    path: "{{ secret_yml }}"
+  register: stat_result
+
 - name: Load the variables {{ secret_yml }}
   include_vars:
     file: "{{ secret_yml }}"
