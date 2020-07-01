@@ -53,9 +53,29 @@
   tags:
     - openshift
 
-- name: Load the variables from {{ stage }}-config.yml
+- name: define the name of the config yml
+  set_fact:
+    config_yml: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/{{ stage }}-config.yml"
+  when: deploy_env is undefined
+
+- name: define the name of the config yml
+  set_fact:
+    config_yml: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/{{ stage }}-{{ deploy_env }}-config.yml"
+  when: deploy_env is defined
+
+- name: Check that the {{ config_yml }} exists
+  stat:
+    path: "{{ config_yml }}"
+  register: stat_result
+
+- name: use the default is there is no config
+  set_fact:
+    config_yml: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/default-config.yml"
+  when: not stat_result.stat.exists
+
+- name: Load the variables from {{ config_yml }}
   include_vars:
-    file: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/{{ stage }}-config.yml"
+    file: "{{ config_yml }}"
 
 - name: Initialise config map variables
   set_fact: mapStr=""
@@ -72,14 +92,19 @@
   tags:
     - openshift
 
-- name: Check that the {{ stage }}-secret.yml exists
-  stat:
-    path: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/{{ stage }}-secret.yml"
-  register: stat_result
+- name: define the name of the secret yml
+  set_fact:
+    secret_yml: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/{{ stage }}-secret.yml"
+  when: deploy_env is undefined
 
-- name: Load the variables {{ stage }}-secrets.yml
+- name: define the name of the secret yml
+  set_fact:
+    secret_yml: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/{{ stage }}-{{ deploy_env }}-secret.yml"
+  when: deploy_env is defined
+
+- name: Load the variables {{ secret_yml }}
   include_vars:
-    file: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/{{ stage }}-secret.yml"
+    file: "{{ secret_yml }}"
   when: stat_result.stat.exists
 
 - name: Initialise secret variables
@@ -100,9 +125,24 @@
   tags:
     - openshift
 
+- name: Check that the {{ stage }}-resources.yml exists
+  stat:
+    path: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/{{ stage }}-resources.yml"
+  register: stat_result
+
+- name: define the name of the resources yml
+  set_fact:
+    resources_yml: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/{{ stage }}-resources.yml"
+  when: stat_result.stat.exists    
+
+- name: define the name of the resources yml
+  set_fact:
+    resources_yml: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/default-resources.yml"
+  when: not stat_result.stat.exists
+
 - name: Load the variables from default-resources.yml
   include_vars:
-    file: "{{ workdir }}/{{ microservice.repo }}/openshift/configuration/default-resources.yml"
+    file: "{{ resources_yml }}"
 
 - name: Create the deployment config
   shell: "oc process -n {{ project }} -f {{ workdir }}/{{ microservice.repo }}/openshift/templates/{{ microservice.name }}-config.yml -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ project }} -p DOCKER_IMAGE_LABEL={{ release_version }} -p DOCKER_REGISTRY={{ openshift.registry }} -p PRODUCT={{ product.name }} -p MAX_MEMORY={{ resources.max_memory }} -p MIN_MEMORY={{ resources.min_memory }} -p MAX_CPU={{ resources.max_cpu }} -p MIN_CPU={{ resources.min_cpu }} -p REPLICAS={{ resources.replicas }} | oc apply -f -"

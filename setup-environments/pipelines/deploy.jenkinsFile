@@ -8,6 +8,7 @@ node("jenkins-slave-ansible") {
 			string(name: 'PRODUCT_REPO'), 
 			string(name: 'MICROSERVICE'),
 			string(name: 'VERSION'),
+			string(name: 'ENV'),
 	  	])
 	])
 
@@ -27,7 +28,7 @@ node("jenkins-slave-ansible") {
 	stage ("deploy the microservice") {
 		withCredentials([file(credentialsId: 'ansible_vault', variable: 'vault')]) {
 			def stage = project.toString().substring(product.length()+1)
-			sh "ansible-playbook -i setup-environments/hosts.ini --vault-password-file ${vault} setup-environments/deploy.yml -e env_project=${project} -e target_app=${microservice} -e release_version=${version} -e stage=${stage}"
+			sh "ansible-playbook -i setup-environments/hosts.ini --vault-password-file ${vault} setup-environments/deploy.yml -e env_project=${project} -e target_app=${microservice} -e release_version=${version} -e stage=${stage} ${PARAMS.ENV != null ? \"-e deploy_env=${PARAMS.ENV}\" : ''}"
 		}
 	}	
 
