@@ -16,6 +16,7 @@ node("jenkins-slave-ansible") {
 	def product = params.PRODUCT
 	def microservice = params.MICROSERVICE	
 	def version = params.VERSION
+	def env = params.ENV
 
 	stage("checkout ${params.PRODUCT_REPO}") {
 		git credentialsId: "git", url: "https://github.com/${params.GITHUB}/${params.PRODUCT_REPO}"
@@ -28,7 +29,7 @@ node("jenkins-slave-ansible") {
 	stage ("deploy the microservice") {
 		withCredentials([file(credentialsId: 'ansible_vault', variable: 'vault')]) {
 			def stage = project.toString().substring(product.length()+1)
-			def deployEnv = PARAMS.ENV == "" ? "" : "-e deploy_env=${PARAMS.ENV}"
+			def deployEnv = env == "" ? "" : "-e deploy_env=${env}"
 			sh "ansible-playbook -i setup-environments/hosts.ini --vault-password-file ${vault} setup-environments/deploy.yml -e env_project=${project} -e target_app=${microservice} -e release_version=${version} -e stage=${stage} ${deployEnv}"
 		}
 	}	
