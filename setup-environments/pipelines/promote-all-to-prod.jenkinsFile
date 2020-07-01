@@ -165,7 +165,6 @@ node {
 	     string(name: 'PRODUCT'), 
 	     string(name: 'PROJECT'), 
 	     string(name: 'GITHUB'), 
-	     string(name: 'PRODUCT_REPO'), 
 	     string(name: 'REPO'),
 	  ])
 	])	
