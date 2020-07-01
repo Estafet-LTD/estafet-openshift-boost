@@ -150,12 +150,13 @@ boolean isVersion(prevProject, project, env, microservice, version) {
 
 def getTestRepo(env) {
 	def yml = readYaml file: "setup-environments/vars/environments-vars.yml"
+	def testRepo
 	yml.environments.stages.each { stage ->
-		if (stage.name.equals(env)) {
-			return stage.test_repo
+		if (stage.name == env) {
+			testRepo = stage.test_repo
 		}
 	}
-	error ("cannot find test repo for $env")
+	return testRepo
 }
 
 node {

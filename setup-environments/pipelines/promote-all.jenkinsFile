@@ -138,9 +138,6 @@ def getTestRepo(env) {
 	def yml = readYaml file: "setup-environments/vars/environments-vars.yml"
 	def testRepo
 	yml.environments.stages.each { stage ->
-		println "compare ${stage.name} to ${env}"
-		println stage.name.getClass()
-		println env.getClass()
 		if (stage.name == env) {
 			testRepo = stage.test_repo
 		}
