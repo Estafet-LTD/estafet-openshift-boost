@@ -10,7 +10,7 @@ boost_microservices:
       test: false
           
     - name: console-project-api
-      version: 0.0.6
+      version: 0.0.7
       repo: estafet-openshift-boost-console-api-project
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
