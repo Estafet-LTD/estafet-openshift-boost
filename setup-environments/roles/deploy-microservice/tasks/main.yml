@@ -29,27 +29,39 @@
   with_items: "{{ setup }}"
   when: stat_result.stat.exists
 
-- name: Remove the deployment descriptor for the application
-  shell: "oc delete dc -l app={{ microservice.name }} -n {{ project }} || true"
+- name: Remove the objects for the non prod application
+  shell: "oc delete dc,svc -l app={{ microservice.name }} -n {{ project }} || true"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
+  when: deploy_env is undefined
   tags:
     - openshift  
 
-- name: Delete the {{ microservice.name }} configmap
-  shell: 'oc delete configmap {{ microservice.name }} -n {{ project }} || true'
+- name: Remove the objects for the prod application
+  shell: "oc delete dc,svc -l app={{ deploy_env }}{{ microservice.name }} -n {{ project }} || true"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
+  when: deploy_env is defined
+  tags:
+    - openshift  
+
+- name: Delete the {{ microservice.name }} configmaps and secrets for non prod
+  shell: 'oc delete configmap,secret {{ microservice.name }} -n {{ project }} || true'
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  when: deploy_env is undefined
   tags:
     - openshift
 
-- name: Delete the {{ microservice.name }} secret
-  shell: 'oc delete secret {{ microservice.name }} -n {{ project }} || true'
+- name: Delete the {{ microservice.name }} configmaps and secrets for prod
+  shell: 'oc delete configmap,secret {{ deploy_env }}{{ microservice.name }} -n {{ project }} || true'
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
+  when: deploy_env is defined
   tags:
     - openshift
 
@@ -84,11 +96,21 @@
   set_fact: mapStr="{{ mapStr }} --from-literal={{ item.name }}='{{ item.value }}'"
   with_items: "{{ config_map }}"
 
-- name: Create the {{ microservice.name }} configmap
+- name: Create the {{ microservice.name }} non prod configmap
   shell: 'oc create configmap {{ microservice.name }} {{ mapStr }} -n {{ project }}'
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
+  when: deploy_env is undefined
+  tags:
+    - openshift
+
+- name: Create the {{ deploy_env }}{{ microservice.name }} prod configmap
+  shell: 'oc create configmap {{ deploy_env }}{{ microservice.name }} {{ mapStr }} -n {{ project }}'
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  when: deploy_env is defined
   tags:
     - openshift
 
@@ -121,12 +143,21 @@
   with_items: "{{ secrets }}"
   when: stat_result.stat.exists
 
-- name: Create the {{ microservice.name }} secrets
+- name: Create the {{ microservice.name }} non prod secrets
   shell: 'oc create secret generic {{ microservice.name }} {{ secretStr }} -n {{ project }}'
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
   when: stat_result.stat.exists
+  tags:
+    - openshift
+
+- name: Create the {{ deploy_env }}{{ microservice.name }} prod secrets
+  shell: 'oc create secret generic {{ deploy_env }}{{ microservice.name }} {{ secretStr }} -n {{ project }}'
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  when: stat_result.stat.exists and deploy_env is defined
   tags:
     - openshift
 
