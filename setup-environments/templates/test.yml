@@ -16,6 +16,12 @@ parameters:
 - description: Defines repo that contains the test for the specified environment
   name: REPO_URI
   required: true
+- description: Defines repo that contains the test for the specified environment
+  name: SMOTE_TEST_REPO_URI
+  required: true
+- description: Defines boost version
+  name: VERSION
+  required: true     
 objects:
 - apiVersion: v1
   kind: BuildConfig
@@ -33,7 +39,49 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/${REPO_URI}"
+        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        ref: ${VERSION}
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+          - name: GITHUB
+            value: ${GITHUB}           
+          - name: PRODUCT
+            value: ${PRODUCT}     
+          - name: REPO
+            value: ${REPO_URI}
+          - name: ENV
+            value: ${ENV}          
+          - name: PROJECT
+            value: some_project                                                
+        jenkinsfilePath: setup-environments/pipelines/testWrapper.jenkinsFile
+      type: JenkinsPipeline
+    triggers:
+    - github:
+        secret: secret101
+      type: GitHub
+    - generic:
+        secret: secret101
+      type: Generic    
+  status:
+    lastVersion: 0    
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: pipeline
+      name: qa-${ENV}-impl
+      product: ${PRODUCT}
+    name: qa-${ENV}-impl
+  spec:
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: "https://github.com/${GITHUB}/${REPO_URI}"     
     strategy:
       jenkinsPipelineStrategy:
         env:
@@ -45,14 +93,40 @@ objects:
             value: ${REPO_URI}
           - name: PROJECT
             value: some_project                                                
-        jenkinsfilePath: openshift/pipelines/test.jenkinsFile
+        jenkinsfilePath: src/test/boost/openshift/pipelines/test.jenkinsFile
       type: JenkinsPipeline
-    triggers:
-    - github:
-        secret: secret101
-      type: GitHub
-    - generic:
-        secret: secret101
-      type: Generic    
   status:
-    lastVersion: 0          
+    lastVersion: 0      
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: pipeline
+      name: qa-${ENV}-smoke-test
+    name: qa-${ENV}-smoke-test
+  spec:
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: "https://github.com/${GITHUB}/${SMOTE_TEST_REPO_URI}"
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+          - name: GITHUB
+            value: ${GITHUB}           
+          - name: PRODUCT
+            value: ${PRODUCT}     
+          - name: REPO
+            value: ${REPO_URI}
+          - name: ENV
+            value: ${ENV}          
+          - name: PROJECT
+            value: some_project   
+        jenkinsfilePath: src/boost/openshift/pipelines/test.jenkinsFile
+      type: JenkinsPipeline
+  status:
+    lastVersion: 0                     
