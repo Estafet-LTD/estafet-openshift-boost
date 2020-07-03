@@ -29,7 +29,7 @@ node {
 		sh "oc label namespace ${project} test-passed=false --overwrite=true"	
 	}
 
-	if (env != 'prod') {
+	if (env != 'prod' || env != 'test') {
 		stage("execute the smoke tests") {
 			def yml = readYaml file: "setup-environments/vars/environments-vars.yml"
 			def testRepo =  yml.environments.smoke_test_repo	  	
