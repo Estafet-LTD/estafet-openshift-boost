@@ -37,3 +37,6 @@
 [submodule "estafet-openshift-boost-couchbase-lib"]
 	path = estafet-openshift-boost-couchbase-lib
 	url = https://github.com/Estafet-LTD/estafet-openshift-boost-couchbase-lib
+[submodule "estafet-blockchain-demo-qa-smoke-test"]
+	path = estafet-blockchain-demo-qa-smoke-test
+	url = https://github.com/Estafet-LTD/estafet-blockchain-demo-qa-smoke-test
