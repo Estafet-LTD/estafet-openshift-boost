@@ -16,6 +16,7 @@ node {
 	  parameters([
 	     string(name: 'GITHUB'), 
 		 string(name: 'PRODUCT'), 
+		 string(name: 'PRODUCT_REPO'),
 		 string(name: 'REPO'), 
 		 string(name: 'ENV'), 
 		 string(name: 'PROJECT'),
@@ -26,7 +27,7 @@ node {
 	def env = params.ENV
 
 	stage("checkout") {
-		git branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
+		git branch: "master", url: "https://github.com/${params.GITHUB}/${params.PRODUCT_REPO}"
 	}
 
 	stage("reset test flags for ${project}") {
