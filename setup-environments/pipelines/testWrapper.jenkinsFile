@@ -25,6 +25,10 @@ node {
 	def project = params.PROJECT
 	def env = params.ENV
 
+	stage("checkout") {
+		git branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
+	}
+
 	stage("reset test flags for ${project}") {
 		sh "oc label namespace ${project} test-passed=false --overwrite=true"	
 	}
