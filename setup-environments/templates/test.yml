@@ -131,7 +131,7 @@ objects:
             value: ${ENV}          
           - name: PROJECT
             value: some_project   
-        jenkinsfilePath: src/boost/openshift/pipelines/test.jenkinsFile
+        jenkinsfilePath: src/test/boost/openshift/pipelines/test.jenkinsFile
       type: JenkinsPipeline
   status:
     lastVersion: 0                     
