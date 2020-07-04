@@ -16,6 +16,9 @@ parameters:
 - description: Defines repo that contains the test for the specified environment
   name: REPO_URI
   required: true
+- description: Defines product repo that contains the test for the specified environment
+  name: PRODUCT_REPO_URI
+  required: true
 - description: Defines repo that contains the test for the specified environment
   name: SMOTE_TEST_REPO_URI
   required: true
@@ -48,6 +51,8 @@ objects:
             value: ${GITHUB}           
           - name: PRODUCT
             value: ${PRODUCT}     
+          - name: PRODUCT_REPO
+            value: ${PRODUCT_REPO_URI}            
           - name: REPO
             value: ${REPO_URI}
           - name: ENV
