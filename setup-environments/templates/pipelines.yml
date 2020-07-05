@@ -182,6 +182,8 @@ objects:
             value: microservice
           - name: VERSION
             value: version
+          - name: ENV
+            value: ''            
         jenkinsfilePath: setup-environments/pipelines/deploy.jenkinsFile
       type: JenkinsPipeline
   status:

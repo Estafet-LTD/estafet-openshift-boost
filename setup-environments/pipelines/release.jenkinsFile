@@ -129,7 +129,7 @@ node("maven") {
 	}
 
 	stage("deploy ${microservice} to ${project}") {
-		sh "oc start-build deploy -e PROJECT=${project} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e PRODUCT_REPO=${params.PRODUCT_REPO} -e MICROSERVICE=${microservice} -e VERSION=${releaseVersion} --wait -n ${params.PRODUCT}-cicd"
+		sh "oc start-build deploy -e PROJECT=${project} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e PRODUCT_REPO=${params.PRODUCT_REPO} -e MICROSERVICE=${microservice} -e VERSION=${releaseVersion} -e ENV='' --wait -n ${params.PRODUCT}-cicd"
 	}
 
 }
