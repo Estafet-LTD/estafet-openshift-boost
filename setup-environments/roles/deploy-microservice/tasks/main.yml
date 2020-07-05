@@ -65,12 +65,12 @@
   tags:
     - openshift
 
-- name: define the name of the config yml
+- name: define the name of the non prod {{ stage }} config yml
   set_fact:
     config_yml: "{{ workdir }}/{{ microservice.repo }}/src/main/boost/openshift/configuration/{{ stage }}-config.yml"
   when: deploy_env is undefined
 
-- name: define the name of the config yml
+- name: define the name of the prod config yml
   set_fact:
     config_yml: "{{ workdir }}/{{ microservice.repo }}/src/main/boost/openshift/configuration/{{ stage }}-{{ deploy_env }}-config.yml"
   when: deploy_env is defined
