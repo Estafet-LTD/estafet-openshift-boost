@@ -71,7 +71,7 @@ def getImageSha(json, version) {
 		println name.getClass() 
 		println "name ${name}"
 		if (name.equals(version)) {
-			def matcher = tags[i]['from']['name'] =~ /(.+\@)(\w+)/
+			def matcher = tags[i]['from']['name'] =~ /(.+\@)(sha256\:)(\w+)/
 			if (!matcher.matches()) {
  			   error("Pattern didn't match!")
 			}
