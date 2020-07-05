@@ -15,6 +15,14 @@
 - set_fact: application_name="{{ params.application_name }}"
   when: params.application_name is defined
 
+- set_fact: 
+    params.amq_user: amq
+  when: params.amq_user is undefined  
+
+- set_fact: 
+    params.amq_password: amq
+  when: params.amq_password is undefined  
+  
 - name: Install the JBoss A-MQ Message Broker
   shell: "oc process amq63-basic -n {{ templates_project }} -p APPLICATION_NAME={{ application_name }} -p IMAGE_STREAM_NAMESPACE={{ templates_project }} -p MQ_USERNAME={{ params.amq_user }} -p MQ_PASSWORD={{ params.amq_password }} | oc create -f -"
   register: command_result
