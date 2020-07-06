@@ -16,15 +16,23 @@
   when: params.application_name is defined
 
 - set_fact: 
-    params.amq_user: amq
+    amq_user: "{{ params.amq_user }}"
+  when: params.amq_user is defined 
+
+- set_fact: 
+    amq_user: amq
   when: params.amq_user is undefined  
 
 - set_fact: 
-    params.amq_password: amq
+    amq_password: "{{ params.amq_password }}"
+  when: params.amq_password is defined 
+
+- set_fact: 
+    amq_password: amq
   when: params.amq_password is undefined  
   
 - name: Install the JBoss A-MQ Message Broker
-  shell: "oc process amq63-basic -n {{ templates_project }} -p APPLICATION_NAME={{ application_name }} -p IMAGE_STREAM_NAMESPACE={{ templates_project }} -p MQ_USERNAME={{ params.amq_user }} -p MQ_PASSWORD={{ params.amq_password }} | oc create -f -"
+  shell: "oc process amq63-basic -n {{ templates_project }} -p APPLICATION_NAME={{ application_name }} -p IMAGE_STREAM_NAMESPACE={{ templates_project }} -p MQ_USERNAME={{ amq_user }} -p MQ_PASSWORD={{ amq_password }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
