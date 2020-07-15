@@ -4,9 +4,6 @@ metadata:
   creationTimestamp: null
   name: boost-library-pipelines
 parameters:
-- description: Defines the location of the estafet github (change this if you have forked and want to use another github)
-  name: GITHUB
-  required: true
 - description: Defines name of the library
   name: LIBRARY_NAME
   required: true    
@@ -40,12 +37,10 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        uri: "https://github.com/Estafet-LTD/estafet-openshift-boost"
     strategy:
       jenkinsPipelineStrategy:
-        env:
-          - name: GITHUB
-            value: ${GITHUB}                   
+        env:                 
           - name: REPO
             value: ${LIBRARY_REPO_URI}            
         jenkinsfilePath: setup-environments/pipelines/${BUILD_LIBRARY}
@@ -69,12 +64,10 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        uri: "https://github.com/Estafet-LTD/estafet-openshift-boost"
     strategy:
       jenkinsPipelineStrategy:
-        env:
-          - name: GITHUB
-            value: ${GITHUB}             
+        env:          
           - name: REPO
             value: ${LIBRARY_REPO_URI}                       
         jenkinsfilePath: setup-environments/pipelines/${RELEASE_LIBRARY}

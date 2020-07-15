@@ -4,9 +4,6 @@ metadata:
   creationTimestamp: null
   name: global-pipelines
 parameters:
-- description: Defines the location of the estafet github (change this if you have forked and want to use another github)
-  name: GITHUB
-  required: true  
 - description: Defines the host and port for the master node
   name: MASTER_HOST
   required: true  
@@ -42,13 +39,11 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        uri: https://github.com/Estafet-LTD/estafet-openshift-boost
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
         env:
-          - name: GITHUB
-            value: ${GITHUB}
           - name: REPO
             value: ${REPO_URI}
           - name: PROJECT_TITLE
@@ -85,7 +80,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        uri: https://github.com/Estafet-LTD/estafet-openshift-boost
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
@@ -112,7 +107,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        uri: https://github.com/Estafet-LTD/estafet-openshift-boost
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
@@ -139,7 +134,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        uri: https://github.com/Estafet-LTD/estafet-openshift-boost
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
@@ -165,15 +160,13 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        uri: https://github.com/Estafet-LTD/estafet-openshift-boost
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
         env:
           - name: PROJECT
             value: project
-          - name: GITHUB
-            value: ${GITHUB}
           - name: PRODUCT
             value: ${PRODUCT}            
           - name: PRODUCT_REPO

@@ -2,7 +2,6 @@ node {
 
 	properties([
 	  parameters([
-	     string(name: 'GITHUB'), 
 		 string(name: 'REPO'), 
 		 string(name: 'MICROSERVICE'), 
 		 string(name: 'DOCKERHUB'),
@@ -17,9 +16,7 @@ node {
 	def properties
 
 	stage("checkout") {
-		withCredentials([usernamePassword(credentialsId: 'git', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-			git branch: "master", url: "https://${USERNAME}:${PASSWORD}@github.com/${params.GITHUB}/${params.REPO}"			
-		}
+		git branch: "master", credentialsId: 'git', url: params.REPO
 	}
 
 	stage("increment version") {

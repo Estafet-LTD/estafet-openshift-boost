@@ -3,10 +3,7 @@ kind: Template
 metadata:
   creationTimestamp: null
   name: promote-all
-parameters:
-- description: Defines the location of the estafet github (change this if you have forked and want to use another github)
-  name: GITHUB
-  required: true  
+parameters: 
 - description: Defines the product that this pipeline is related to
   name: PRODUCT
   required: true
@@ -33,7 +30,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        uri: https://github.com/Estafet-LTD/estafet-openshift-boost
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:

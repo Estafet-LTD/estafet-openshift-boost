@@ -18,7 +18,7 @@
         
     - name: Checkout the boost console dependencies from github
       git:
-        repo: "https://github.com/{{ github.org }}/estafet-openshift-boost.git"
+        repo: "https://github.com/Estafet-LTD/estafet-openshift-boost.git"
         dest: "{{ workdir }}/estafet-openshift-boost"
         version: "{{ boost.version }}"
         update: yes

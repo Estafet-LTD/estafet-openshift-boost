@@ -2,7 +2,6 @@ node {
 	
 	properties([
 	  parameters([
-	     string(name: 'GITHUB'), 
 	     string(name: 'PRODUCT'), 
 	     string(name: 'REPO'),
 	  ])
@@ -11,7 +10,7 @@ node {
 	def microservices		
 	
 	stage("checkout") {
-		git credentialsId: "git", branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
+		git credentialsId: "git", branch: "master", url: params.REPO
 	}
 	
 	stage("read the microservices definition") {
@@ -21,7 +20,7 @@ node {
 
 	stage ('build all microservices') {
 		microservices.each { microservice ->
-			sh "oc start-build release-${microservice.name} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e PRODUCT_REPO=${params.REPO} -e REPO=${microservice.repo} -e MICROSERVICE=${microservice.name} --wait -n ${params.PRODUCT}-cicd"
+			sh "oc start-build release-${microservice.name} -e PRODUCT=${params.PRODUCT} -e PRODUCT_REPO=${params.REPO} -e REPO=${microservice.repo} -e MICROSERVICE=${microservice.name} --wait -n ${params.PRODUCT}-cicd"
 	  }	
 	}
 }

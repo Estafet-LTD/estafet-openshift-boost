@@ -14,7 +14,6 @@ node {
 
 	properties([
 	  parameters([
-	     string(name: 'GITHUB'), 
 		 string(name: 'PRODUCT'), 
 		 string(name: 'PRODUCT_REPO'),
 		 string(name: 'REPO'), 
@@ -27,7 +26,7 @@ node {
 	def env = params.ENV
 
 	stage("checkout") {
-		git branch: "master", url: "https://github.com/${params.GITHUB}/${params.PRODUCT_REPO}"
+		git branch: "master", credentialsId: 'git', url: params.PRODUCT_REPO
 	}
 
 	stage("reset test flags for ${project}") {
@@ -38,7 +37,7 @@ node {
 		stage("execute the smoke tests") {
 			def yml = readYaml file: "setup-environments/vars/environments-vars.yml"
 			def testRepo =  yml.environments.smoke_test_repo	  	
-			sh "oc start-build qa-${env}-smoke-test -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e REPO=${testRepo} -e PROJECT=${project} --wait -n ${params.PRODUCT}-cicd"
+			sh "oc start-build qa-${env}-smoke-test -e PRODUCT=${params.PRODUCT} -e REPO=${testRepo} -e PROJECT=${project} --wait -n ${params.PRODUCT}-cicd"
 		}
 	}
 
@@ -51,9 +50,9 @@ node {
 			def route = readFile('route.json')
 			def bluegreen = getPassive(route)
 			println "the stage environment is $bluegreen"
-			sh "oc start-build qa-prod-impl -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e REPO=${params.REPO} -e PROJECT=${project} -e ENV=${bluegreen} --wait -n ${params.PRODUCT}-cicd"
+			sh "oc start-build qa-prod-impl -e PRODUCT=${params.PRODUCT} -e REPO=${params.REPO} -e PROJECT=${project} -e ENV=${bluegreen} --wait -n ${params.PRODUCT}-cicd"
 		} else {
-			sh "oc start-build qa-${env}-impl -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e REPO=${params.REPO} -e PROJECT=${project} --wait -n ${params.PRODUCT}-cicd"
+			sh "oc start-build qa-${env}-impl -e PRODUCT=${params.PRODUCT} -e REPO=${params.REPO} -e PROJECT=${project} --wait -n ${params.PRODUCT}-cicd"
 		}
 	}
 	

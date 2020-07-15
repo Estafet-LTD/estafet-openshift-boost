@@ -151,7 +151,6 @@ node {
 	  parameters([
 	     string(name: 'PRODUCT'), 
 	     string(name: 'PROJECT'), 
-	     string(name: 'GITHUB'), 
 	     string(name: 'REPO'),
 	  ])
 	])	
@@ -163,7 +162,7 @@ node {
 	def next
 	
 	stage("checkout") {
-		git credentialsId: "git", branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
+		git credentialsId: "git", branch: "master", url: params.REPO
 	}
 	
 	stage("read the microservices definition") {
@@ -183,13 +182,13 @@ node {
 			def version = getLatestVersion prevProject, microservice.name
 			def env = prevProject.substring(product.length()+1)
 			if (!deploymentConfigExists(project, microservice.name) || !isRunning(project, microservice.name) || !isVersion(prevProject, project, microservice.name, version)) {
-				sh "oc start-build promote-${env}-${microservice.name} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e PRODUCT_REPO=${params.REPO} -e REPO=${microservice.repo} -e MICROSERVICE=${microservice.name} -e PROJECT=${params.PROJECT} --wait -n ${product}-cicd"
+				sh "oc start-build promote-${env}-${microservice.name} -e PRODUCT=${params.PRODUCT} -e PRODUCT_REPO=${params.REPO} -e REPO=${microservice.repo} -e MICROSERVICE=${microservice.name} -e PROJECT=${params.PROJECT} --wait -n ${product}-cicd"
 			}
 		}		
 	}
 
 	stage ("trigger ${next} tests") {
-		sh "oc start-build qa-${next} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e REPO=${getTestRepo(next)} -e PROJECT=${project} -n ${params.PRODUCT}-cicd"
+		sh "oc start-build qa-${next} -e PRODUCT=${params.PRODUCT} -e REPO=${getTestRepo(next)} -e PROJECT=${project} -n ${params.PRODUCT}-cicd"
 	}
 
 }

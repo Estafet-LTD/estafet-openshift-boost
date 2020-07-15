@@ -64,7 +64,6 @@ node() {
 
 	properties([
 	  parameters([
-	     string(name: 'GITHUB'), 
 		 string(name: 'PRODUCT'), 
 		 string(name: 'PRODUCT_REPO'), 
 		 string(name: 'REPO'), 
@@ -108,11 +107,7 @@ node() {
 	}
 
 	stage("checkout release version") {
-		withCredentials([usernamePassword(credentialsId: 'git', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-			checkout scm: [	$class: 'GitSCM', 
-						   	userRemoteConfigs: [[url: "https://${USERNAME}:${PASSWORD}@github.com/${params.GITHUB}/${params.REPO}"]], 
-							branches: [[name: "refs/tags/${version}"]]], changelog: false, poll: false
-		}
+		checkout scm: [$class: 'GitSCM', userRemoteConfigs: [[url: params.REPO, credentialsId: 'git']], branches: [[name: version]]],poll: false
 	}
 	
 	stage("reset test flag for ${project}") {
@@ -125,7 +120,7 @@ node() {
 	}	
 
 	stage("deploy ${microservice} to ${project}") {
-		sh "oc start-build deploy -e PROJECT=${project} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e PRODUCT_REPO=${params.PRODUCT_REPO} -e MICROSERVICE=${microservice} -e VERSION=${version} -e ENV=${env} --wait -n ${params.PRODUCT}-cicd"
+		sh "oc start-build deploy -e PROJECT=${project} -e PRODUCT=${params.PRODUCT} -e PRODUCT_REPO=${params.PRODUCT_REPO} -e MICROSERVICE=${microservice} -e VERSION=${version} -e ENV=${env} --wait -n ${params.PRODUCT}-cicd"
 	}
 	
 }

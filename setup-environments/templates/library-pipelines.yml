@@ -4,9 +4,6 @@ metadata:
   creationTimestamp: null
   name: library-pipelines
 parameters:
-- description: Defines the location of the estafet github (change this if you have forked and want to use another github)
-  name: GITHUB
-  required: true
 - description: Defines the main repository that contains the infrastructor definition
   name: ENVIRONMENTS_REPO_URI
   required: true      
@@ -43,12 +40,10 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/${ENVIRONMENTS_REPO_URI}"
+        uri: ${ENVIRONMENTS_REPO_URI}
     strategy:
       jenkinsPipelineStrategy:
-        env:
-          - name: GITHUB
-            value: ${GITHUB}                   
+        env:                  
           - name: REPO
             value: ${LIBRARY_REPO_URI}            
         jenkinsfilePath: "setup-environments/pipelines/${BUILD_PIPELINE}"
@@ -72,12 +67,10 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/${ENVIRONMENTS_REPO_URI}"
+        uri: ${ENVIRONMENTS_REPO_URI}
     strategy:
       jenkinsPipelineStrategy:
-        env:
-          - name: GITHUB
-            value: ${GITHUB}             
+        env:           
           - name: REPO
             value: ${LIBRARY_REPO_URI}                       
         jenkinsfilePath: "setup-environments/pipelines/${RELEASE_PIPELINE}"

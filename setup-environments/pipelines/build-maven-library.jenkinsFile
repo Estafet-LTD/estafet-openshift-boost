@@ -4,12 +4,12 @@ node("maven") {
 
 	properties([
 	  parameters([
-	     string(name: 'GITHUB'), string(name: 'REPO'),
+		 string(name: 'REPO'),
 	  ])
 	])
 
 	stage("checkout") {
-		git credentialsId: "git", branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
+		git credentialsId: "git", branch: "master", url: params.REPO
 	}
 
 	stage("deploy snapshots") {

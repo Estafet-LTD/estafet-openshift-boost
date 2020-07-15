@@ -4,9 +4,6 @@ metadata:
   creationTimestamp: null
   name: microservice-pipelines
 parameters:
-- description: Defines the location of the estafet github (change this if you have forked and want to use another github)
-  name: GITHUB
-  required: true
 - description: Defines name of the microservice
   name: MICROSERVICE_NAME
   required: true
@@ -46,13 +43,11 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        uri: "https://github.com/Estafet-LTD/estafet-openshift-boost"
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
         env:
-          - name: GITHUB
-            value: ${GITHUB}
           - name: PRODUCT
             value: ${PRODUCT}
           - name: PRODUCT_REPO
@@ -82,12 +77,10 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/${ENVIRONMENTS_REPO_URI}"
+        uri: ${ENVIRONMENTS_REPO_URI}
     strategy:
       jenkinsPipelineStrategy:
         env:
-          - name: GITHUB
-            value: ${GITHUB}
           - name: PRODUCT
             value: ${PRODUCT}
           - name: REPO
@@ -115,13 +108,11 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        uri: https://github.com/Estafet-LTD/estafet-openshift-boost
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
-        env:
-          - name: GITHUB
-            value: ${GITHUB}      
+        env:     
           - name: PRODUCT
             value: ${PRODUCT}  
           - name: PRODUCT_REPO
@@ -151,13 +142,11 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/${GITHUB}/estafet-openshift-boost"
+        uri: https://github.com/Estafet-LTD/estafet-openshift-boost
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
-        env:
-          - name: GITHUB
-            value: ${GITHUB}      
+        env:    
           - name: PRODUCT
             value: ${PRODUCT}  
           - name: PRODUCT_REPO

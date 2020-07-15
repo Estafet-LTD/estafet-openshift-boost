@@ -8,7 +8,6 @@ node("jenkins-slave-ansible") {
 
 	properties([
 	  parameters([ 
-	    string(name: 'GITHUB'), 
 		string(name: 'PRODUCT'), 
 		string(name: 'PRODUCT_REPO'), 
 		string(name: 'REPO'), 
@@ -21,7 +20,7 @@ node("jenkins-slave-ansible") {
 	def version
 
 	stage("checkout ${params.REPO}") {
-		git credentialsId: "git", url: "https://github.com/${params.GITHUB}/${params.REPO}"
+		git credentialsId: "git", url: params.REPO
 	}
 
 	stage("reset the promoted image stream") {
@@ -36,7 +35,7 @@ node("jenkins-slave-ansible") {
 	}
 
 	stage("checkout ${params.PRODUCT_REPO}") {
-		git credentialsId: "git", url: "https://github.com/${params.GITHUB}/${params.PRODUCT_REPO}"
+		git credentialsId: "git", url: params.PRODUCT_REPO
 	}
 
 	stage ("install boost") {
@@ -55,7 +54,7 @@ node("jenkins-slave-ansible") {
 	}	
 
 	stage("execute build test") {
-		sh "oc start-build test-${microservice} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e REPO=${params.REPO} -e MICROSERVICE=${microservice} --wait -n ${params.PRODUCT}-cicd"
+		sh "oc start-build test-${microservice} -e PRODUCT=${params.PRODUCT} -e REPO=${params.REPO} -e MICROSERVICE=${microservice} --wait -n ${params.PRODUCT}-cicd"
 	}
 
 }

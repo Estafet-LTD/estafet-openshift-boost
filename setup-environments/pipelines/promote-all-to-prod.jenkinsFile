@@ -165,7 +165,6 @@ node {
 	  parameters([
 	     string(name: 'PRODUCT'), 
 	     string(name: 'PROJECT'), 
-	     string(name: 'GITHUB'), 
 	     string(name: 'REPO'),
 	  ])
 	])	
@@ -177,7 +176,7 @@ node {
 	def env
 	
 	stage("checkout") {
-		git credentialsId: "git", branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
+		git credentialsId: "git", branch: "master", url: params.REPO
 	}
 	
 	stage("read the microservices definition") {
@@ -202,13 +201,13 @@ node {
 			if (!deploymentConfigExists(project, "${env}${microservice.name}".toString()) || 
 				!isRunning(project, "${env}${microservice.name}".toString()) || 
 				!isVersion(prevProject, project, env, microservice.name, version)) {
-				sh "oc start-build promote-to-prod-${microservice.name} -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e PRODUCT_REPO=${params.REPO} -e REPO=${microservice.repo} -e MICROSERVICE=${microservice.name} -e PROJECT=${params.PROJECT} --wait -n ${product}-cicd"
+				sh "oc start-build promote-to-prod-${microservice.name} -e PRODUCT=${params.PRODUCT} -e PRODUCT_REPO=${params.REPO} -e REPO=${microservice.repo} -e MICROSERVICE=${microservice.name} -e PROJECT=${params.PROJECT} --wait -n ${product}-cicd"
 			}
 	  	}		
 	}
 
 	stage ('trigger prod tests') {
-		sh "oc start-build qa-prod -e GITHUB=${params.GITHUB} -e PRODUCT=${params.PRODUCT} -e REPO=${getTestRepo('prod')} -e PROJECT=${project} -n ${params.PRODUCT}-cicd"
+		sh "oc start-build qa-prod -e PRODUCT=${params.PRODUCT} -e REPO=${getTestRepo('prod')} -e PROJECT=${project} -n ${params.PRODUCT}-cicd"
 	}
 
 }

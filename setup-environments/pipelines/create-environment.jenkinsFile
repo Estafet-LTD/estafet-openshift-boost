@@ -32,7 +32,6 @@ node("jenkins-slave-ansible") {
 	     string(name: 'USER_ID'),
 	     string(name: 'USER_NAME'),
 		 string(name: 'OPENSHIFT_HOST_PORT'),
-		 string(name: 'GITHUB'), 
 		 string(name: 'REPO'),
 	  ])
 	])
@@ -54,7 +53,7 @@ node("jenkins-slave-ansible") {
 	}
 
 	stage("checkout") {
-		git credentialsId: "git", branch: "master", url: "https://github.com/${params.GITHUB}/${params.REPO}"
+		git credentialsId: "git", branch: "master", url: params.REPO
 	}
 
 	stage ("update the roles") {

@@ -4,9 +4,6 @@ metadata:
   creationTimestamp: null
   name: release-boost-framework
 parameters:  
-- description: Defines the location of the estafet github (change this if you have forked and want to use another github)
-  name: GITHUB
-  required: true   
 objects:
 - apiVersion: v1
   kind: BuildConfig
@@ -26,10 +23,7 @@ objects:
       git:
         uri: "https://github.com/Estafet-LTD/estafet-openshift-boost"
     strategy:
-      jenkinsPipelineStrategy:
-        env:
-          - name: GITHUB
-            value: ${GITHUB}                          
+      jenkinsPipelineStrategy:                         
         jenkinsfilePath: setup-environments/pipelines/release-boost-framework.jenkinsFile
       type: JenkinsPipeline
   status:

@@ -2,7 +2,6 @@ node("jenkins-slave-ansible") {
 
 	properties([
 		parameters([
-			string(name: 'GITHUB'), 
 			string(name: 'PROJECT'), 
 			string(name: 'PRODUCT'), 
 			string(name: 'PRODUCT_REPO'), 
@@ -19,7 +18,7 @@ node("jenkins-slave-ansible") {
 	def env = params.ENV
 
 	stage("checkout ${params.PRODUCT_REPO}") {
-		git credentialsId: "git", url: "https://github.com/${params.GITHUB}/${params.PRODUCT_REPO}"
+		git credentialsId: "git", url: params.PRODUCT_REPO
 	}
 
 	stage ("install boost") {

@@ -1,6 +1,6 @@
 ---
 - name: Create build and release pipelines for the boost libraries
-  shell: "oc process -f {{ templates }}/boost-library-pipelines.yml -p GITHUB={{ github.org }} -p LIBRARY_NAME={{ item.name }} -p LIBRARY_REPO_URI={{ item.repo }} -p PRODUCT={{ product.name }} -p BUILD_LIBRARY={{ item.build }} -p RELEASE_LIBRARY={{ item.release }} | oc create -f -"
+  shell: "oc process -f {{ templates }}/boost-library-pipelines.yml -p LIBRARY_NAME={{ item.name }} -p LIBRARY_REPO_URI={{ item.repo }} -p PRODUCT={{ product.name }} -p BUILD_LIBRARY={{ item.build }} -p RELEASE_LIBRARY={{ item.release }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
