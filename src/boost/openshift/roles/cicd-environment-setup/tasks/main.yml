@@ -1,8 +1,4 @@
 ---
-- debug:
-    var: boost
-    verbosity: 0  
-
 - include_role: 
     name: namespace-setup
   vars:

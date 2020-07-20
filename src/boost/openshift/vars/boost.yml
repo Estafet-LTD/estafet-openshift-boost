@@ -1,5 +1,5 @@
 ---
-boost:
+boostcd:
   repo: https://github.com/boostcd/boostcd.git
   test_repo: https://github.com/Estafet-LTD/estafet-blockchain-demo.git
 
