@@ -1,0 +1,45 @@
+[submodule "feature-api"]
+	path = feature-api
+	url = https://github.com/boostcd/feature-api.git
+[submodule "console-ui"]
+	path = console-ui
+	url = https://github.com/boostcd/console-ui.git
+[submodule "project-api"]
+	path = project-api
+	url = https://github.com/boostcd/project-api.git
+[submodule "user-api"]
+	path = user-api
+	url = https://github.com/boostcd/user-api.git
+[submodule "jira-api"]
+	path = jira-api
+	url = https://github.com/boostcd/jira-api.git
+[submodule "trello-api"]
+	path = trello-api
+	url = https://github.com/boostcd/trello-api.git
+[submodule "gateway-api"]
+	path = gateway-api
+	url = https://github.com/boostcd/gateway-api.git
+[submodule "environment-api"]
+	path = environment-api
+	url = https://github.com/boostcd/environment-api.git
+[submodule "jenkins-api"]
+	path = jenkins-api
+	url = https://github.com/boostcd/jenkins-api.git
+[submodule "commons-lib"]
+	path = commons-lib
+	url = https://github.com/boostcd/commons-lib.git
+[submodule "boost-springboot"]
+	path = boost-springboot
+	url = https://github.com/boostcd/boost-springboot.git
+[submodule "couchbase-lib"]
+	path = couchbase-lib
+	url = https://github.com/boostcd/couchbase-lib.git
+[submodule "messages-lib"]
+	path = messages-lib
+	url = https://github.com/boostcd/messages-lib.git
+[submodule "jms-lib"]
+	path = jms-lib
+	url = https://github.com/boostcd/jms-lib.git
+[submodule "ddl-lib"]
+	path = ddl-lib
+	url = https://github.com/boostcd/ddl-lib.git
