@@ -1,75 +1,75 @@
 ---
 boost_microservices:
   
-    - name: console-ui-react
+    - name: console-ui
       version: 0.0.11
-      repo: estafet-openshift-boost-console-ui-react
+      repo: https://github.com/boostcd/console-ui.git
       build: build-boost.jenkinsFile
       release: release-boost-react.jenkinsFile
       expose: true
       test: false
           
-    - name: console-project-api
+    - name: project-api
       version: 0.0.7
-      repo: estafet-openshift-boost-console-api-project
+      repo: https://github.com/boostcd/project-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
       expose: false
       test: false
           
-    - name: console-user-api
+    - name: user-api
       version: 0.0.6
-      repo: estafet-openshift-boost-console-api-user
+      repo: https://github.com/boostcd/user-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
       expose: false
       test: false          
             
-    - name: console-environment-api
+    - name: environment-api
       version: 0.1.9
-      repo: estafet-openshift-boost-console-api-environment
+      repo: https://github.com/boostcd/environment-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
       expose: false
       test: false
                 
-    - name: console-jenkins-api
+    - name: jenkins-api
       version: 0.0.7
-      repo: estafet-openshift-boost-console-api-jenkins
+      repo: https://github.com/boostcd/jenkins-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
       expose: false
       test: false
           
-    - name: console-gateway-api
+    - name: gateway-api
       version: 0.0.6
-      repo: estafet-openshift-boost-console-api-gateway
+      repo: https://github.com/boostcd/gateway-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
       expose: true
       test: false
                            
-    - name: console-trello-api
+    - name: trello-api
       version: 0.0.5
       conditional: trello
-      repo: estafet-openshift-boost-console-api-trello
+      repo: https://github.com/boostcd/trello-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
       expose: false
       test: false        
 
-    - name: console-jira-api
+    - name: jira-api
       version: 0.0.5
       conditional: jira
-      repo: estafet-openshift-boost-console-api-jira
+      repo: https://github.com/boostcd/jira-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile      
       expose: false
       test: false  
           
-    - name: console-feature-api
+    - name: feature-api
       version: 0.0.7
-      repo: estafet-openshift-boost-console-api-feature
+      repo: https://github.com/boostcd/feature-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile    
       expose: false

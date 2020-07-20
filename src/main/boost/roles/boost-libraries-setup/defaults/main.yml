@@ -1,21 +1,31 @@
 boost_libraries:
 
-  - name: boost-messages-lib
+  - name: ddl-lib
+    repo: https://github.com/boostcd/ddl-lib.git
+    build: build-maven-library.jenkinsFile
+    release: release-maven-library.jenkinsFile
+
+  - name: jms-lib
+    repo: https://github.com/boostcd/jms-lib.git
+    build: build-maven-library.jenkinsFile
+    release: release-maven-library.jenkinsFile
+
+  - name: messages-lib
     repo: estafet-openshift-boost-messages-lib
     build: build-maven-library.jenkinsFile
     release: release-maven-library.jenkinsFile
     
-  - name: boost-commons-lib
+  - name: commons-lib
     repo: estafet-openshift-boost-commons-lib
     build: build-maven-library.jenkinsFile
     release: release-maven-library.jenkinsFile   
       
-  - name: boost-couchbase-lib
+  - name: couchbase-lib
     repo: estafet-openshift-boost-couchbase-lib
     build: build-maven-library.jenkinsFile
     release: release-maven-library.jenkinsFile 
     
-  - name: boost-springboot
+  - name: boostcd-springboot
     repo: estafet-openshift-boost-springboot   
     build: build-maven-library.jenkinsFile
     release: release-maven-library.jenkinsFile
