@@ -25,7 +25,10 @@ parameters:
 - description: Defines boost url
   name: BOOST_URL
   required: true    
-objects:
+- description: Defines product url
+  name: PRODUCT_URL
+  required: true   
+  objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
@@ -46,6 +49,8 @@ objects:
     strategy:
       jenkinsPipelineStrategy:
         env:
+          - name: REPO
+            value: ${PRODUCT_URL} 
           - name: MICROSERVICE
             value: ${MICROSERVICE_NAME}                                 
         jenkinsfilePath: src/boost/openshift/pipelines/${BUILD_PIPELINE}
