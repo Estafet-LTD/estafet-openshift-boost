@@ -1,10 +1,8 @@
 ---
-- include_role: 
-    name: github-webhook-teardown
 
 - name:  create a new webhook for microservice {{ item.name }}
   github_webhook:
-    repository: "{{ item.repo }}"
+    repository: "{{ item.repo | github_webhook_repo }}"
     url: "http://console-gateway-api-{{ product.name }}-console.{{ openshift.subdomain }}/github/hooks/"
     content_type: json
     events:
@@ -16,7 +14,7 @@
 
 - name:  create a new webhook for test {{ item.test_repo }}
   github_webhook:
-    repository: "{{ item.test_repo }}"
+    repository: "{{ item.test_repo | github_webhook_repo }}"
     url: "http://console-gateway-api-{{ product.name }}-console.{{ openshift.subdomain }}/github/hooks/"
     content_type: json
     events:
