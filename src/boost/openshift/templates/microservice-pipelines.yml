@@ -25,6 +25,9 @@ parameters:
 - description: Defines the last namespace before production
   name: PREPROD_PROJECT
   required: true
+- description: Defines boost url
+  name: BOOST_URL
+  required: true  
 objects:
 - apiVersion: v1
   kind: BuildConfig
@@ -43,7 +46,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/boostcd/boostcd"
+        uri: ${BOOST_URL}
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
@@ -108,7 +111,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: https://github.com/boostcd/boostcd
+        uri: ${BOOST_URL}
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
@@ -142,7 +145,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: https://github.com/boostcd/boostcd
+        uri: ${BOOST_URL}
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:

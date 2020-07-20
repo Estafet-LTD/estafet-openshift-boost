@@ -5,7 +5,7 @@
 
     - name: load the variables
       include_vars:
-        dir: vars
+        dir: ../vars
         extensions: [yml]  
    
     - set_fact: 
@@ -18,7 +18,7 @@
         
     - name: Checkout the boost console dependencies from github
       git:
-        repo: "https://github.com/boostcd/boostcd.git"
+        repo: "{{ boost.repo }}"
         dest: "{{ workdir }}/boostcd"
         version: "{{ boost.version }}"
         update: yes

@@ -4,6 +4,9 @@ metadata:
   creationTimestamp: null
   name: release-boost-framework
 parameters:  
+- description: Defines boost url
+  name: BOOST_URL
+  required: true 
 objects:
 - apiVersion: v1
   kind: BuildConfig
@@ -21,7 +24,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/boostcd/boostcd"
+        uri: ${BOOST_URL}
     strategy:
       jenkinsPipelineStrategy:                         
         jenkinsfilePath: src/boost/openshift/pipelines/release-boost-framework.jenkinsFile

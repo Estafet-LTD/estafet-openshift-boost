@@ -22,6 +22,9 @@ parameters:
 - description: Defines host and port of the openshift cluster
   name: OPENSHIFT_HOST_PORT
   required: true  
+- description: Defines boost url
+  name: BOOST_URL
+  required: true    
 objects:
 - apiVersion: v1
   kind: BuildConfig
@@ -39,7 +42,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/boostcd/boostcd"
+        uri: ${BOOST_URL}
     strategy:
       jenkinsPipelineStrategy:
         env:
@@ -65,7 +68,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/boostcd/boostcd"
+        uri: ${BOOST_URL}
     strategy:
       jenkinsPipelineStrategy:
         env:

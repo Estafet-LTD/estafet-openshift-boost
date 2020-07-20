@@ -19,6 +19,9 @@ parameters:
 - description: Defines the release library
   name: RELEASE_LIBRARY
   required: true  
+- description: Defines the boost repo
+  name: BOOST_URL
+  required: true    
 objects:
 - apiVersion: v1
   kind: BuildConfig
@@ -37,7 +40,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/boostcd/boostcd"
+        uri: ${BOOST_URL}
     strategy:
       jenkinsPipelineStrategy:
         env:                 
@@ -64,7 +67,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/boostcd/boostcd"
+        uri: ${BOOST_URL}
     strategy:
       jenkinsPipelineStrategy:
         env:          
