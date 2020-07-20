@@ -1,4 +1,8 @@
 ---
+- debug:
+  var: boost
+  verbosity: 0  
+
 - include_role: 
     name: namespace-setup
   vars:
@@ -22,10 +26,6 @@
   set_fact: preprod_project="{{ product.name }}-{{ item.name }}"
   with_items: "{{ environments.stages }}"
   when: "item.next == 'prod'"  
-
-- debug:
-  var: boost
-  verbosity: 0  
 
 - name: Create build, release and promotion pipelines for each of the microservices
   shell: "oc process -f {{ templates }}/microservice-pipelines.yml -p VERSION={{ boost.version }} -p MICROSERVICE_NAME={{ item.name }} -p MICROSERVICE_REPO_URI={{ item.repo }} -p PRODUCT={{ product.name }} -p ENVIRONMENTS_REPO_URI={{ product.repo }} -p TEST_PIPELINE={{ item.test }} -p PREPROD_PROJECT={{ preprod_project }} | oc create -f -"
