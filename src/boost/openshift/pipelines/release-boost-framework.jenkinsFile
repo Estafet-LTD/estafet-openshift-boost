@@ -5,7 +5,7 @@ node {
 	def properties
 
 	stage("checkout") {
-		git branch: "master", credentialsId: 'git', url: "https://github.com/Estafet-LTD/estafet-openshift-boost.git"			
+		git branch: "master", credentialsId: 'git', url: "https://github.com/boostcd/boostcd.git"			
 	}
 
 	stage("increment version") {

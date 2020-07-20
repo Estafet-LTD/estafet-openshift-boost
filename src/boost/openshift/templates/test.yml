@@ -19,6 +19,9 @@ parameters:
 - description: Defines repo that contains the test for the specified environment
   name: SMOTE_TEST_REPO_URI
   required: true
+- description: Defines boost url
+  name: BOOST_URL
+  required: true    
 - description: Defines boost version
   name: VERSION
   required: true     
@@ -39,7 +42,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: https://github.com/Estafet-LTD/estafet-openshift-boost
+        uri: ${BOOST_URL}
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
@@ -54,7 +57,7 @@ objects:
             value: ${ENV}          
           - name: PROJECT
             value: some_project                                                
-        jenkinsfilePath: setup-environments/pipelines/testWrapper.jenkinsFile
+        jenkinsfilePath: src/boost/openshift/pipelines/testWrapper.jenkinsFile
       type: JenkinsPipeline
     triggers:
     - github:

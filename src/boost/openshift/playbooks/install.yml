@@ -18,8 +18,8 @@
         
     - name: Checkout the boost console dependencies from github
       git:
-        repo: "https://github.com/Estafet-LTD/estafet-openshift-boost.git"
-        dest: "{{ workdir }}/estafet-openshift-boost"
+        repo: "https://github.com/boostcd/boostcd.git"
+        dest: "{{ workdir }}/boostcd"
         version: "{{ boost.version }}"
         update: yes
       tags:
@@ -31,7 +31,7 @@
         dest: . 
         force: yes       
       with_fileglob:
-      - "{{ workdir }}/estafet-openshift-boost/setup-environments/*.yml"
+      - "{{ workdir }}/boostcd/src/boost/openshift/playbooks/*.yml"
 
     - name: Updating inventory
       copy:
@@ -39,11 +39,11 @@
         dest: . 
         force: yes       
       with_fileglob:
-      - "{{ workdir }}/estafet-openshift-boost/setup-environments/*.ini"
+      - "{{ workdir }}/boostcd/src/boost/openshift/playbooks/*.ini"
 
     - name: Updating boost roles
       synchronize:
-        src: "{{ workdir }}/estafet-openshift-boost/setup-environments/roles"
+        src: "{{ workdir }}/boostcd/src/boost/openshift/roles"
         dest: "~/.ansible"    
 
     - name: Check that the product roles exist

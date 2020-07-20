@@ -22,14 +22,14 @@ node("jenkins-slave-ansible") {
 	}
 
 	stage ("install boost") {
-		sh "ansible-playbook -i setup-environments/hosts.ini setup-environments/install.yml"
+		sh "ansible-playbook -i src/boost/openshift/playbooks/hosts.ini src/boost/openshift/playbooks/install.yml"
 	}		
 
 	stage ("deploy the microservice") {
 		withCredentials([file(credentialsId: 'ansible_vault', variable: 'vault')]) {
 			def stage = project.toString().substring(product.length()+1)
 			def deployEnv = env == "" ? "" : "-e deploy_env=${env}"
-			sh "ansible-playbook -i setup-environments/hosts.ini --vault-password-file ${vault} setup-environments/deploy.yml -e env_project=${project} -e target_app=${microservice} -e release_version=${version} -e stage=${stage} ${deployEnv}"
+			sh "ansible-playbook -i src/boost/openshift/playbooks/hosts.ini --vault-password-file ${vault} src/boost/openshift/playbooks/deploy.yml -e env_project=${project} -e target_app=${microservice} -e release_version=${version} -e stage=${stage} ${deployEnv}"
 		}
 	}	
 

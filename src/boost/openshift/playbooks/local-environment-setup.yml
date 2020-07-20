@@ -10,7 +10,7 @@
     
     - name: Verify if the environments have been defined
       fail:
-        msg: "[Local environment definition] are not set. Please edit local-environment-vars.yml"
+        msg: "[Local environment definition] are not set. Please edit local-environment.yml"
       when: local_environment is undefined
             
     - include_role:

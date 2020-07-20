@@ -135,7 +135,7 @@ boolean isVersion(prevProject, project, microservice, version) {
 }
 
 def getTestRepo(env) {
-	def yml = readYaml file: "setup-environments/vars/environments-vars.yml"
+	def yml = readYaml file: "src/boost/openshift/vars/environments.yml"
 	def testRepo
 	yml.environments.stages.each { stage ->
 		if (stage.name == env) {
@@ -166,7 +166,7 @@ node {
 	}
 	
 	stage("read the microservices definition") {
-		def yml = readYaml file: "setup-environments/vars/microservices-vars.yml"
+		def yml = readYaml file: "src/boost/openshift/vars/microservices.yml"
 		microservices = yml.microservices
 	}
 

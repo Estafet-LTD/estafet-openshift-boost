@@ -46,7 +46,7 @@ objects:
         env:                  
           - name: REPO
             value: ${LIBRARY_REPO_URI}            
-        jenkinsfilePath: "setup-environments/pipelines/${BUILD_PIPELINE}"
+        jenkinsfilePath: "src/boost/openshift/pipelines/${BUILD_PIPELINE}"
       type: JenkinsPipeline
   status:
     lastVersion: 0
@@ -73,7 +73,7 @@ objects:
         env:           
           - name: REPO
             value: ${LIBRARY_REPO_URI}                       
-        jenkinsfilePath: "setup-environments/pipelines/${RELEASE_PIPELINE}"
+        jenkinsfilePath: "src/boost/openshift/pipelines/${RELEASE_PIPELINE}"
       type: JenkinsPipeline
   status:
     lastVersion: 0

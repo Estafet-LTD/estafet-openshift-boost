@@ -15,7 +15,7 @@
 
     - name: Verify if the environments have been defined
       fail:
-        msg: "[Developer environment definition] are not set. Please edit developer-environment-vars.yml"
+        msg: "[Developer environment definition] are not set. Please edit developer-environment.yml"
       when: developer_environment is undefined
             
     - include_role:

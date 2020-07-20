@@ -57,12 +57,12 @@ node("jenkins-slave-ansible") {
 	}
 
 	stage ("update the roles") {
-		sh "ansible-playbook -i setup-environments/hosts.ini setup-environments/install.yml"
+		sh "ansible-playbook -i src/boost/openshift/playbooks/hosts.ini src/boost/openshift/playbooks/install.yml"
 	}		
 	
 	stage ("build the environment") {
 		withCredentials([file(credentialsId: 'ansible_vault', variable: 'vault')]) {
-			sh "ansible-playbook -i setup-environments/hosts.ini --vault-password-file ${vault} setup-environments/developer-environment-setup.yml -e env_project=${project}"
+			sh "ansible-playbook -i src/boost/openshift/playbooks/hosts.ini --vault-password-file ${vault} src/boost/openshift/playbooks/developer-environment-setup.yml -e env_project=${project}"
     	}
 	}		
 

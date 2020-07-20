@@ -37,13 +37,13 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/Estafet-LTD/estafet-openshift-boost"
+        uri: "https://github.com/boostcd/boostcd"
     strategy:
       jenkinsPipelineStrategy:
         env:                 
           - name: REPO
             value: ${LIBRARY_REPO_URI}            
-        jenkinsfilePath: setup-environments/pipelines/${BUILD_LIBRARY}
+        jenkinsfilePath: src/boost/openshift/pipelines/${BUILD_LIBRARY}
       type: JenkinsPipeline
   status:
     lastVersion: 0
@@ -64,13 +64,13 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/Estafet-LTD/estafet-openshift-boost"
+        uri: "https://github.com/boostcd/boostcd"
     strategy:
       jenkinsPipelineStrategy:
         env:          
           - name: REPO
             value: ${LIBRARY_REPO_URI}                       
-        jenkinsfilePath: setup-environments/pipelines/${RELEASE_LIBRARY}
+        jenkinsfilePath: src/boost/openshift/pipelines/${RELEASE_LIBRARY}
       type: JenkinsPipeline
   status:
     lastVersion: 0

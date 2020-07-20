@@ -29,7 +29,7 @@
     - postgresql
 
 - name: Copy ddl to PostgreSQL Pod
-  shell: 'oc rsync --no-perms=true --include="*.ddl" --exclude="*" {{ workdir }}/{{ params.repo }}/ddl/ {{db_pod}}:/tmp -n {{ db_project }}'
+  shell: 'oc rsync --no-perms=true --include="*.ddl" --exclude="*" {{ workdir }}/{{ params.repo }}/src/ddl/ {{db_pod}}:/tmp -n {{ db_project }}'
   register: command_result
   when: params.reset_db 
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"

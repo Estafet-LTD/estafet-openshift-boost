@@ -43,7 +43,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/Estafet-LTD/estafet-openshift-boost"
+        uri: "https://github.com/boostcd/boostcd"
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
@@ -56,7 +56,7 @@ objects:
             value: ${MICROSERVICE_REPO_URI}
           - name: MICROSERVICE
             value: ${MICROSERVICE_NAME}                                 
-        jenkinsfilePath: "setup-environments/pipelines/build.jenkinsFile"
+        jenkinsfilePath: "src/boost/openshift/pipelines/build.jenkinsFile"
       type: JenkinsPipeline
   status:
     lastVersion: 0
@@ -87,7 +87,7 @@ objects:
             value: ${MICROSERVICE_REPO_URI}
           - name: MICROSERVICE
             value: ${MICROSERVICE_NAME}                                 
-        jenkinsfilePath: "setup-environments/pipelines/${TEST_PIPELINE}"
+        jenkinsfilePath: "src/boost/openshift/pipelines/${TEST_PIPELINE}"
       type: JenkinsPipeline
   status:
     lastVersion: 0
@@ -108,7 +108,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: https://github.com/Estafet-LTD/estafet-openshift-boost
+        uri: https://github.com/boostcd/boostcd
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
@@ -121,7 +121,7 @@ objects:
             value: ${MICROSERVICE_REPO_URI}
           - name: MICROSERVICE
             value: ${MICROSERVICE_NAME}                              
-        jenkinsfilePath: "setup-environments/pipelines/release.jenkinsFile"
+        jenkinsfilePath: "src/boost/openshift/pipelines/release.jenkinsFile"
       type: JenkinsPipeline
   status:
     lastVersion: 0
@@ -142,7 +142,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: https://github.com/Estafet-LTD/estafet-openshift-boost
+        uri: https://github.com/boostcd/boostcd
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
@@ -157,7 +157,7 @@ objects:
             value: ${MICROSERVICE_NAME}
           - name: PROJECT
             value: ${PREPROD_PROJECT}                         
-        jenkinsfilePath: "setup-environments/pipelines/promote-to-prod.jenkinsFile"
+        jenkinsfilePath: "src/boost/openshift/pipelines/promote-to-prod.jenkinsFile"
       type: JenkinsPipeline
   status:
     lastVersion: 0    

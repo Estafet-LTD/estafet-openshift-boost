@@ -21,10 +21,10 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: "https://github.com/Estafet-LTD/estafet-openshift-boost"
+        uri: "https://github.com/boostcd/boostcd"
     strategy:
       jenkinsPipelineStrategy:                         
-        jenkinsfilePath: setup-environments/pipelines/release-boost-framework.jenkinsFile
+        jenkinsfilePath: src/boost/openshift/pipelines/release-boost-framework.jenkinsFile
       type: JenkinsPipeline
   status:
     lastVersion: 0    

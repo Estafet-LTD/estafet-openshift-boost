@@ -1,4 +1,4 @@
-# estafet-openshift-boost git hooks
+# boostcd git hooks
 
 A commit-msg git hook that checks whether the commit message contains a valid trello link and that the card's status != Done
 

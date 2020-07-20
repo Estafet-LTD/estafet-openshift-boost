@@ -7,6 +7,9 @@ parameters:
 - description: Defines the product that this pipeline is related to
   name: PRODUCT
   required: true
+- description: Defines boost url
+  name: BOOST_URL
+  required: true      
 - description: Defines boost version
   name: VERSION
   required: true        
@@ -30,7 +33,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: https://github.com/Estafet-LTD/estafet-openshift-boost
+        uri: ${BOOST_URL}
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
@@ -39,7 +42,7 @@ objects:
             value: ${PRODUCT}        
           - name: PROJECT
             value: "${PRODUCT}-${ENV}"  
-        jenkinsfilePath: setup-environments/pipelines/promote-all.jenkinsFile
+        jenkinsfilePath: src/boost/openshift/pipelines/promote-all.jenkinsFile
       type: JenkinsPipeline
   status:
     lastVersion: 0    

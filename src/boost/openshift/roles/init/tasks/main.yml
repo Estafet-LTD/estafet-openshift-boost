@@ -9,7 +9,7 @@
 
 - name: load the boost variables
   include_vars:
-    dir: "{{ workdir }}/estafet-openshift-boost/setup-environments/vars"
+    dir: "{{ workdir }}/boostcd/src/boost/openshift/vars"
     extensions: [yml]  
 
 - set_fact: openshift_host_port="{{ openshift.host }}:{{ openshift.port }}"
@@ -20,42 +20,42 @@
     
 - name: Verify if openshift is set
   fail:
-    msg: "[OpenShift host] is not defined. Please edit openshift-vars.yml"
+    msg: "[OpenShift host] is not defined. Please edit openshift.yml"
   when: openshift is undefined
 
 - name: Verify if product variable is set
   fail:
-    msg: "[Product] is not defined. Please edit product-vars.yml"
+    msg: "[Product] is not defined. Please edit product.yml"
   when: product is undefined
 
 - name: Verify if the microservices have been defined
   fail:
-    msg: "[Microservices Definitions] are not set. Please edit microservices-vars.yml"
+    msg: "[Microservices Definitions] are not set. Please edit microservices.yml"
   when: microservices is undefined
 
 - name: Verify if the environments have been defined
   fail:
-    msg: "[Environments Definitions] are not set. Please edit environments-vars.yml"
+    msg: "[Environments Definitions] are not set. Please edit environments.yml"
   when: environments is undefined
 
 - name: Verify if the libraries have been defined
   fail:
-    msg: "[Library Definitions] are not set. Please edit libraries-vars.yml"
+    msg: "[Library Definitions] are not set. Please edit libraries.yml"
   when: libraries is undefined
 
 - name: Verify if the users have been defined
   fail:
-    msg: "[Users] are not set. Please edit users-vars.yml"
+    msg: "[Users] are not set. Please edit users.yml"
   when: users is undefined
 
 - name: Verify if the tasks manager has been defined
   fail:
-    msg: "[Task Manager] are not set. Please edit project-vars.yml"
+    msg: "[Task Manager] are not set. Please edit project.yml"
   when: task_manager is undefined
 
 - name: Verify if the tasks manager has been defined
   fail:
-    msg: "[Task Manager Title] are not set. Please edit project-vars.yml"
+    msg: "[Task Manager Title] are not set. Please edit project.yml"
   when: task_manager is undefined
 
 - name: Login in OpenShift as {{ openshift.username }}

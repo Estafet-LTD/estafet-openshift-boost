@@ -11,21 +11,21 @@ boost_libraries:
     release: release-maven-library.jenkinsFile
 
   - name: messages-lib
-    repo: estafet-openshift-boost-messages-lib
+    repo: https://github.com/boostcd/messages-lib.git
     build: build-maven-library.jenkinsFile
     release: release-maven-library.jenkinsFile
     
   - name: commons-lib
-    repo: estafet-openshift-boost-commons-lib
+    repo: https://github.com/boostcd/commons-lib.git
     build: build-maven-library.jenkinsFile
     release: release-maven-library.jenkinsFile   
       
   - name: couchbase-lib
-    repo: estafet-openshift-boost-couchbase-lib
+    repo: https://github.com/boostcd/couchbase-lib.git
     build: build-maven-library.jenkinsFile
     release: release-maven-library.jenkinsFile 
     
   - name: boostcd-springboot
-    repo: estafet-openshift-boost-springboot   
+    repo: https://github.com/boostcd/boost-springboot.git
     build: build-maven-library.jenkinsFile
     release: release-maven-library.jenkinsFile

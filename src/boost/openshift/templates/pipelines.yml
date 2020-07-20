@@ -19,6 +19,9 @@ parameters:
 - description: Defines the product that this pipeline is related to
   name: PRODUCT
   required: true  
+- description: Defines boost url
+  name: BOOST_URL
+  required: true  
 - description: Defines boost version
   name: VERSION
   required: true    
@@ -39,7 +42,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: https://github.com/Estafet-LTD/estafet-openshift-boost
+        uri: ${BOOST_URL}
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
@@ -60,7 +63,7 @@ objects:
             value: "admin"                                   
           - name: USER_ID
             value: "1234"
-        jenkinsfilePath: setup-environments/pipelines/create-environment.jenkinsFile
+        jenkinsfilePath: src/boost/openshift/pipelines/create-environment.jenkinsFile
       type: JenkinsPipeline
   status:
     lastVersion: 0              
@@ -80,14 +83,14 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: https://github.com/Estafet-LTD/estafet-openshift-boost
+        uri: ${BOOST_URL}
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
         env:
           - name: PRODUCT
             value: ${PRODUCT}           
-        jenkinsfilePath: setup-environments/pipelines/build-all.jenkinsFile
+        jenkinsfilePath: src/boost/openshift/pipelines/build-all.jenkinsFile
       type: JenkinsPipeline
   status:
     lastVersion: 0     
@@ -107,14 +110,14 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: https://github.com/Estafet-LTD/estafet-openshift-boost
+        uri: ${BOOST_URL}
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
         env:
           - name: PRODUCT
             value: ${PRODUCT}        
-        jenkinsfilePath: setup-environments/pipelines/release-all.jenkinsFile
+        jenkinsfilePath: src/boost/openshift/pipelines/release-all.jenkinsFile
       type: JenkinsPipeline
   status:
     lastVersion: 0    
@@ -134,14 +137,14 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: https://github.com/Estafet-LTD/estafet-openshift-boost
+        uri: ${BOOST_URL}
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
         env:
           - name: PRODUCT
             value: ${PRODUCT}          
-        jenkinsfilePath: setup-environments/pipelines/promote-passive-to-live.jenkinsFile
+        jenkinsfilePath: src/boost/openshift/pipelines/promote-passive-to-live.jenkinsFile
       type: JenkinsPipeline
   status:
     lastVersion: 0             
@@ -160,7 +163,7 @@ objects:
     runPolicy: Serial
     source:
       git:
-        uri: https://github.com/Estafet-LTD/estafet-openshift-boost
+        uri: ${BOOST_URL}
         ref: ${VERSION}
     strategy:
       jenkinsPipelineStrategy:
@@ -177,7 +180,7 @@ objects:
             value: version
           - name: ENV
             value: ''            
-        jenkinsfilePath: setup-environments/pipelines/deploy.jenkinsFile
+        jenkinsfilePath: src/boost/openshift/pipelines/deploy.jenkinsFile
       type: JenkinsPipeline
   status:
     lastVersion: 0                 
