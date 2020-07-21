@@ -12,39 +12,13 @@
     volume_capacity: 10Gi
     memory_limit: 2Gi
 
-- name: Delete the all build pipelines
-  shell: "oc delete bc build-boost-{{ item.name }} -n {{ boost_project }} || true"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"  
-  with_items: "{{ boost_microservices }}"
-  tags:
-    - openshift 
-
-- name: Delete the all release pipelines
-  shell: "oc delete bc release-boost-{{ item.name }} -n {{ boost_project }} || true"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"  
-  with_items: "{{ boost_microservices }}"
-  tags:
-    - openshift 
-
-- name: Delete the publish image pipeline
-  shell: "oc delete bc publish-image -n {{ boost_project }} || true"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"  
-  tags:
-    - openshift 
-
 - include_role: 
     name: boost-libraries-setup
   vars:
     project: "{{ boost_project }}"
     
 - name: Create build and release pipelines for each of the microservices
-  shell: "oc process -f {{ templates }}/console-microservice-pipelines.yml -p OPENSHIFT_HOST_PORT={{ openshift_host_port }} -p DOCKERHUB={{ dockerhub.org }} -p MICROSERVICE_NAME={{ item.name }} -p MICROSERVICE_REPO_URI={{ item.repo }} -p BUILD_PIPELINE={{ item.build }} -p RELEASE_PIPELINE={{ item.release }} | oc create -f -"
+  shell: "oc process -f {{ templates }}/console-microservice-pipelines.yml -p BOOST_URL={{ boostcd.repo }} -p OPENSHIFT_HOST_PORT={{ openshift_host_port }} -p DOCKERHUB={{ dockerhub.org }} -p MICROSERVICE_NAME={{ item.name }} -p MICROSERVICE_REPO_URI={{ item.repo }} -p BUILD_PIPELINE={{ item.build }} -p RELEASE_PIPELINE={{ item.release }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
@@ -53,7 +27,7 @@
     - openshift      
 
 - name: Create release pipeline for the boost framework
-  shell: "oc process -f {{ templates }}/boost-release-pipeline.yml | oc create -f -"
+  shell: "oc process -f {{ templates }}/boost-release-pipeline.yml -p BOOST_URL={{ boostcd.repo }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
@@ -61,7 +35,7 @@
     - openshift 
 
 - name: Create publish image pipeline
-  shell: "oc process -f {{ templates }}/publish-image-pipeline.yml -p OPENSHIFT_HOST_PORT={{ openshift_host_port }} -p DOCKERHUB={{ dockerhub.org }} | oc create -f -"
+  shell: "oc process -f {{ templates }}/publish-image-pipeline.yml -p BOOST_URL={{ boostcd.repo }} -p OPENSHIFT_HOST_PORT={{ openshift_host_port }} -p DOCKERHUB={{ dockerhub.org }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
