@@ -28,7 +28,7 @@ parameters:
 - description: Defines product url
   name: PRODUCT_URL
   required: true   
-  objects:
+objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
