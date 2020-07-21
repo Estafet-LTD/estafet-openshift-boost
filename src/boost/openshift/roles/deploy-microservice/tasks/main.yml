@@ -181,7 +181,7 @@
     file: "{{ resources_yml }}"
 
 - name: Create the non prod deployment config
-  shell: "oc process -n {{ project }} -f {{ workdir }}/{{ microservice.name }}/src/main/boost/openshift/templates/{{ microservice.name }}-config.yml -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ project }} -p DOCKER_IMAGE_LABEL={{ release_version }} -p DOCKER_REGISTRY={{ openshift.registry }} -p PRODUCT={{ product.name }} -p MAX_MEMORY={{ resources.max_memory }} -p MIN_MEMORY={{ resources.min_memory }} -p MAX_CPU={{ resources.max_cpu }} -p MIN_CPU={{ resources.min_cpu }} -p REPLICAS={{ resources.replicas }} | oc apply -f -"
+  shell: "oc process -n {{ project }} -f {{ workdir }}/{{ microservice.name }}/src/main/boost/openshift/templates/deploy-config.yml -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ project }} -p DOCKER_IMAGE_LABEL={{ release_version }} -p DOCKER_REGISTRY={{ openshift.registry }} -p PRODUCT={{ product.name }} -p MAX_MEMORY={{ resources.max_memory }} -p MIN_MEMORY={{ resources.min_memory }} -p MAX_CPU={{ resources.max_cpu }} -p MIN_CPU={{ resources.min_cpu }} -p REPLICAS={{ resources.replicas }} | oc apply -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
@@ -190,7 +190,7 @@
     - openshift     
 
 - name: Create the prod deployment config
-  shell: "oc process -n {{ project }} -f {{ workdir }}/{{ microservice.name }}/src/main/boost/openshift/templates/{{ microservice.name }}-config.yml -p ENV={{ deploy_env }}  -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ project }} -p DOCKER_IMAGE_LABEL={{ release_version }} -p DOCKER_REGISTRY={{ openshift.registry }} -p PRODUCT={{ product.name }} -p MAX_MEMORY={{ resources.max_memory }} -p MIN_MEMORY={{ resources.min_memory }} -p MAX_CPU={{ resources.max_cpu }} -p MIN_CPU={{ resources.min_cpu }} -p REPLICAS={{ resources.replicas }} | oc apply -f -"
+  shell: "oc process -n {{ project }} -f {{ workdir }}/{{ microservice.name }}/src/main/boost/openshift/templates/deploy-config.yml -p ENV={{ deploy_env }}  -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ project }} -p DOCKER_IMAGE_LABEL={{ release_version }} -p DOCKER_REGISTRY={{ openshift.registry }} -p PRODUCT={{ product.name }} -p MAX_MEMORY={{ resources.max_memory }} -p MIN_MEMORY={{ resources.min_memory }} -p MAX_CPU={{ resources.max_cpu }} -p MIN_CPU={{ resources.min_cpu }} -p REPLICAS={{ resources.replicas }} | oc apply -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
