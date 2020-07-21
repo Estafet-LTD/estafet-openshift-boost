@@ -1,3 +1,17 @@
+@NonCPS
+def org(repo) {
+	def matcher = repo =~ /https:\/\/github.com\/([a-zA-Z0-9-_]+)\/([a-zA-Z0-9-_]+)(\.git)?/
+	def org = matcher[0][1]
+	return org
+}
+
+@NonCPS
+def uri(repo) {
+	def matcher = repo =~ /https:\/\/github.com\/([a-zA-Z0-9-_]+)\/([a-zA-Z0-9-_]+)(\.git)?/
+	def uri = matcher[0][2]
+	return uri
+}
+
 node {
 
 	properties([
@@ -9,6 +23,8 @@ node {
 	  ])
 	])
 
+	def uri = uri(params.REPO)
+	def org = org(params.REPO)
 	def project = "boost-test"
 	def microservice = params.MICROSERVICE
 	def developmentVersion
@@ -16,7 +32,9 @@ node {
 	def properties
 
 	stage("checkout") {
-		git branch: "master", credentialsId: 'git', url: params.REPO
+		withCredentials([usernamePassword(credentialsId: 'git', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+			git branch: "master", url: "https://$USERNAME:$PASSWORD@github.com/$org/$uri"			
+		}
 	}
 
 	stage("increment version") {
