@@ -1,3 +1,9 @@
+@NonCPS
+def matcher(repo) {
+  def m = repo =~ /https:\/\/github.com\/([a-zA-Z0-9-_]+)\/([a-zA-Z0-9-_]+)(\.git)?/
+  return m
+}
+
 node('maven') {
 
 	properties([
@@ -6,12 +12,12 @@ node('maven') {
 	  ])
 	])
 
+	def m = matcher(params.REPO)
 	def developmentVersion
 	def releaseVersion
 
 	stage("checkout") {
 		withCredentials([usernamePassword(credentialsId: 'git', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-			def m = (params.REPO =~ /https:\/\/github.com\/([a-zA-Z0-9-_]+)\/([a-zA-Z0-9-_]+)(\.git)?/)
 			git branch: "master", url: "https://${USERNAME}:${PASSWORD}@github.com/${m[0][1]}/${m[0][2]}"			
 		}
 	}
