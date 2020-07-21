@@ -49,7 +49,7 @@
     - postgresql  
 
 - name: Execute Drop ddl on PostgreSQL Pod
-  shell: 'oc exec {{db_pod}} -n {{ db_project }} -- /bin/sh -i -c "psql -d {{ project }}-{{ params.app }} -U postgres -f /tmp/drop-{{ params.app }}-db.ddl"'
+  shell: 'oc exec {{db_pod}} -n {{ db_project }} -- /bin/sh -i -c "psql -d {{ project }}-{{ params.app }} -U postgres -f /tmp/drop-db.ddl"'
   register: command_result
   when: params.reset_db
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
