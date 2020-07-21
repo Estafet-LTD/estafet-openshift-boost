@@ -10,8 +10,8 @@ parameters:
 - description: Defines name of the microservice
   name: MICROSERVICE_NAME
   required: true
-- description: Defines the git repository uri within which the microservice resides
-  name: MICROSERVICE_REPO_URI
+- description: Defines the product master git repository
+  name: PRODUCT_REPO
   required: true    
 - description: Defines build pipeline
   name: BUILD_PIPELINE
@@ -47,7 +47,7 @@ objects:
       jenkinsPipelineStrategy:
         env:
           - name: REPO
-            value: ${MICROSERVICE_REPO_URI} 
+            value: ${PRODUCT_REPO} 
           - name: MICROSERVICE
             value: ${MICROSERVICE_NAME}                                 
         jenkinsfilePath: src/boost/openshift/pipelines/${BUILD_PIPELINE}
