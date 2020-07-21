@@ -40,3 +40,6 @@
 [submodule "ddl-lib"]
 	path = ddl-lib
 	url = https://github.com/boostcd/ddl-lib.git
+[submodule "boost-ui"]
+	path = boost-ui
+	url = https://github.com/boostcd/boost-ui
