@@ -1,7 +1,7 @@
 ---
 boostcd:
   repo: https://github.com/boostcd/boostcd.git
-  test_repo: https://github.com/Estafet-LTD/estafet-blockchain-demo.git
+  test_repo: https://github.com/Estafet-LTD/blockchain-demo.git
 
 workdir: "{{ ansible_env.HOME }}/.boost"
 boost_ddl: "{{ workdir }}/boostcd/src/boost/openshift/ddl"
