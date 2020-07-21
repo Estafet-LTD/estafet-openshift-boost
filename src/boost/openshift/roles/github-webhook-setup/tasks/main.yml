@@ -1,6 +1,6 @@
 ---
 
-- name:  create a new webhook for microservice {{ item.name }}
+- name:  create a new webhook for the microservices
   github_webhook:
     repository: "{{ item.repo | github_repo }}"
     url: "http://console-gateway-api-{{ product.name }}-console.{{ openshift.subdomain }}/github/hooks/"
@@ -12,7 +12,7 @@
     state: present
   with_items: "{{ microservices }}"
 
-- name:  create a new webhook for test {{ item.test_repo }}
+- name:  create a new webhook for the tests
   github_webhook:
     repository: "{{ item.test_repo | github_repo }}"
     url: "http://console-gateway-api-{{ product.name }}-console.{{ openshift.subdomain }}/github/hooks/"
