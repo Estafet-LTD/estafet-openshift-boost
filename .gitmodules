@@ -1,9 +1,6 @@
 [submodule "feature-api"]
 	path = feature-api
 	url = https://github.com/boostcd/feature-api.git
-[submodule "console-ui"]
-	path = console-ui
-	url = https://github.com/boostcd/console-ui.git
 [submodule "project-api"]
 	path = project-api
 	url = https://github.com/boostcd/project-api.git
