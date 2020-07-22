@@ -78,5 +78,6 @@
     body:
       username: "{{ couchbase.user }}"  
       password: "{{ couchbase.password }}" 
+      port: 8091
     force_basic_auth: yes
     status_code: 200, 202      
