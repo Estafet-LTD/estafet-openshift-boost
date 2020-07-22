@@ -25,21 +25,10 @@
       tags:
         - git  
 
-    - name: Updating playbooks
-      copy:
-        src: "{{ item }}"
-        dest: . 
-        force: yes       
-      with_fileglob:
-      - "{{ workdir }}/boostcd/src/boost/openshift/playbooks/*.yml"
-
-    - name: Updating inventory
-      copy:
-        src: "{{ item }}"
-        dest: . 
-        force: yes       
-      with_fileglob:
-      - "{{ workdir }}/boostcd/src/boost/openshift/playbooks/*.ini"
+    - name: Updating boost playbooks and inventory
+      synchronize:
+        src: "{{ workdir }}/boostcd/src/boost/openshift/playbooks"
+        dest: .
 
     - name: Updating boost roles
       synchronize:
