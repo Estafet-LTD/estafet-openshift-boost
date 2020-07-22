@@ -22,6 +22,11 @@
     project: "{{ boost_project }}"
 
 - include_role: 
+    name: pgadmin-setup
+  vars:
+    project: "{{ boost_project }}"
+
+- include_role: 
     name: add-boost-jenkins-role
   vars:
     project: "{{ boost_project }}"

@@ -17,6 +17,20 @@ def recentVersion(List versions) {
 	}[-1]
 }
 
+@NonCPS
+def org(repo) {
+	def matcher = repo =~ /https:\/\/github.com\/([a-zA-Z0-9-_]+)\/([a-zA-Z0-9-_]+)(\.git)?/
+	def org = matcher[0][1]
+	return org
+}
+
+@NonCPS
+def uri(repo) {
+	def matcher = repo =~ /https:\/\/github.com\/([a-zA-Z0-9-_]+)\/([a-zA-Z0-9-_]+)(\.git)?/
+	def uri = matcher[0][2]
+	return uri
+}
+
 def getValue(name, configs) {
 	def returnValue
 	configs.each { config ->
@@ -58,7 +72,9 @@ node("maven") {
 	boolean skipStages = false
 	
 	stage("checkout") {
-		git branch: "master", credentialsId: 'git', url: params.REPO
+		withCredentials([usernamePassword(credentialsId: 'git', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+			git branch: "master", url: "https://$USERNAME:$PASSWORD@github.com/${org(params.REPO)}/${uri(params.REPO)}"			
+		}
 	}
 
 	stage ("check build image") {

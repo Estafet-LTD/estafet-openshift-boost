@@ -20,15 +20,13 @@ node {
 	  ])
 	])	
 
-	def uri = uri(params.REPO)
-	def org = org(params.REPO)
 	def developmentVersion
 	def releaseVersion
 	def properties
 
 	stage("checkout") {
 		withCredentials([usernamePassword(credentialsId: 'git', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-			git branch: "master", url: "https://$USERNAME:$PASSWORD@github.com/$org/$uri"			
+			git branch: "master", url: "https://$USERNAME:$PASSWORD@github.com/${org(params.REPO)}/${uri(params.REPO)}"			
 		}
 	}
 
