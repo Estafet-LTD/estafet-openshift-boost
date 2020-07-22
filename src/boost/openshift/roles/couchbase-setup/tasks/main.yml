@@ -84,7 +84,7 @@
     body:
       services: kv,index,n1ql
     force_basic_auth: yes
-    status_code: 200, 202          
+    status_code: 200, 202, 400          
   when: http_response.status != 200  
 
 - name: Update the memoryQuota to {{ memoryQuota }}
