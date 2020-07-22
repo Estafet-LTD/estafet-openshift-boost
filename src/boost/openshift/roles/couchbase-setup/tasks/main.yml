@@ -32,8 +32,8 @@
   tags:
     - openshift   
 
-- name: Patch the readiness probe
-  shell: 'oc patch dc/couchbase -p ''{"spec":{"template":{"spec":{"containers":[{"name":"couchbase","readinessProbe":{"httpGet":{"path":"/","port":"8091","scheme":"HTTP"}}}]}}}}'' -n {{ project }}'
+- name: Set the readiness probe
+  shell: 'oc set probe dc/couchbase --readiness --get-url=http://:8091 --initial-delay-seconds=2'
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
