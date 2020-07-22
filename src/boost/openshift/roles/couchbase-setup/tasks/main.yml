@@ -56,7 +56,7 @@
     memoryQuota: 512
   when: params.memoryQuota is undefined
 
-- name: Create the memoryQuota on Couchbase Pod
+- name: Update the memoryQuota to {{ memoryQuota }}
   uri:
     url: http://couchbase-{{ project }}.{{ openshift.apps }}/pools/default
     method: POST
