@@ -89,3 +89,15 @@
       port: 8091
     force_basic_auth: yes
     status_code: 200, 202      
+
+- name: Update the services
+  uri:
+    url: http://couchbase-{{ project }}.{{ openshift.subdomain }}/node/controller/setupServices
+    method: POST
+    user: "{{ couchbase.user }}"
+    password: "{{ couchbase.password }}"  
+    body_format: form-urlencoded
+    body:
+      services: kv,index,n1ql
+    force_basic_auth: yes
+    status_code: 200, 202          
