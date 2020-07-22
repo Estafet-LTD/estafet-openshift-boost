@@ -24,6 +24,14 @@
       - openshift
       - couchbase
 
+- name: Expose Service couchbase
+  shell: "oc expose service couchbase"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift    
+
 - name: Patch the service account for the deployment config
   shell: 'oc patch dc/couchbase -p ''{"spec":{"template":{"spec":{"serviceAccountName": "useroot"}}}}'' -n {{ project }}'
   register: command_result
@@ -33,7 +41,7 @@
     - openshift   
 
 - name: Set the readiness probe
-  shell: 'oc set probe dc/couchbase --readiness --get-url=http://:8091/internalSettings --initial-delay-seconds=2'
+  shell: 'oc set probe dc/couchbase --readiness --get-url=http://:8091/ --initial-delay-seconds=2'
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
@@ -47,14 +55,6 @@
   changed_when: "'exists' not in command_result.stderr"
   tags:
     - openshift      
-
-- name: Expose Service couchbase
-  shell: "oc expose service couchbase"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"
-  tags:
-    - openshift    
 
 - set_fact:
     memoryQuota: "{{ params.memoryQuota }}"
