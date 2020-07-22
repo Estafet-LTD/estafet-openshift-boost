@@ -1,4 +1,10 @@
 ---
+
+- name: Checking if database already exists
+  uri:
+    url: http://couchbase-{{ project }}.{{ openshift.subdomain }}/pools/default
+  register: http_response
+
 - name: Create the service account
   shell: 'oc create serviceaccount useroot -n {{ project }}'
   register: command_result
@@ -101,3 +107,4 @@
       services: kv,index,n1ql
     force_basic_auth: yes
     status_code: 200, 202          
+  when: http_response.status != 200
