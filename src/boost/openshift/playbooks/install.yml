@@ -28,7 +28,7 @@
     - name: Updating boost playbooks and inventory
       synchronize:
         src: "{{ workdir }}/boostcd/src/boost/openshift/playbooks"
-        dest: .
+        dest: ..
 
     - name: Updating boost roles
       synchronize:
