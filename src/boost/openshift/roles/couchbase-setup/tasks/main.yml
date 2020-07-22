@@ -66,4 +66,17 @@
     body:
       memoryQuota: "{{ memoryQuota }}"
     force_basic_auth: yes
-    status_code: 202   
+    status_code: 200, 202   
+
+- name: Update the credentials
+  uri:
+    url: http://couchbase-{{ project }}.{{ openshift.subdomain }}/settings/web
+    method: POST
+    user: Administrator
+    password: password  
+    body_format: form-urlencoded
+    body:
+      username: "{{ couchbase.user }}"  
+      password: "{{ couchbase.password }}" 
+    force_basic_auth: yes
+    status_code: 200, 202      
