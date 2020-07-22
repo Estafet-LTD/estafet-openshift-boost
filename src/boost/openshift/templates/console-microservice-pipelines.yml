@@ -13,6 +13,9 @@ parameters:
 - description: Defines the product master git repository
   name: PRODUCT_REPO
   required: true    
+- description: Defines the microservice git repository
+  name: MICROSERVICE_REPO_URI
+  required: true    
 - description: Defines build pipeline
   name: BUILD_PIPELINE
   required: true   
