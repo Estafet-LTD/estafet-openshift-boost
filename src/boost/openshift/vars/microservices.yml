@@ -2,7 +2,7 @@
 boost_microservices:
   
     - name: boost-ui
-      version: 0.0.11
+      version: 0.0.12
       repo: https://github.com/boostcd/boost-ui.git
       build: build-boost.jenkinsFile
       release: release-boost-react.jenkinsFile
@@ -10,7 +10,7 @@ boost_microservices:
       test: false
           
     - name: project-api
-      version: 0.0.7
+      version: 0.0.8
       repo: https://github.com/boostcd/project-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
@@ -18,7 +18,7 @@ boost_microservices:
       test: false
           
     - name: user-api
-      version: 0.0.6
+      version: 0.0.7
       repo: https://github.com/boostcd/user-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
@@ -26,7 +26,7 @@ boost_microservices:
       test: false          
             
     - name: environment-api
-      version: 0.1.9
+      version: 0.1.10
       repo: https://github.com/boostcd/environment-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
@@ -34,7 +34,7 @@ boost_microservices:
       test: false
                 
     - name: jenkins-api
-      version: 0.0.7
+      version: 0.0.8
       repo: https://github.com/boostcd/jenkins-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
@@ -42,7 +42,7 @@ boost_microservices:
       test: false
           
     - name: gateway-api
-      version: 0.0.6
+      version: 0.0.7
       repo: https://github.com/boostcd/gateway-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
@@ -50,7 +50,7 @@ boost_microservices:
       test: false
                            
     - name: trello-api
-      version: 0.0.5
+      version: 0.0.6
       conditional: trello
       repo: https://github.com/boostcd/trello-api.git
       build: build-boost.jenkinsFile
@@ -59,7 +59,7 @@ boost_microservices:
       test: false        
 
     - name: jira-api
-      version: 0.0.5
+      version: 0.0.6
       conditional: jira
       repo: https://github.com/boostcd/jira-api.git
       build: build-boost.jenkinsFile
@@ -68,7 +68,7 @@ boost_microservices:
       test: false  
           
     - name: feature-api
-      version: 0.0.7
+      version: 0.0.8
       repo: https://github.com/boostcd/feature-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile    
