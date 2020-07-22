@@ -3,6 +3,9 @@
 - name: Checking if database already exists
   uri:
     url: http://couchbase-{{ project }}.{{ openshift.subdomain }}/pools/default
+    user: Administrator
+    password: password 
+    force_basic_auth: yes
     status_code: 200, 202, 503, 404, 400
   register: http_response
 
