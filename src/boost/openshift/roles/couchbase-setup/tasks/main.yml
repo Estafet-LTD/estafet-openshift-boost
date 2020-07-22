@@ -56,7 +56,7 @@
     memoryQuota: 512
   when: params.memoryQuota is undefined
 
-- name: Update the memoryQuota to {{ memoryQuota }}
+- name: Update the memoryQuota
   uri:
     url: http://couchbase-{{ project }}.{{ openshift.apps }}/pools/default
     method: POST
@@ -64,6 +64,6 @@
     password: "{{ couchbase.password }}"  
     body_format: form-urlencoded
     body:
-      memoryQuota: "{{ memoryQuota }}"
+      memoryQuota: 512
     force_basic_auth: yes
     status_code: 202   
