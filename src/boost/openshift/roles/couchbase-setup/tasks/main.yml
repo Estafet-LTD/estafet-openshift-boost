@@ -58,10 +58,10 @@
 
 - name: Update the memoryQuota to {{ memoryQuota }}
   uri:
-    url: http://couchbase-{{ project }}.{{ openshift.apps }}/pools/default
+    url: http://couchbase-{{ project }}.{{ openshift.subdomain }}/pools/default
     method: POST
-    user: "{{ couchbase.user }}"
-    password: "{{ couchbase.password }}"  
+    user: Administrator
+    password: password  
     body_format: form-urlencoded
     body:
       memoryQuota: "{{ memoryQuota }}"
