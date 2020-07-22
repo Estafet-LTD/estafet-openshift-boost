@@ -3,6 +3,7 @@
 - name: Checking if database already exists
   uri:
     url: http://couchbase-{{ project }}.{{ openshift.subdomain }}/pools/default
+    status_code: 200, 202, 503, 404, 400
   register: http_response
 
 - name: Create the service account
