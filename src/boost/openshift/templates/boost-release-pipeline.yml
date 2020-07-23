@@ -26,7 +26,10 @@ objects:
       git:
         uri: ${BOOST_URL}
     strategy:
-      jenkinsPipelineStrategy:                         
+      jenkinsPipelineStrategy:       
+        env:          
+        - name: REPO
+          value: ${BOOST_URL}                        
         jenkinsfilePath: src/boost/openshift/pipelines/release-boost-framework.jenkinsFile
       type: JenkinsPipeline
   status:
