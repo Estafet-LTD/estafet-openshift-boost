@@ -94,7 +94,7 @@ objects:
             value: ${REPO_URI}
           - name: PROJECT
             value: some_project                                                
-        jenkinsfilePath: src/test/boost/openshift/pipelines/test.jenkinsFile
+        jenkinsfilePath: src/boost/openshift/pipelines/test.jenkinsFile
       type: JenkinsPipeline
   status:
     lastVersion: 0      
@@ -125,7 +125,7 @@ objects:
             value: ${ENV}          
           - name: PROJECT
             value: some_project   
-        jenkinsfilePath: src/test/boost/openshift/pipelines/test.jenkinsFile
+        jenkinsfilePath: src/boost/openshift/pipelines/test.jenkinsFile
       type: JenkinsPipeline
   status:
     lastVersion: 0                     
