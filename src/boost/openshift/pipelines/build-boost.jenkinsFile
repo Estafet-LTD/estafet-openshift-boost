@@ -2,7 +2,7 @@ node("jenkins-slave-ansible") {
 
 	properties([
 	  parameters([
-		string(repo: 'REPO'),
+		string(name: 'REPO'),
 	    string(name: 'MICROSERVICE'),
 	  ])
 	])
