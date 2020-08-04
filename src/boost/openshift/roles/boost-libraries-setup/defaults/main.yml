@@ -1,5 +1,10 @@
 boost_libraries:
 
+  - name: openshift-lib
+    repo: https://github.com/boostcd/openshift-lib.git
+    build: build-maven-library.jenkinsFile
+    release: release-maven-library.jenkinsFile
+
   - name: ddl-lib
     repo: https://github.com/boostcd/ddl-lib.git
     build: build-maven-library.jenkinsFile
