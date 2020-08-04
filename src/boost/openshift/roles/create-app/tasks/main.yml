@@ -31,14 +31,14 @@
   tags:
     - git  
 
-- name: Check that the local-setup.yml exists
+- name: Check that the {{ stage }}-setup.yml exists
   stat:
-    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/local-setup.yml"
+    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/{{ stage }}-setup.yml"
   register: stat_result
 
 - name: load the settings
   include_vars:
-    file: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/local-setup.yml"
+    file: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/{{ stage }}-setup.yml"
   when: stat_result.stat.exists
 
 - include_role: 
@@ -96,7 +96,7 @@
 
 - name: Load the variables from local-config.yml
   include_vars:
-    file: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/local-config.yml"
+    file: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/{{ stage }}-config.yml"
 
 - name: Initialise config map variables
   set_fact: mapStr=""
@@ -113,14 +113,14 @@
   tags:
     - openshift
 
-- name: Check that the local-secret.yml exists
+- name: Check that the {{ stage }}-secret.yml exists
   stat:
-    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/local-secret.yml"
+    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/{{ stage }}-secret.yml"
   register: stat_result
 
 - name: Load the variables from local-secrets.yml
   include_vars:
-    file: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/local-secret.yml"
+    file: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/{{ stage }}-secret.yml"
   when: stat_result.stat.exists
 
 - name: Initialise secret variables

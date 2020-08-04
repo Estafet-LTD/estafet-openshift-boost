@@ -28,7 +28,7 @@
     docker_registry: "{{ env.docker_registry }}"
     project: "{{ env_project }}"
     test: "{{ env.test }}"
-    
+    stage: local
   with_items: "{{ microservices }}"
   tags:
     - openshift
