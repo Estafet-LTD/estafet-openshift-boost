@@ -49,7 +49,6 @@
   register: stat_result
   when: setup_yml is undefined
 
-
 - name: define the setup file
   set_fact:
     setup_yml: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/default-setup.yml"
@@ -122,15 +121,15 @@
     path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/{{ stage }}-config.yml"
   register: stat_result
 
-- name: define the config file
+- name: define the {{ stage }}-config.yml file
   set_fact:
     config: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/{{ stage }}-config.yml"
   when: stat_result.stat.exists
 
-- name: define the config file
+- name: define the default config file
   set_fact:
     config: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/default-config.yml"
-  when: not stat_result.stat.exists  
+  when: config is undefined
 
 - name: Load the variables from {{ config }}
   include_vars:

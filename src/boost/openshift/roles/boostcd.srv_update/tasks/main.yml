@@ -1,0 +1,11 @@
+---
+- set_fact:
+    payload: "{ \"productId\" : \"{{ product.name }}\" , \"description\" : \"{{ product.description }}\", \"version\" : \"{{ boost.version }}\", \"repo\" : \"{{ boost.repo }}\"  }"
+
+- name: Update the environments service with the
+  uri:
+    url: http://gateway-api-{{ project }}.{{ openshift.subdomain }}/product
+    method: POST
+    body_format: json
+    body: "{{ payload }}"
+    status_code: 200
