@@ -118,7 +118,7 @@
 # create config maps
 - name: Check that the {{ stage }}-config.yml exists
   stat:
-    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/{{ stage }}-config.yml"
+    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/{{ stage }}-config.yml"
   register: stat_result
 
 - name: define the {{ stage }}-config.yml file
