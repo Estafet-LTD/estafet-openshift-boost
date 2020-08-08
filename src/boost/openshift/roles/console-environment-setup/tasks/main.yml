@@ -6,12 +6,6 @@
     project_description: "Console: {{ product.description }}"
 
 - include_role: 
-    name: namespace-role-setup
-  vars:
-    project: "{{ console_project }}"
-    role: view
-
-- include_role: 
     name: amq-setup
   vars:
     project: "{{ console_project }}"
@@ -27,7 +21,7 @@
   vars:
     project: "{{ console_project }}"
 
-- name: Deploy the microservices
+- name: Deploy the console and the proxy
   include_role:
     name: deploy-console-app
   vars:
@@ -35,7 +29,26 @@
     docker_registry: "{{ console_environment.docker_registry }}"
     maven_mirror_url: "{{ console_environment.maven_mirror_url }}"     
     project: "{{ console_project }}"
-  when: (item.conditional is undefined) or (item.conditional == 'jira' and jira is defined) or (item.conditional == 'trello' and trello is defined)
+  when: (item.name == 'boost-ui') or (item.name == 'proxy-api')
+  with_items: "{{ boost_microservices }}"
+  tags:
+    - openshift
+
+- include_role: 
+    name: namespace-setup
+  vars:
+    project: boost-services
+    project_description: "Boost Services"
+
+- name: Deploy the boost microservices
+  include_role:
+    name: deploy-console-app
+  vars:
+    microservice: "{{ item }}"     
+    docker_registry: "{{ console_environment.docker_registry }}"
+    maven_mirror_url: "{{ console_environment.maven_mirror_url }}"     
+    project: boost-services
+  when: (item.name != 'boost-ui') and (item.name != 'proxy-api') and ((item.conditional is undefined) or (item.conditional == 'jira' and jira is defined) or (item.conditional == 'trello' and trello is defined))
   with_items: "{{ boost_microservices }}"
   tags:
     - openshift

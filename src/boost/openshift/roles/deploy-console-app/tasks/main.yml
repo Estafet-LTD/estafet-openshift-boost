@@ -21,6 +21,9 @@
     dc_image: "{{list_of_dcs.stdout|from_json|json_query('items[0].spec.template.spec.containers[0].image')}}"
   ignore_errors: yes
 
+- set_fact:
+    stage: live
+
 - debug:
     var: dc_image
     verbosity: 0
@@ -39,23 +42,41 @@
   tags:
     - git  
 
-- name: Check that the local-setup.yml exists
+# setup   
+- name: Check that the {{ stage }}-setup.yml exists
   stat:
-    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/local-setup.yml"
+    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/{{ stage }}-setup.yml"
   register: stat_result
+
+- name: define the setup file
+  set_fact:
+    setup_yml: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/{{ stage }}-setup.yml"
+  when: stat_result.stat.exists  
+
+- name: Check that the default-setup.yml exists
+  stat:
+    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/default-setup.yml"
+  register: stat_result
+  when: setup_yml is undefined
+
+- name: define the setup file
+  set_fact:
+    setup_yml: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/default-setup.yml"
+  when: stat_result.stat.exists and setup_yml is undefined  
 
 - name: load the settings
   include_vars:
-    file: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/local-setup.yml"
-  when: stat_result.stat.exists
+    file: "{{ setup_yml }}"
+  when: setup_yml is defined
 
 - include_role: 
     name: "{{ item.name }}"
   vars:
     params: "{{ item }}"
   with_items: "{{ setup | default([]) }}"
-  when: stat_result.stat.exists and image_deployed == false
+  when: setup_yml is defined and not image_deployed
 
+# app cleanup    
 - name: Remove all aspects of the application so that we can rebuild from scratch
   shell: "oc delete all -l app={{ microservice.name }} -n {{ project }} || true"
   register: command_result
@@ -65,6 +86,7 @@
   tags:
     - openshift  
 
+# cleanup config maps and secrets     
 - name: Delete the {{ microservice.name }} configmap
   shell: 'oc delete configmap {{ microservice.name }} -n {{ project }} || true'
   register: command_result
@@ -83,9 +105,25 @@
   tags:
     - openshift
 
-- name: Load the variables from local-config.yml
+# create config maps    
+- name: Check that the {{ stage }}-config.yml exists
+  stat:
+    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/{{ stage }}-config.yml"
+  register: stat_result
+
+- name: define the {{ stage }}-config.yml file
+  set_fact:
+    config: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/{{ stage }}-config.yml"
+  when: stat_result.stat.exists
+
+- name: define the default config file
+  set_fact:
+    config: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/default-config.yml"
+  when: config is undefined
+
+- name: Load the variables from {{ config }}
   include_vars:
-    file: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/local-config.yml"
+    file: "{{ config }}"
 
 - name: Initialise config map variables
   set_fact: mapStr=""
@@ -99,42 +137,60 @@
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
-  when: image_deployed == false
   tags:
     - openshift
 
-- name: Check that the local-secret.yml exists
+# create secrets
+- name: Check that the {{ stage }}-secret.yml exists
   stat:
-    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/local-secret.yml"
+    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/{{ stage }}-secret.yml"
   register: stat_result
 
-- name: Load the variables from local-secrets.yml
+- name: define the secret file
+  set_fact:
+    secret: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/{{ stage }}-secret.yml"
+  when: stat_result.stat.exists  
+
+- name: Check that the default-secret.yml exists
+  stat:
+    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/default-secret.yml"
+  register: stat_result
+  when: secret is undefined
+
+- name: define the default secret file
+  set_fact:
+    secret: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/default-secret.yml"
+  when: stat_result.stat.exists and secret is undefined
+
+- name: Load the variables from {{ secret }}
   include_vars:
-    file: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/local-secret.yml"
-  when: stat_result.stat.exists
+    file: "{{ secret }}"
+  when: secret is defined
 
 - name: Initialise secret variables
   set_fact: secretStr=""
-  when: stat_result.stat.exists
+  when: secret is defined
 
 - name: format the secrets variables
   set_fact: secretStr="{{ secretStr }} --from-literal={{ item.name }}='{{ item.value }}'"
   with_items: "{{ secrets }}"
-  when: stat_result.stat.exists
+  when: secret is defined
 
 - name: Create the {{ microservice.name }} secrets
   shell: 'oc create secret generic {{ microservice.name }} {{ secretStr }} -n {{ project }}'
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
-  when: stat_result.stat.exists and image_deployed == false
+  when: secret is defined
   tags:
     - openshift
 
+# load resources        
 - name: Load the variables from default-resources.yml
   include_vars:
     file: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/default-resources.yml"
 
+# deploy app     
 - name: Create the deployment config
   shell: "oc process -n {{ project }} -f {{ workdir }}/{{ microservice.name }}/src/boost/openshift/templates/deploy-config.yml -p MICROSERVICE={{ microservice.name }} -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ dockerhub.org }} -p DOCKER_IMAGE_LABEL={{ microservice.version }} -p DOCKER_REGISTRY={{ dockerhub.url }} -p PRODUCT={{ product.name }} -p MAX_MEMORY={{ resources.max_memory }} -p MIN_MEMORY={{ resources.min_memory }} -p MAX_CPU={{ resources.max_cpu }} -p MIN_CPU={{ resources.min_cpu }} -p REPLICAS={{ resources.replicas }} | oc apply -f -"
   register: command_result

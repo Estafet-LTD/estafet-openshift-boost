@@ -8,7 +8,6 @@ boost_microservices:
       release: release-boost-react.jenkinsFile
       expose: true
       test: false
-      product: true
 
     - name: proxy-api
       version: 0.0.1
@@ -16,8 +15,7 @@ boost_microservices:
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
       expose: true
-      test: false
-      product: true      
+      test: false    
 
     - name: project-api
       version: 0.0.8
@@ -26,7 +24,6 @@ boost_microservices:
       release: release-boost-java.jenkinsFile
       expose: false
       test: false
-      product: false
           
     - name: user-api
       version: 0.0.7
@@ -35,7 +32,6 @@ boost_microservices:
       release: release-boost-java.jenkinsFile
       expose: false
       test: false        
-      product: false 
             
     - name: environment-api
       version: 0.1.10
@@ -44,7 +40,6 @@ boost_microservices:
       release: release-boost-java.jenkinsFile
       expose: false
       test: false
-      product: false
                 
     - name: jenkins-api
       version: 0.0.8
@@ -53,7 +48,6 @@ boost_microservices:
       release: release-boost-java.jenkinsFile
       expose: false
       test: false
-      product: false
           
     - name: gateway-api
       version: 0.0.7
@@ -62,7 +56,6 @@ boost_microservices:
       release: release-boost-java.jenkinsFile
       expose: true
       test: false
-      product: false
                            
     - name: trello-api
       version: 0.0.6
@@ -72,7 +65,6 @@ boost_microservices:
       release: release-boost-java.jenkinsFile
       expose: false
       test: false        
-      product: false
 
     - name: jira-api
       version: 0.0.6
@@ -82,7 +74,6 @@ boost_microservices:
       release: release-boost-java.jenkinsFile      
       expose: false
       test: false  
-      product: false
           
     - name: feature-api
       version: 0.0.8
@@ -91,4 +82,3 @@ boost_microservices:
       release: release-boost-java.jenkinsFile    
       expose: false
       test: false 
-      product: false
