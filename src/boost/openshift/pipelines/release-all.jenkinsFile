@@ -14,7 +14,7 @@ node {
 	}
 	
 	stage("read the microservices definition") {
-		def yml = readYaml file: "src/boost/openshift/vars/microservices.yml"
+		def yml = readYaml file: "src/boost/openshift/definitions/microservices.yml"
 		microservices = yml.microservices
 	}
 

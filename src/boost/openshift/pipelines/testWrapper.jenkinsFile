@@ -35,7 +35,7 @@ node {
 
 	if (env != 'prod' && env != 'test') {
 		stage("execute the smoke tests") {
-			def yml = readYaml file: "src/boost/openshift/vars/environments.yml"
+			def yml = readYaml file: "src/boost/openshift/definitions/environments.yml"
 			def testRepo =  yml.environments.smoke_test_repo	  	
 			sh "oc start-build qa-${env}-smoke-test -e PRODUCT=${params.PRODUCT} -e REPO=${testRepo} -e PROJECT=${project} --wait -n ${params.PRODUCT}-cicd"
 		}

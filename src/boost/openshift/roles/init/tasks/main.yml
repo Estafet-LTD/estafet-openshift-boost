@@ -4,12 +4,12 @@
 
 - name: load product variables
   include_vars:
-    dir: "{{ playbook_dir }}/../vars"
+    dir: "{{ playbook_dir }}/../definitions"
     extensions: [yml]
 
 - name: load the boost variables
   include_vars:
-    dir: "{{ workdir }}/boostcd/src/boost/openshift/vars"
+    dir: "{{ workdir }}/boostcd/src/boost/openshift/definitions"
     extensions: [yml]  
 
 - set_fact: openshift_host_port="{{ openshift.host }}:{{ openshift.port }}"

@@ -40,7 +40,7 @@ boost_microservices:
     - name: environment-api
       version: 0.1.10
       repo: https://github.com/boostcd/environment-api.git
-      build: build-boost.jenkinsFile
+      build: build-environment-api.jenkinsFile
       release: release-boost-java.jenkinsFile
       expose: false
       test: false

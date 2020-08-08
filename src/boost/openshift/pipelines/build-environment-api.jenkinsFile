@@ -1,0 +1,32 @@
+node("jenkins-slave-ansible") {
+
+	properties([
+	  parameters([
+		string(name: 'REPO'),
+	    string(name: 'MICROSERVICE'),
+	  ])
+	])
+
+	def project = "boost-test"
+	def microservice = params.MICROSERVICE	
+
+	stage("checkout") {
+		git credentialsId: "git", branch: "master", url: params.REPO
+	}
+	
+	stage ("update the roles") {
+		sh "ansible-playbook -i src/boost/openshift/playbooks/hosts.ini src/boost/openshift/playbooks/install.yml"
+	}		
+	
+	stage ("build the console app") {
+		withCredentials([file(credentialsId: 'ansible_vault', variable: 'vault')]) {
+			sh "ansible-playbook -i src/boost/openshift/playbooks/hosts.ini --vault-password-file ${vault} src/boost/openshift/playbooks/build-console-app.yml -e env_project=${project} -e target_app=${microservice}"
+    	}
+	}	
+
+	stage ("activate the product") {
+		def json = "{ \"productId\" : \"blockchain-demo\", \"description\" : \"Block Chain Demo\", \"version\" : \"master\", \"repo\" : \"https://github.com/Estafet-LTD/blockchain-demo.git\" }"
+		httpRequest url: 'http://environment-api.${project}.svc:8080/product', contentType: 'APPLICATION_JSON', httpMode: 'POST', requestBody: json
+	}
+
+}

@@ -5,7 +5,7 @@
   
     - name: load the variables
       include_vars:
-        dir: ../vars
+        dir: ../definitions
         extensions: [yml]  
 
     - name: Verify that the env_project variable is set
