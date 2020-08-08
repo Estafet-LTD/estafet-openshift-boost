@@ -52,3 +52,11 @@
   with_items: "{{ boost_microservices }}"
   tags:
     - openshift
+
+- name: 
+  include_role:
+    name: boostcd.init_product
+  vars:
+    project: boost-services
+  tags:
+    - openshift    
