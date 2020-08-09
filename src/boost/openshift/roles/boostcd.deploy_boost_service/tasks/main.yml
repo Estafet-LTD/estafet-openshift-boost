@@ -154,7 +154,6 @@
   stat:
     path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/default-secret.yml"
   register: stat_result
-  when: secret is undefined
 
 - name: define the default secret file
   set_fact:
