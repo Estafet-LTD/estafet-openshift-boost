@@ -114,7 +114,7 @@
   register: stat_result
   
 - set_fact:
-  config: ""
+    config: ""
 
 - name: define the {{ stage }}-config.yml file
   set_fact:
@@ -152,7 +152,7 @@
   register: stat_result
 
 - set_fact:
-  secret: ""
+    secret: ""
 
 - name: define the secret file
   set_fact:
