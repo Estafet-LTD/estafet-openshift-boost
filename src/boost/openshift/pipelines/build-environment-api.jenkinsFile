@@ -26,7 +26,7 @@ node("jenkins-slave-ansible") {
 
 	stage ("activate the product") {
 		def json = "{ \"productId\" : \"blockchain-demo\", \"description\" : \"Block Chain Demo\", \"version\" : \"master\", \"repo\" : \"https://github.com/Estafet-LTD/blockchain-demo.git\" }"
-		httpRequest url: 'http://environment-api.${project}.svc:8080/product', contentType: 'APPLICATION_JSON', httpMode: 'POST', requestBody: json
+		httpRequest url: "http://environment-api.${project}.svc:8080/product", contentType: 'APPLICATION_JSON', httpMode: 'POST', requestBody: json
 	}
 
 }
