@@ -10,7 +10,7 @@ boost_microservices:
       test: false
 
     - name: proxy-api
-      version: 0.0.1
+      version: 0.0.2
       repo: https://github.com/boostcd/proxy-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
