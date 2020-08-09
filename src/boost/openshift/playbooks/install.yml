@@ -29,11 +29,15 @@
       synchronize:
         src: "{{ workdir }}/boostcd/src/boost/openshift/playbooks"
         dest: "{{ playbook_dir }}/.."
+        recursive: yes
+        delete: yes
 
     - name: Updating boost roles
       synchronize:
         src: "{{ workdir }}/boostcd/src/boost/openshift/roles"
         dest: "~/.ansible"    
+        recursive: yes
+        delete: yes        
 
     - name: Check that the product roles exist
       stat:
