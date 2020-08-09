@@ -42,9 +42,6 @@
   tags:
     - git  
 
-- set_fact:
-    setup_yml: ""   
-
 # setup   
 - name: Check that the {{ stage }}-setup.yml exists
   stat:
@@ -60,24 +57,23 @@
   stat:
     path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/default-setup.yml"
   register: stat_result
-  when: setup_yml != ""
 
 - name: define the setup file
   set_fact:
     setup_yml: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/default-setup.yml"
-  when: stat_result.stat.exists and setup_yml != ""
+  when: setup_yml is undefined and stat_result.stat.exists
 
 - name: load the settings
   include_vars:
     file: "{{ setup_yml }}"
-  when: setup_yml != ""
+  when: setup_yml is undefined
 
 - include_role: 
     name: "{{ item.name }}"
   vars:
     params: "{{ item }}"
   with_items: "{{ setup | default([]) }}"
-  when: setup_yml != "" and not image_deployed
+  when: setup_yml is undefined and not image_deployed
 
 # app cleanup    
 - name: Remove all aspects of the application so that we can rebuild from scratch
