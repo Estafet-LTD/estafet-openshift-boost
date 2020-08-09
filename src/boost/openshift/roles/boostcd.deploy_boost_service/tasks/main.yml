@@ -64,7 +64,7 @@
 - name: define the setup file
   set_fact:
     setup_yml: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/default-setup.yml"
-  when: setup_yml != "" and stat_result.stat.exists
+  when: setup_yml == "" and stat_result.stat.exists
 
 - name: load the settings
   include_vars:
@@ -124,7 +124,7 @@
 - name: define the default config file
   set_fact:
     config: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/default-config.yml"
-  when: config != ""
+  when: config == ""
 
 - name: Load the variables from {{ config }}
   include_vars:
@@ -167,7 +167,7 @@
 - name: define the default secret file
   set_fact:
     secret: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/default-secret.yml"
-  when: stat_result.stat.exists and secret != ""
+  when: stat_result.stat.exists and secret == ""
 
 - name: Load the variables from {{ secret }}
   include_vars:
