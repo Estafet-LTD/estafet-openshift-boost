@@ -23,7 +23,7 @@
 
 - name: Deploy the boost microservices
   include_role:
-    name: deploy-console-app
+    name: boostcd.deploy_boost_service
   vars:
     microservice: "{{ item }}"     
     docker_registry: "{{ console_environment.docker_registry }}"
@@ -42,7 +42,7 @@
 
 - name: Deploy the console and the proxy
   include_role:
-    name: deploy-console-app
+    name: boostcd.deploy_boost_service
   vars:
     microservice: "{{ item }}"     
     docker_registry: "{{ console_environment.docker_registry }}"
