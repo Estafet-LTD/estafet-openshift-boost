@@ -69,7 +69,7 @@
 - name: load the settings
   include_vars:
     file: "{{ setup_yml }}"
-  when: setup_yml setup_yml != ""
+  when: setup_yml != ""
 
 - include_role: 
     name: "{{ item.name }}"
