@@ -34,6 +34,14 @@
   tags:
     - openshift
 
+- name: initialise the product
+  include_role:
+    name: boostcd.init_product
+  vars:
+    project: boost-services
+  tags:
+    - openshift    
+
 - include_role: 
     name: namespace-setup
   vars:
@@ -53,10 +61,3 @@
   tags:
     - openshift
 
-- name: initialise the product
-  include_role:
-    name: boostcd.init_product
-  vars:
-    project: boost-services
-  tags:
-    - openshift    
