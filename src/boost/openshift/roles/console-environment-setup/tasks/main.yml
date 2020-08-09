@@ -48,7 +48,7 @@
     docker_registry: "{{ console_environment.docker_registry }}"
     maven_mirror_url: "{{ console_environment.maven_mirror_url }}"     
     project: boost-services
-  when: (item.name != 'boost-ui') and (item.name != 'proxy-api') and ((item.conditional is undefined) or (item.conditional == 'jira' and jira is defined) or (item.conditional == 'trello' and trello is defined))
+  when: item.name != 'boost-ui' and item.name != 'proxy-api'
   with_items: "{{ boost_microservices }}"
   tags:
     - openshift

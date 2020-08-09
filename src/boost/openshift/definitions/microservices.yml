@@ -59,7 +59,6 @@ boost_microservices:
                            
     - name: trello-api
       version: 0.0.6
-      conditional: trello
       repo: https://github.com/boostcd/trello-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
@@ -68,7 +67,6 @@ boost_microservices:
 
     - name: jira-api
       version: 0.0.6
-      conditional: jira
       repo: https://github.com/boostcd/jira-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile      
