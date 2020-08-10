@@ -9,7 +9,7 @@
 
 - name: Build and Deploy the microservices
   include_role:
-    name: build-app
+    name: boostcd.build_app
   vars:
     microservice: "{{ item }}" 
     project: "{{ env_project }}"      
