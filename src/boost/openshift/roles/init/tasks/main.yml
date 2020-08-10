@@ -2,6 +2,11 @@
 - set_fact:
     workdir: "{{ ansible_env.HOME }}/.boost"
 
+- name: merge the default boost repo value
+  set_fact:
+    boost: "{{ boost | combine(boostcd,recursive=True) }}"
+  when: boost.repo is undefined
+    
 - name: load product variables
   include_vars:
     dir: "{{ playbook_dir }}/../definitions"

@@ -3,6 +3,16 @@
   hosts: local   
   tasks:
 
+    - name: define the default boost repo value
+      set_fact:
+        boostcd:
+          repo: https://github.com/boostcd/boostcd.git
+
+    - name: merge the default boost repo value
+      set_fact:
+        boost: "{{ boost | combine(boostcd,recursive=True) }}"
+      when: boost.repo is undefined
+
     - name: load the variables
       include_vars:
         dir: ../definitions
