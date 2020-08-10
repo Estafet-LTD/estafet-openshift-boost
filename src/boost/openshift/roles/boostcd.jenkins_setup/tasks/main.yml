@@ -1,4 +1,8 @@
 ---
+- name: reset restart flag for jenkins
+  set_fact:
+    restart_jenkins: false
+
 - name: Install the Jenkins master server
   shell: "oc new-app jenkins-persistent -p VOLUME_CAPACITY={{ volume_capacity }} -p MEMORY_LIMIT={{ memory_limit }}"
   register: command_result

@@ -1,3 +1,0 @@
----
-restart_jenkins: true
-jenkins_xml: "{{ roles }}/boostcd.jenkins_script_approval/files/scriptApproval.xml"
