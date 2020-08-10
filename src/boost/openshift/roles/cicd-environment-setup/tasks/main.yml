@@ -12,7 +12,7 @@
     role: edit
 
 - include_role: 
-    name: jenkins-setup
+    name: boostcd.jenkins_setup
   vars:
     project: "{{ cicd_project }}"
     volume_capacity: 30Gi
@@ -92,10 +92,17 @@
     - openshift      
 
 - include_role: 
-    name: jenkins-script-approval
+    name: boostcd.jenkins_script_approval
   vars:
     project: "{{ cicd_project }}"
     
 - include_role: 
     name: jenkins-ansible-slave-setup
+  vars:
+    project: "{{ cicd_project }}"    
+
+- include_role: 
+    name: boostcd.jenkins_restart
+  vars:
+    project: "{{ cicd_project }}"    
     

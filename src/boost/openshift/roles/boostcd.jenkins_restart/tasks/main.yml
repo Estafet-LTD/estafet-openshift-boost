@@ -1,0 +1,4 @@
+---    
+- include: restart.yml
+  when: restart_jenkins
+    

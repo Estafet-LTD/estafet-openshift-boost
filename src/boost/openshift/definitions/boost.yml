@@ -7,7 +7,6 @@ workdir: "{{ ansible_env.HOME }}/.boost"
 boost_ddl: "{{ workdir }}/boostcd/src/boost/openshift/ddl"
 templates: "{{ workdir }}/boostcd/src/boost/openshift/templates"
 objects: "{{ workdir }}/boostcd/src/boost/openshift/objects"
-jenkins_xml: "{{ workdir }}/boostcd/src/boost/openshift/jenkins-xml"
   
 console_environment:
   maven_mirror_url: http://nexus.nexus.svc:8081/nexus/content/groups/public
