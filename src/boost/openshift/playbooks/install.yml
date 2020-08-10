@@ -18,10 +18,6 @@
         boost: "{{boost|combine(boostcd,recursive=True)}}"
       when: boost.repo is undefined
 
-    - debug:
-        var: boost
-        verbosity: 0
-
     - set_fact: 
         workdir: "{{ ansible_env.HOME }}/.boost"
 
@@ -72,3 +68,7 @@
       changed_when: "'exists' not in command_result.stderr"
       tags:
         - jmespath 
+
+    - debug:
+        var: boost
+        verbosity: 0
