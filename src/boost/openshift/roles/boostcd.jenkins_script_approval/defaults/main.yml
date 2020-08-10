@@ -1,2 +1,3 @@
 ---
 restart_jenkins: true
+jenkins_xml: "{{ role_path }}/files/scriptApproval.xml"

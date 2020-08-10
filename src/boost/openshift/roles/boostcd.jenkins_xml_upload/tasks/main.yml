@@ -1,4 +1,8 @@
 ---
+- debug:
+    var: jenkins_xml
+    verbosity: 0
+
 - name: switch to the project {{ project }}
   shell: "oc project {{ project }}"
 

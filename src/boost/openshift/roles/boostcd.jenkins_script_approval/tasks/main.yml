@@ -1,5 +1,7 @@
 ---
+- debug:
+    var: jenkins_xml
+    verbosity: 0
+
 - include_role: 
     name: boostcd.jenkins_xml_upload
-  vars:
-    jenkins_xml: "{{ role_path }}/files/scriptApproval.xml"
