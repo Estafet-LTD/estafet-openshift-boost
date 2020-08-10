@@ -3,6 +3,11 @@
   hosts: local   
   tasks:
 
+    - name: load the variables
+      include_vars:
+        dir: ../definitions
+        extensions: [yml]  
+   
     - name: define the default boost repo value
       set_fact:
         boostcd:
@@ -13,11 +18,6 @@
         boost: "{{boost|combine(boostcd,recursive=True)}}"
       when: boost.repo is undefined
 
-    - name: load the variables
-      include_vars:
-        dir: ../definitions
-        extensions: [yml]  
-   
     - set_fact: 
         workdir: "{{ ansible_env.HOME }}/.boost"
 
