@@ -7,7 +7,8 @@ workdir: "{{ ansible_env.HOME }}/.boost"
 boost_ddl: "{{ workdir }}/boostcd/src/boost/openshift/ddl"
 templates: "{{ workdir }}/boostcd/src/boost/openshift/templates"
 objects: "{{ workdir }}/boostcd/src/boost/openshift/objects"
-  
+roles: "{{ workdir }}/boostcd/src/boost/openshift/roles"
+
 console_environment:
   maven_mirror_url: http://nexus.nexus.svc:8081/nexus/content/groups/public
   docker_registry: "{{ openshift.registry }}"
