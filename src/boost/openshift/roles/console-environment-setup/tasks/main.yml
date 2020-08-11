@@ -23,7 +23,7 @@
 
 - name: Deploy the boost microservices
   include_role:
-    name: boostcd.deploy_boost_service
+    name: boostcd._deploy_boost_service
   vars:
     microservice: "{{ item }}"     
     docker_registry: "{{ console_environment.docker_registry }}"
@@ -36,7 +36,7 @@
 
 - name: initialise the product
   include_role:
-    name: boostcd.init_product
+    name: boostcd._init_product
   vars:
     project: boost-services
   tags:
@@ -50,7 +50,7 @@
 
 - name: Deploy the console and the proxy
   include_role:
-    name: boostcd.deploy_boost_service
+    name: boostcd._deploy_boost_service
   vars:
     microservice: "{{ item }}"     
     docker_registry: "{{ console_environment.docker_registry }}"

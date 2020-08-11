@@ -1,6 +1,6 @@
 ---
 - name: Allows jenkins to access the {{ project }} namespace
-  shell: "oc policy add-role-to-user {{ role }} system:serviceaccount:{{ product.name }}-cicd:jenkins -n {{ project }}"
+  shell: "oc policy add-role-to-user {{ role }} system:serviceaccount:boost-cicd:jenkins -n {{ project }}"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
@@ -9,10 +9,10 @@
     - jenkins   
 
 - include_role: 
-    name : boostcd.admin_annotator
+    name : boostcd._admin_annotator
 
 - name: Allows jenkins to modify the labels for the {{ project }} namespace
-  shell: "oc adm policy add-role-to-user admin-annotator system:serviceaccount:{{ product.name }}-cicd:jenkins -n {{ project }}"
+  shell: "oc adm policy add-role-to-user admin-annotator system:serviceaccount:boost-cicd:jenkins -n {{ project }}"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"

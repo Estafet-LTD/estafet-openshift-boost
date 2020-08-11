@@ -6,14 +6,14 @@
     project_description: "Boost CI/CD"
 
 - include_role: 
-    name: boostcd.jenkins_setup
+    name: boostcd._jenkins_setup
   vars:
     project: "{{ boost_project }}"
     volume_capacity: 10Gi
     memory_limit: 2Gi
 
 - include_role: 
-    name: boostcd.boost_libraries_setup
+    name: boostcd._boost_libraries_setup
   vars:
     project: "{{ boost_project }}"
     
@@ -43,21 +43,21 @@
     - openshift    
 
 - include_role: 
-    name: boostcd.jenkins_script_approval
+    name: boostcd._jenkins_script_approval
   vars:
     project: "{{ boost_project }}"
 
 - include_role: 
-    name: boostcd.jenkins_ansible_slave_setup
+    name: boostcd._jenkins_ansible_slave_setup
   vars:
     project: "{{ boost_project }}"     
 
 - include_role: 
-    name: boostcd.jenkins_image_mgmt_slave_setup   
+    name: boostcd._jenkins_image_mgmt_slave_setup
   vars:
     project: "{{ boost_project }}"     
 
 - include_role: 
-    name: boostcd.jenkins_restart
+    name: boostcd._jenkins_restart
   vars:
     project: "{{ boost_project }}"

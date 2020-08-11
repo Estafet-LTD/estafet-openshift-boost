@@ -27,7 +27,7 @@
     project: "{{ boost_project }}"
 
 - include_role: 
-    name: boostcd.add_boost_jenkins_role
+    name: boostcd._add_boost_jenkins_role
   vars:
     project: "{{ boost_project }}"
     role: edit    
