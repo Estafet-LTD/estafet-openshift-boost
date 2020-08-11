@@ -1,5 +1,8 @@
 ---
 - include_role: 
+    name: boostcd.nexus_setup
+
+- include_role: 
     name: boostcd._boost_cicd_setup
 
 - include_role: 

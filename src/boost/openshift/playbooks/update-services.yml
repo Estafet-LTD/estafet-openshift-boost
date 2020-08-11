@@ -2,6 +2,6 @@
 - name: Update the Console Environment
   hosts: local
   roles:
-    - console-environment-setup
+    - boostcd._console_environment_setup
 
   

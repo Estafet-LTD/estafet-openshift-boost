@@ -1,0 +1,44 @@
+---
+- set_fact: 
+    build_project: "{{ product.name }}-build"
+
+- name: "Updating users for {{ build_project }}"
+  include_role: 
+    name: boostcd._namespace_role_setup
+  vars:
+    project: "{{ build_project }}"
+    role: edit   
+    
+- set_fact: test_project="{{ product.name }}-test"
+- name: "Updating users for {{ test_project }}"
+  include_role: 
+    name: boostcd._namespace_role_setup
+  vars:
+    project: "{{ test_project }}"
+    role: edit   
+     
+- set_fact: cicd_project="{{ product.name }}-cicd"
+- name: "Updating users for {{ cicd_project }}"
+  include_role: 
+    name: boostcd._namespace_role_setup
+  vars:
+    project: "{{ cicd_project }}"
+    role: edit  
+    
+- set_fact: monitoring_project="{{ product.name }}-monitoring"
+- name: "Updating users for {{ monitoring_project }}"
+  include_role: 
+    name: boostcd._namespace_role_setup
+  vars:
+    project: "{{ monitoring_project }}"
+    role: view  
+
+- set_fact: nexus_project="nexus"
+- name: "Updating users for {{ nexus_project }}"
+  include_role: 
+    name: boostcd._namespace_role_setup
+  vars:
+    project: "{{ nexus_project }}"
+    role: view  
+
+

@@ -1,0 +1,8 @@
+---
+- include_role: 
+    name: boostcd._update_environments
+
+- include_role: 
+    name: boostcd._console_environment_setup
+    
+  

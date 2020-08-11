@@ -1,8 +1,0 @@
----
-- include_role: 
-    name: update-environments
-
-- include_role: 
-    name: console-environment-setup
-    
-  

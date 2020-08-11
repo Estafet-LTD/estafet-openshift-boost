@@ -1,0 +1,34 @@
+---
+- name: Verify if the environments have been defined
+  fail:
+    msg: "[env_project ] is not defined."
+  when: env_project is undefined
+
+- name: Switch to the project {{ env_project }}
+  shell: 'oc project {{ env_project }}'
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+
+- include_role: 
+    name: "{{ item.name }}"
+  vars:
+    project: "{{ env_project }}"
+    params: "{{ item }}"
+  with_items: "{{ env.setup | default([]) }}"
+
+- name: Create the microservices
+  include_role:
+    name: boostcd._create_app
+  vars:
+    microservice: "{{ item }}" 
+    maven_mirror_url: "{{ env.maven_mirror_url }}"
+    docker_registry: "{{ env.docker_registry }}"
+    project: "{{ env_project }}"
+    test: "{{ env.test }}"
+    stage: local
+  with_items: "{{ microservices }}"
+  tags:
+    - openshift

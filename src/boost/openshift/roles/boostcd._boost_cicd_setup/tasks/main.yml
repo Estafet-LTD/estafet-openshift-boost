@@ -1,6 +1,6 @@
 ---
 - include_role: 
-    name: namespace-setup
+    name: boostcd._namespace_setup
   vars:
     project: "{{ boost_project }}"
     project_description: "Boost CI/CD"

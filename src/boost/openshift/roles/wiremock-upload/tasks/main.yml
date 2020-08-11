@@ -1,8 +1,0 @@
----
-- name: Loading all json stubs from {{ params.json_dir }}
-  include_role: 
-    name: wiremock-json
-  vars:
-    json: "{{ item }}"      
-  with_fileglob:
-    - "{{ workdir }}/{{ params.repo }}/{{ params.json_dir }}/*.json"

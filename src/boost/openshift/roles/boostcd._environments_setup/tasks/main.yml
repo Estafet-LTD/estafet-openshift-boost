@@ -1,0 +1,34 @@
+---
+- debug:
+    var: env
+    verbosity: 0
+
+- set_fact: stage_project="{{ product.name }}-{{ env.name }}"
+
+- include_role: 
+    name: boostcd._namespace_setup
+  vars:
+    project: "{{ stage_project }}"
+    project_description: "{{ env.display }}: {{ product.description }}"
+    next: "{{ product.name }}-{{ env.next }}"
+    display: "{{ env.display }}"
+
+- include_role: 
+    name: boostcd._namespace_role_setup
+  vars:
+    project: "{{ stage_project }}"
+    role: env.role
+  when: env.role is defined
+
+- include_role: 
+    name: "{{ item.name }}"
+  vars:
+    project: "{{ stage_project }}"
+    params: "{{ item }}"
+  with_items: "{{ env.setup | default([]) }}"
+
+- include_role: 
+    name: boostcd._add_jenkins_role
+  vars:
+    project: "{{ stage_project }}"
+    role: edit

@@ -1,0 +1,63 @@
+---
+- include_role: 
+    name: boostcd._namespace_setup
+  vars:
+    project: boost-services
+    project_description: "Boost Services"
+
+- include_role: 
+    name: boostcd.amq_setup
+  vars:
+    project: boost-services
+    params: "{{ amq_params }}"
+
+- include_role: 
+    name: boostcd.postgresql_setup
+  vars:
+    project: boost-services
+
+- include_role: 
+    name: boostcd.jaeger_setup
+  vars:
+    project: boost-services
+
+- name: Deploy the boost microservices
+  include_role:
+    name: boostcd._deploy_boost_service
+  vars:
+    microservice: "{{ item }}"     
+    docker_registry: "{{ console_environment.docker_registry }}"
+    maven_mirror_url: "{{ console_environment.maven_mirror_url }}"     
+    project: boost-services
+  when: item.name != 'boost-ui' and item.name != 'proxy-api'
+  with_items: "{{ boost_microservices }}"
+  tags:
+    - openshift
+
+- name: initialise the product
+  include_role:
+    name: boostcd._init_product
+  vars:
+    project: boost-services
+  tags:
+    - openshift    
+
+- include_role: 
+    name: boostcd._namespace_setup
+  vars:
+    project: "{{ console_project }}"
+    project_description: "Console: {{ product.description }}"
+
+- name: Deploy the console and the proxy
+  include_role:
+    name: boostcd._deploy_boost_service
+  vars:
+    microservice: "{{ item }}"     
+    docker_registry: "{{ console_environment.docker_registry }}"
+    maven_mirror_url: "{{ console_environment.maven_mirror_url }}"     
+    project: "{{ console_project }}"
+  when: (item.name == 'boost-ui') or (item.name == 'proxy-api')
+  with_items: "{{ boost_microservices }}"
+  tags:
+    - openshift
+

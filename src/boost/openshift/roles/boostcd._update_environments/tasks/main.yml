@@ -1,0 +1,26 @@
+---
+- include_role: 
+    name: "{{ item.name }}"
+  vars:
+    project: "{{ item.project }}"
+    params: "{{ item }}"
+  with_items: "{{ environments.setup | default([]) }}"
+
+- include_role: 
+    name: boostcd._cicd_environment_setup
+
+- include_role: 
+    name: boostcd._monitoring_environment_setup
+
+- include_role: 
+    name: boostcd._database_environment_setup
+
+- include_role: 
+    name: boostcd._environments_setup
+  vars:
+    env: "{{ item }}"     
+  with_items: "{{ environments.stages }}"
+
+- include_role: 
+    name: boostcd._prod_route_setup
+ 
