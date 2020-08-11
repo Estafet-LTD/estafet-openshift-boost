@@ -9,7 +9,7 @@
     - jenkins   
 
 - include_role: 
-    name : admin-annotator
+    name : boostcd.admin_annotator
 
 - name: Allows jenkins to modify the labels for the {{ project }} namespace
   shell: "oc adm policy add-role-to-user admin-annotator system:serviceaccount:{{ product.name }}-cicd:jenkins -n {{ project }}"

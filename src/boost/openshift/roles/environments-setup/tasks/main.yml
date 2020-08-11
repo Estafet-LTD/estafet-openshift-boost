@@ -28,7 +28,7 @@
   with_items: "{{ env.setup | default([]) }}"
 
 - include_role: 
-    name: add-jenkins-role
+    name: boostcd.add_jenkins_role
   vars:
     project: "{{ stage_project }}"
     role: edit
