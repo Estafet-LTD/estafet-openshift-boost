@@ -17,6 +17,21 @@
     boost: "{{boost|combine(boostcd,recursive=True)}}"
   when: boost.repo is undefined
 
+- name: merge the default maven repo into the environments
+  set_fact:
+    environments: "{{environments|combine(console_environment,recursive=True)}}"
+  when: environments.maven_mirror_url is undefined
+
+- name: merge the default maven repo into the developer environment
+  set_fact:
+    developer_environment: "{{developer_environment|combine(console_environment,recursive=True)}}"
+  when: developer_environment.maven_mirror_url is undefined
+
+- name: merge the default maven repo into the qa environment
+  set_fact:
+    qa_environment: "{{qa_environment|combine(console_environment,recursive=True)}}"
+  when: qa_environment.maven_mirror_url is undefined
+
 - set_fact: openshift_host_port="{{ openshift.host }}:{{ openshift.port }}"
   when: openshift.port is defined
 
