@@ -6,6 +6,9 @@
   with_items: "{{ environments.teardown | default([]) }}"
 
 - include_role: 
+  name : boostcd._webhook_teardown
+
+- include_role: 
     name : boostcd._delete_namespace
   vars:
     project: "{{ product.name }}-cicd"
