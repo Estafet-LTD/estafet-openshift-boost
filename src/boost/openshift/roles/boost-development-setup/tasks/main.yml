@@ -1,6 +1,0 @@
----
-- include_role: 
-    name: boost-cicd-setup
-
-- include_role: 
-    name: boost-test-setup

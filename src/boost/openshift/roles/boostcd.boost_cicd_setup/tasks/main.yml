@@ -13,7 +13,7 @@
     memory_limit: 2Gi
 
 - include_role: 
-    name: boost-libraries-setup
+    name: boostcd.boost_libraries_setup
   vars:
     project: "{{ boost_project }}"
     
@@ -48,12 +48,12 @@
     project: "{{ boost_project }}"
 
 - include_role: 
-    name: jenkins-ansible-slave-setup   
+    name: boostcd.jenkins_ansible_slave_setup
   vars:
     project: "{{ boost_project }}"     
 
 - include_role: 
-    name: jenkins-image-mgmt-slave-setup   
+    name: boostcd.jenkins_image_mgmt_slave_setup   
   vars:
     project: "{{ boost_project }}"     
 

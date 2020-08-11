@@ -97,7 +97,7 @@
     project: "{{ cicd_project }}"
     
 - include_role: 
-    name: jenkins-ansible-slave-setup
+    name: boostcd.jenkins_ansible_slave_setup
   vars:
     project: "{{ cicd_project }}"    
 
