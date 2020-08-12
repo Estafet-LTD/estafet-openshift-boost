@@ -4,7 +4,7 @@
     restart_jenkins: false
 
 - set_fact:
-    jenkins_env_plugins: "-e INSTALL_PLUGINS=\"{{ jenkins_plugins }}\""
+    jenkins_env_plugins: "-e INSTALL_PLUGINS='{{ jenkins_plugins }}'"
   when: jenkins_plugins is defined
 
 - name: Install the Jenkins master server
