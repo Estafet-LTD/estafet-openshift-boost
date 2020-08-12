@@ -11,7 +11,7 @@
     project: "{{ boost_project }}"
     volume_capacity: 10Gi
     memory_limit: 2Gi
-    #jenkins_plugins: "pipeline-maven:3.5.9,http_request"
+    jenkins_plugins: "pipeline-maven,http_request"
 
 - include_role: 
     name: boostcd._boost_libraries_setup
