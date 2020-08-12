@@ -51,12 +51,12 @@
 
     - name: Check that the product roles exist
       stat:
-        path: "{{ playbook_dir }}/roles"
+        path: "{{ playbook_dir }}/extensions"
       register: product_roles
 
     - name: Updating product roles
       copy:
-        src: "{{ playbook_dir }}/roles"
+        src: "{{ playbook_dir }}/extensions"
         dest: "~/.ansible"
         force: yes   
       when: product_roles.stat.exists and product_roles.stat.isdir
