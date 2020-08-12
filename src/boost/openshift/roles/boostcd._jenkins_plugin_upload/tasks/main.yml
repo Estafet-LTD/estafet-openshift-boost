@@ -19,7 +19,7 @@
     verbosity: 0
 
 - name: Copy script approval to the jenkins Pod
-  shell: 'oc rsync --no-perms=true --exclude="*" {{ plugins_path }}/ {{jenkins_pod}}:/var/lib/jenkins/plugins -n {{ project }}'
+  shell: 'oc rsync --no-perms=true --include="*" {{ plugins_path }}/ {{jenkins_pod}}:/var/lib/jenkins/plugins/ -n {{ project }}'
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
