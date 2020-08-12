@@ -1,8 +1,4 @@
 ---
-- debug:
-    var: jenkins_xml
-    verbosity: 0
-
 - include_role: 
     name: boostcd._jenkins_xml_upload
   vars:

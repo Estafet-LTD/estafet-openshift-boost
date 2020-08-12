@@ -1,0 +1,7 @@
+---
+- include: kubernetes.yml    
+- include: git.yml    
+- include: cluser_admin.yml
+- include: dockerhub.yml
+- include: ansible_vault.yml
+- include: upload.yml

@@ -48,6 +48,11 @@
     project: "{{ boost_project }}"
 
 - include_role: 
+    name: boostcd._jenkins_config_xml
+  vars:
+    project: "{{ cicd_project }}"
+
+- include_role: 
     name: boostcd._jenkins_ansible_slave_setup
   vars:
     project: "{{ boost_project }}"     
