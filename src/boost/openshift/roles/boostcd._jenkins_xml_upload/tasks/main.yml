@@ -3,6 +3,18 @@
     var: jenkins_xml
     verbosity: 0
 
+- set_fact:
+    jenkins_path: /var/lib/jenkins/{{ jenkins_path }}
+  when: jenkins_path is defined
+
+- set_fact:
+    jenkins_path: /var/lib/jenkins
+  when: jenkins_path is undefined
+
+- debug:
+    var: jenkins_path
+    verbosity: 0
+
 - name: switch to the project {{ project }}
   shell: "oc project {{ project }}"
 
@@ -18,7 +30,7 @@
     verbosity: 0
 
 - name: Copy script approval to the jenkins Pod
-  shell: 'oc rsync --no-perms=true --include="{{ jenkins_xml | filename }}" --exclude="*" {{ jenkins_xml | directory }}/ {{jenkins_pod}}:/var/lib/jenkins -n {{ project }}'
+  shell: 'oc rsync --no-perms=true --include="{{ jenkins_xml | filename }}" --exclude="*" {{ jenkins_xml | directory }}/ {{jenkins_pod}}:{{ jenkins_path }} -n {{ project }}'
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
