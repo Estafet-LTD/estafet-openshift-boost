@@ -6,7 +6,7 @@
 
 - name: encode vault to base64
   set_fact: 
-    vault_contents_encoded: {{ vault_contents | b64decode }}
+    vault_contents_encoded: "{{ vault_contents | b64decode }}"
 
 - name: Set ansible vault password
   xml:
