@@ -1,8 +1,4 @@
 ---
-- debug:
-    var: dhub
-    verbosity: 0
-
 - name: Set the dockerhub username
   xml:
     path: "{{ role_path }}/files/credentials.xml"

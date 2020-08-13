@@ -1,8 +1,11 @@
 ---
-
 - name: read ansible vault file
   set_fact:
     vault_contents: "{{lookup('file', '~/ansible_vault') }}"
+
+- debug:
+    var: vault_contents
+    verbosity: 0
 
 - name: encode vault to base64
   set_fact: 
