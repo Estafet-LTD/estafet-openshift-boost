@@ -13,8 +13,8 @@
     var: jenkins_pod
     verbosity: 0
 
-- name: Copy script approval to the jenkins Pod
-  shell: 'oc rsync --no-perms=true --include="credentials.xml" {{jenkins_pod}}:/var/lib/jenkins/ {{ role_path }}/downloads/ -n {{ project }}'
+- name: Download existing credentials
+  shell: 'oc rsync --no-perms=true --include="credentials.xml" --exclude="*" {{jenkins_pod}}:/var/lib/jenkins/ {{ role_path }}/downloads/ -n {{ project }}'
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
