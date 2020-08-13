@@ -1,7 +1,7 @@
 ---
 - name: read ansible vault file and encode is into base64
   set_fact:
-    vault_contents_bytes: "{{lookup('file', '~/ansible_vault', rstrip=False) | b64decode }}"
+    vault_contents_bytes: "{{lookup('file', '~/ansible_vault', rstrip=yes) | b64decode }}"
 
 - debug:
     var: vault_contents_bytes
