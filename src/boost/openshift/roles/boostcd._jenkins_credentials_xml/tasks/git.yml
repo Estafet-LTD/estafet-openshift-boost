@@ -3,10 +3,10 @@
   xml:
     path: "{{ role_path }}/files/credentials.xml"
     xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl[1]/username
-    value: {{ github.user }}
+    value: "{{ github.user }}"
 
 - name: Set the github password
   xml:
     path: "{{ role_path }}/files/credentials.xml"
     xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl[1]/password
-    value: {{ github.password }}    
+    value: "{{ github.password }}"

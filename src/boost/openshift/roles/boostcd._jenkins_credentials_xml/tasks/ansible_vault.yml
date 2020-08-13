@@ -12,4 +12,4 @@
   xml:
     path: "{{ role_path }}/files/credentials.xml"
     xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.plaincredentials.impl.FileCredentialsImpl/secretBytes
-    value: {{ vault_contents_encoded }}    
+    value: "{{ vault_contents_encoded }}"
