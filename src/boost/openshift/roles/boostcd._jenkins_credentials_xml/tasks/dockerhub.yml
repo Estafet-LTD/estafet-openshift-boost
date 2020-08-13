@@ -1,6 +1,6 @@
 ---
 - debug:
-    var: dockerhub
+    var: dhub
     verbosity: 0
 
 - name: Set the dockerhub username
