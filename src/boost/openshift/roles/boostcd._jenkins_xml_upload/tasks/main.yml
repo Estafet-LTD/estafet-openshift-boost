@@ -41,6 +41,9 @@
 - set_fact:
     jpath: ""
 
+- set_fact:
+    jenkins_path: ""
+
 - name: indicate restart for jenkins
   set_fact:
     restart_jenkins: true
