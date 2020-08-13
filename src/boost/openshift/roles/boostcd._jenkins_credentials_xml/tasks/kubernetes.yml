@@ -10,10 +10,6 @@
     var: kube_id
     verbosity: 0
 
-- debug:
-    var: kube_id.matches[0].id
-    verbosity: 0
-
 - name: Set the kube to the credentials template
   xml:
     path: "{{ role_path }}/files/credentials.xml"
