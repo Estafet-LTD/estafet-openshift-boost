@@ -38,6 +38,9 @@
     - openshift
     - jenkins  
 
+- set_fact:
+    jpath: ""
+
 - name: indicate restart for jenkins
   set_fact:
     restart_jenkins: true
