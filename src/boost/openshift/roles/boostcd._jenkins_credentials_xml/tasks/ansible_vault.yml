@@ -1,0 +1,15 @@
+---
+
+- name: read ansible vault file
+  set_fact:
+    vault_contents: "{{lookup('file', '~/ansible_vault') }}"
+
+- name: encode vault to base64
+  set_fact: 
+    vault_contents_encoded: {{ vault_contents | b64decode }}
+
+- name: Set ansible vault password
+  xml:
+    path: "{{ role_path }}/files/credentials.xml"
+    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.plaincredentials.impl.FileCredentialsImpl/secretBytes
+    value: {{ vault_contents_encoded }}    

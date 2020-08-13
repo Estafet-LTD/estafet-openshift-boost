@@ -53,6 +53,11 @@
     project: "{{ boost_project }}"
 
 - include_role: 
+    name: boostcd._jenkins_credentials_xml
+  vars:
+    project: "{{ boost_project }}"
+
+- include_role: 
     name: boostcd._jenkins_maven_pipeline_plugin
   vars:
     project: "{{ boost_project }}"
