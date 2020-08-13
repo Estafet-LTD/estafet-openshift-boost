@@ -2,11 +2,11 @@
 - name: Set the cluster admin username
   xml:
     path: "{{ role_path }}/files/credentials.xml"
-    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl[2]/username
+    xpath: "/com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl[2]/username"
     value: {{ openshift.username }}
 
 - name: Set the cluster admin password
   xml:
     path: "{{ role_path }}/files/credentials.xml"
-    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl[2]/password
+    xpath: "/com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl[2]/password"
     value: {{ openshift.password }}    

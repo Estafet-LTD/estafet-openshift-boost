@@ -2,13 +2,13 @@
 - name: Set the github username
   xml:
     path: "{{ role_path }}/files/credentials.xml"
-    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl[3]/username
+    xpath: "/com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl[3]/username"
     value: {{ dockerhub.username }}
   when: dockerhub is defined
 
 - name: Set the github password
   xml:
     path: "{{ role_path }}/files/credentials.xml"
-    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl[3]/password
+    xpath: "/com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl[3]/password"
     value: {{ dockerhub.password }}    
   when: dockerhub is defined    
