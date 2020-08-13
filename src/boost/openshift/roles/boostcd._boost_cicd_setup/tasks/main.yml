@@ -56,6 +56,7 @@
     name: boostcd._jenkins_credentials_xml
   vars:
     project: "{{ boost_project }}"
+    boostcd_dev: true
 
 - include_role: 
     name: boostcd._jenkins_maven_pipeline_plugin

@@ -7,12 +7,12 @@
   xml:
     path: "{{ role_path }}/files/credentials.xml"
     xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl[3]/username
-    value: "{{ dockerhub.username }}"
-  when: dockerhub is defined
+    value: "{{ dhub.username }}"
+  when: boostcd_dev is defined and boostcd_dev
 
 - name: Set the dockerhub password
   xml:
     path: "{{ role_path }}/files/credentials.xml"
     xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl[3]/password
-    value: "{{ dockerhub.password }}"
-  when: dockerhub is defined    
+    value: "{{ dhub.password }}"
+  when: boostcd_dev is defined and boostcd_dev
