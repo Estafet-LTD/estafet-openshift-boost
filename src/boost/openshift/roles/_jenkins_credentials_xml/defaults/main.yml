@@ -1,5 +1,4 @@
 ---
-credentials_xml: "{{ role_path }}/files/credentials.xml"
 dhub: 
   username: !vault |
               $ANSIBLE_VAULT;1.1;AES256

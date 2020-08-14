@@ -3,4 +3,4 @@ dependencies:
   - role: _jenkins_prepare_plugin
     vars:
         plug_in: pipeline-maven
-        path: "{{ role_path | literal }}"
+        path: "{{ roles }}/_jenkins_maven_pipeline_plugin"
