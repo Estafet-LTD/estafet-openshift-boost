@@ -2,4 +2,4 @@
 - include_role: 
     name: _jenkins_xml_upload
   vars:
-    jenkins_xml: {{ credentials_xml | literal }}
+    jenkins_xml: "{{ credentials_xml | literal }}"
