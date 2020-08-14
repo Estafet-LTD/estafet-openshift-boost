@@ -42,22 +42,29 @@
         recursive: yes
         delete: yes
 
-    - name: Updating boost roles
+    - name: Updating boost system roles
       synchronize:
         src: "{{ workdir }}/boostcd/src/boost/openshift/roles"
         dest: "~/.ansible"    
         recursive: yes
         delete: no
 
-    - name: Check that the product roles exist
+    - name: Updating boost extensions
+      synchronize:
+        src: "{{ workdir }}/boostcd/src/boost/openshift/extensions/"
+        dest: "~/.ansible/roles/"    
+        recursive: yes
+        delete: no        
+
+    - name: Check that the product extensions exist
       stat:
-        path: "{{ playbook_dir }}/../roles"
+        path: "{{ playbook_dir }}/../extensions"
       register: product_roles
 
-    - name: Updating product roles
+    - name: Updating product extensions
       synchronize:
-        src: "{{ playbook_dir }}/../roles"
-        dest: "~/.ansible"
+        src: "{{ playbook_dir }}/../extensions/"
+        dest: "~/.ansible/roles"
         recursive: yes
         delete: no
       when: product_roles.stat.exists and product_roles.stat.isdir
