@@ -1,0 +1,4 @@
+---
+dependencies:
+  - role: _init
+  - role: boostcd.nexus_setup

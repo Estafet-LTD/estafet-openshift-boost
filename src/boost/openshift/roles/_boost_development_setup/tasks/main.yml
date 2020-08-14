@@ -1,0 +1,6 @@
+---
+- include_role: 
+    name: _boost_cicd_setup
+
+- include_role: 
+    name: _boost_test_setup

@@ -1,0 +1,37 @@
+---
+- include_role: 
+    name: "{{ item.name }}"
+  vars:
+    params: "{{ item }}"
+  with_items: "{{ environments.teardown | default([]) }}"
+
+- include_role: 
+  name : _webhook_teardown
+
+- include_role: 
+    name : _delete_namespace
+  vars:
+    project: "{{ product.name }}-cicd"
+
+- include_role: 
+    name: _delete_namespace
+  vars:
+    project: "{{ product.name }}-{{ item.name }}"     
+  with_items: "{{ environments.stages }}"
+
+- include_role: 
+    name : _delete_namespace
+  vars:
+    project: "{{ product.name }}-console"
+
+- include_role: 
+    name : _delete_namespace
+  vars:
+    project: "{{ product.name }}-monitoring"
+  when: environments.monitoring is defined
+
+- include_role: 
+    name : _delete_namespace
+  vars:
+    project: "{{ product.name }}-database"
+  when: environments.databases is defined

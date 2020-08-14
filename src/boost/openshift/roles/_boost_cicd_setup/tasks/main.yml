@@ -1,0 +1,84 @@
+---
+- include_role: 
+    name: _namespace_setup
+  vars:
+    project: "{{ boost_project }}"
+    project_description: "Boost CI/CD"
+
+- include_role: 
+    name: _jenkins_setup
+  vars:
+    project: "{{ boost_project }}"
+    volume_capacity: 10Gi
+    memory_limit: 2Gi
+
+- include_role: 
+    name: _boost_libraries_setup
+  vars:
+    project: "{{ boost_project }}"
+    
+- name: Create build and release pipelines for each of the microservices
+  shell: "oc process -f {{ templates }}/console-microservice-pipelines.yml -p MICROSERVICE_REPO_URI={{ item.repo }} -p BOOST_URL={{ boostcd.repo }} -p OPENSHIFT_HOST_PORT={{ openshift_host_port }} -p DOCKERHUB={{ dockerhub.org }} -p MICROSERVICE_NAME={{ item.name }} -p PRODUCT_REPO={{ product.repo }} -p BUILD_PIPELINE={{ item.build }} -p RELEASE_PIPELINE={{ item.release }} | oc create -f -"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  with_items: "{{ boost_microservices }}"
+  tags:
+    - openshift      
+
+- name: Create release pipeline for the boost framework
+  shell: "oc process -f {{ templates }}/boost-release-pipeline.yml -p BOOST_URL={{ boostcd.repo }} | oc create -f -"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  tags:
+    - openshift 
+
+- name: Create publish image pipeline
+  shell: "oc process -f {{ templates }}/publish-image-pipeline.yml -p BOOST_URL={{ boostcd.repo }} -p OPENSHIFT_HOST_PORT={{ openshift_host_port }} -p DOCKERHUB={{ dockerhub.org }} | oc create -f -"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  tags:
+    - openshift    
+
+- include_role: 
+    name: _jenkins_script_approval
+  vars:
+    project: "{{ boost_project }}"
+
+- include_role: 
+    name: _jenkins_config_xml
+  vars:
+    project: "{{ boost_project }}"
+
+- include_role: 
+    name: _jenkins_credentials_xml
+  vars:
+    project: "{{ boost_project }}"
+    boostcd_dev: true
+
+- include_role: 
+    name: _jenkins_maven_pipeline_plugin
+  vars:
+    project: "{{ boost_project }}"
+
+- include_role: 
+    name: _jenkins_http_request_plugin
+  vars:
+    project: "{{ boost_project }}"
+
+- include_role: 
+    name: _jenkins_ansible_slave_setup
+  vars:
+    project: "{{ boost_project }}"     
+
+- include_role: 
+    name: _jenkins_image_mgmt_slave_setup
+  vars:
+    project: "{{ boost_project }}"     
+
+- include_role: 
+    name: _jenkins_restart
+  vars:
+    project: "{{ boost_project }}"

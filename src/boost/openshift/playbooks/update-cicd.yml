@@ -2,6 +2,6 @@
 - name: Update the CICD Environment
   hosts: local
   roles:
-    - boostcd._cicd_environment_setup
+    - _cicd_environment_setup
          
   

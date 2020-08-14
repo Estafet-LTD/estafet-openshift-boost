@@ -1,6 +1,0 @@
----
-- include_role: 
-    name: boostcd._jenkins_xml_upload
-  vars:
-    jenkins_xml: "{{ roles }}/boostcd._jenkins_config_xml/files/config.xml"
-    jenkins_path: "jobs/{{ project }}"

@@ -24,7 +24,7 @@
       when: stage is undefined
 
     - include_role:
-        name: boostcd._deploy
+        name: _deploy
       vars: 
         project: "{{ env_project }}"
 

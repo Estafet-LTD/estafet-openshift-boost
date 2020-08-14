@@ -28,7 +28,7 @@
       when: target_app is undefined
 
     - include_role:
-        name: boostcd._build_console_app
+        name: _build_console_app
       vars: 
         project: "{{ env_project }}"
 

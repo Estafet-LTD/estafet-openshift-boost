@@ -1,6 +1,0 @@
----
-dependencies:
-  - role: boostcd._jenkins_prepare_plugin
-    vars:
-        plug_in: pipeline-maven
-        path: "{{ role_path | literal }}"

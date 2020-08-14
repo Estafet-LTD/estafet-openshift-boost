@@ -1,0 +1,19 @@
+---
+- name: Switch to the project {{ env_project }}
+  shell: 'oc project {{ env_project }}'
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+
+- name: Build and Deploy the microservices
+  include_role:
+    name: _build_app
+  vars:
+    microservice: "{{ item }}" 
+    project: "{{ env_project }}"      
+  with_items: "{{ microservices }}"
+  when: item.name == target_app
+  tags:
+    - openshift

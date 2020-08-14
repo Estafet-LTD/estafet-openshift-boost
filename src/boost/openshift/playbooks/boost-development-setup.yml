@@ -2,5 +2,5 @@
 - name: Boost Development Environment
   hosts: local  
   roles:
-    - boostcd._boost_development_setup
+    - _boost_development_setup
 

@@ -1,5 +1,0 @@
----
-- include_role: 
-    name: boostcd._jenkins_plugin_upload
-  vars:
-    plugins_path: "{{ roles }}/boostcd._jenkins_maven_pipeline_plugin/files"

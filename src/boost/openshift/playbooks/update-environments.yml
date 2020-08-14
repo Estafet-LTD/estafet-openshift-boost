@@ -2,4 +2,4 @@
 - name: Update the Product Environment
   hosts: local
   roles:
-    - boostcd._update_environments
+    - _update_environments

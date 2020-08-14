@@ -1,0 +1,6 @@
+---
+- include_role: 
+    name: _jenkins_xml_upload
+  vars:
+    jenkins_xml: "{{ roles }}/_jenkins_config_xml/files/config.xml"
+    jenkins_path: "jobs/{{ project }}"

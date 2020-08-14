@@ -2,4 +2,4 @@
 - name: Delete SDLC Environments
   hosts: local 
   roles:
-    - boostcd._delete_environments
+    - _delete_environments

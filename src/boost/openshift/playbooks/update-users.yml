@@ -2,5 +2,5 @@
 - name: Update the users for Microservices Scrum Demo
   hosts: local
   roles:
-    - boostcd._update_users
+    - _update_users
 

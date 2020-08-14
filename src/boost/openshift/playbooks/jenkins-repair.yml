@@ -4,7 +4,7 @@
   tasks:   
 
     - include_role:
-        name: boostcd._jenkins_repair
+        name: _jenkins_repair
       vars:
         project: "{{ product.name }}-cicd" 
         

@@ -1,0 +1,26 @@
+---
+- include_role: 
+    name: "{{ item.name }}"
+  vars:
+    project: "{{ item.project }}"
+    params: "{{ item }}"
+  with_items: "{{ environments.setup | default([]) }}"
+
+- include_role: 
+    name: _cicd_environment_setup
+
+- include_role: 
+    name: _monitoring_environment_setup
+
+- include_role: 
+    name: _database_environment_setup
+
+- include_role: 
+    name: _environments_setup
+  vars:
+    env: "{{ item }}"     
+  with_items: "{{ environments.stages }}"
+
+- include_role: 
+    name: _prod_route_setup
+ 

@@ -19,7 +19,7 @@
       when: developer_environment is undefined
             
     - include_role:
-        name: boostcd._environment_setup
+        name: _environment_setup
       vars:
         env: "{{ developer_environment }}" 
         
