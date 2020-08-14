@@ -4,5 +4,6 @@
 - include: git.yml
 - include: cluster_admin.yml
 - include: dockerhub.yml
+  when: boostcd_dev is defined and boostcd_dev
 - include: ansible_vault.yml
 - include: upload.yml
