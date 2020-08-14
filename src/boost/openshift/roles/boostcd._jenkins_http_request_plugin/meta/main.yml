@@ -3,4 +3,4 @@ dependencies:
   - role: boostcd._jenkins_prepare_plugin
     vars:
         plug_in: http_request
-        path: {{ role_path | literal }}
+        path: "{{ role_path | literal }}"
