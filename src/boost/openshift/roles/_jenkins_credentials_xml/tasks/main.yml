@@ -1,9 +1,9 @@
 ---
-- include: download.yml
-- include: kubernetes.yml
-- include: git.yml
-- include: cluster_admin.yml
-- include: dockerhub.yml
-  when: boostcd_dev is defined and boostcd_dev
-- include: ansible_vault.yml
-- include: upload.yml
+- name: Check that the credentials xml download exists
+  stat:
+    path: "{{ roles }}/_jenkins_credentials_xml/downloads/credentials.xml"
+  register: downloaded_credentials_xml
+
+- name: update the credentials (if they have not alreadt been updated)
+  include: update_credentials.xml
+  when: not downloaded_credentials_xml.stat.exists
