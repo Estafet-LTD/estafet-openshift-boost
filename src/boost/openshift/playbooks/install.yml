@@ -26,6 +26,17 @@
         path: "{{ workdir }}"
         state: directory
         
+    - name: Check that the boost directory exists
+      stat:
+        path: "{{ workdir }}/boostcd"
+      register: boost_dir
+
+    - name: Recursively remove boost directory
+      file:
+        path: "{{ workdir }}/boostcd"
+        state: absent
+      when: boost_dir.stat.exists
+
     - name: Checkout the boost console dependencies from github
       git:
         repo: "{{ boost.repo }}"
