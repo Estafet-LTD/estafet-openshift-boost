@@ -8,7 +8,8 @@
     var: jenkins_plugin_path
     verbosity: 0
 
-- include_role: _jenkins_prepare_plugin
+- include_role: 
+    name: _jenkins_prepare_plugin
   vars:
     plugin_path: "{{ jenkins_plugin_path }}"
     plugin: "{{ jenkins_plugin }}"
