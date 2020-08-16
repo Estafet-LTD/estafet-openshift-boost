@@ -13,12 +13,12 @@
 - name: Get count of file system service account nodes
   xml:
     path: "{{ roles }}/_jenkins_credentials_xml/downloads/credentials.xml"
-    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.kubernetes.credentials.FileSystemServiceAccountCredential/id
+    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.kubernetes.credentials.FileSystemServiceAccountCredential
     count: yes
   register: file_sys_sa_credential
 
 - set_fact:
-    xml_node: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.kubernetes.credentials.FileSystemServiceAccountCredential/id
+    xml_node: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.kubernetes.credentials.FileSystemServiceAccountCredential
   when: file_sys_sa_credential.count > 0  
 
 - name: Retrieve the kube from the downloaded credentials
@@ -26,14 +26,33 @@
     path: "{{ roles }}/_jenkins_credentials_xml/downloads/credentials.xml"
     xpath: "{{ xml_node }}"
     content: text
-  register: kube_id
+  register: credentials
 
 - debug:
-    var: kube_id
+    var: credentials
     verbosity: 0
 
-- name: Set the kube to the credentials template
+- name: Set the credentials id to the credentials template
+  xml:
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    xpath: "{{ xml_node }}/id"
+    value: "{{ credentials.matches[0].id }}"
+
+- name: Add the plugin attribute
   xml:
     path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
     xpath: "{{ xml_node }}"
-    value: "{{ kube_id.matches[0].id }}"
+    attribute: plugin
+    value: "{{ credentials.matches[0].plugin }}"
+
+- name: Set the credentials scope to the credentials template
+  xml:
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    xpath: "{{ xml_node }}/scope"
+    value: "{{ credentials.matches[0].scope }}"
+
+- name: Set the credentials description to the credentials template
+  xml:
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    xpath: "{{ xml_node }}/description"
+    value: "{{ credentials.matches[0].description }}"
