@@ -1,6 +1,0 @@
----
-dependencies:
-  - role: _jenkins_prepare_plugin
-    vars:
-        plug_in: pipeline-maven
-        path: "{{ roles }}/_jenkins_maven_pipeline_plugin"

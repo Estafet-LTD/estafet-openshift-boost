@@ -1,6 +1,0 @@
----
-dependencies:
-  - role: _jenkins_prepare_plugin
-    vars:
-        plug_in: http_request
-        path: "{{ roles }}/_jenkins_http_request_plugin"
