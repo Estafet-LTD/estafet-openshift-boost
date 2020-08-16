@@ -1,0 +1,10 @@
+---
+- name: Get count of {{ credential_id }}
+  xml:
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    xpath: '/com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl/id[text()="{{ credential_id }}"]'
+    count: yes
+  register: hits
+
+- include: set_xml.yml
+  when: hits.count > 0  

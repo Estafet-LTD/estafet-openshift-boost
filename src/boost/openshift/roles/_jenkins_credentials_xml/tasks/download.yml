@@ -14,10 +14,32 @@
     verbosity: 0
 
 - name: Download existing credentials
-  shell: 'oc rsync --no-perms=true --include="credentials.xml" --exclude="*" {{jenkins_pod}}:/var/lib/jenkins/ {{ roles }}/_jenkins_credentials_xml/downloads/ -n {{ project }}'
+  shell: 'oc rsync --no-perms=true --include="credentials.xml" --exclude="*" {{jenkins_pod}}:/var/lib/jenkins/ {{ roles }}/_jenkins_credentials_xml/files/ -n {{ project }}'
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
   tags:
     - openshift
     - jenkins  
+
+- name: Get count of service account nodes
+  xml:
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.csanchez.jenkins.plugins.kubernetes.ServiceAccountCredential
+    count: yes
+  register: sa_credential
+
+- set_fact:
+  security_node: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.csanchez.jenkins.plugins.kubernetes.ServiceAccountCredential
+  when: sa_credential.count > 0
+
+- name: Get count of file system service account nodes
+  xml:
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.kubernetes.credentials.FileSystemServiceAccountCredential
+    count: yes
+  register: file_sys_sa_credential
+
+- set_fact:
+  security_node: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.kubernetes.credentials.FileSystemServiceAccountCredential
+  when: file_sys_sa_credential.count > 0  

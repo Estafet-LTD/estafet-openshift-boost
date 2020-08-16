@@ -1,0 +1,38 @@
+---
+- name: Add {{ credential_id }} node
+  xml:
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    xpath: "{{ security_node }}"
+    insertafter: yes
+    add_children:
+    - com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl
+
+- name: Set the scope
+  xml:
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl[1]/scope
+    value: GLOBAL
+
+- name: Set the description
+  xml:
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl[1]/id
+    value: "{{ credential_description }}"
+
+- name: Set the credential id
+  xml:
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl[1]/id
+    value: "{{ credential_id }}"
+
+- name: Set the credential username
+  xml:
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl[1]/username
+    value: "{{ credential_user }}"    
+
+- name: Set the credential password
+  xml:
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl[1]/password
+    value: "{{ credential_password }}" 

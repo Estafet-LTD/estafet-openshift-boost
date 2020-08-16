@@ -1,9 +1,47 @@
 ---
 - include: download.yml
-- include: kubernetes.yml
-- include: git.yml
-- include: cluster_admin.yml
-- include: dockerhub.yml
+
+- include_role: 
+    name: _jenkins_add_xml_credential
+  vars:
+    credential_id: git
+    credential_user: "{{ github.user }}"
+    credential_password: "{{ github.password }}"
+    credential_description: "Git Credentials"
+
+- include_role: 
+    name: _jenkins_add_xml_credential
+  vars:
+    credential_id: cluster_admin
+    credential_user: "{{ openshift.username }}"
+    credential_password: "{{ openshift.password }}"
+    credential_description: "Cluster Admin"
+
+- include_role: 
+    name: _jenkins_add_xml_credential
+  vars:
+    credential_id: cluster_admin
+    credential_user: "{{ openshift.username }}"
+    credential_password: "{{ openshift.password }}"
+    credential_description: "Cluster Admin Credentials"
+
+- include_role: 
+    name: _jenkins_add_xml_credential
+  vars:
+    credential_id: dockerhub
+    credential_user: "{{ dhub.username }}"
+    credential_password: "{{ dhub.password }}"
+    credential_description: "Dockerhub Credentials"
   when: boostcd_dev is defined and boostcd_dev
+
+- name: Get count of ansible vault
+  xml:
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    xpath: '/com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.plaincredentials.impl.FileCredentialsImpl/id[text()="ansible_vault"]'
+    count: yes
+  register: hits
+
 - include: ansible_vault.yml
+  when: hits.count > 0    
+
 - include: upload.yml

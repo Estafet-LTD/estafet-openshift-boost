@@ -12,3 +12,27 @@
     path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
     xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.plaincredentials.impl.FileCredentialsImpl/secretBytes
     value: "{{ bytes }}"
+
+- name: Set ansible vault scope
+  xml:
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.plaincredentials.impl.FileCredentialsImpl/scope
+    value: GLOBAL
+
+- name: Set ansible vault id
+  xml:
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.plaincredentials.impl.FileCredentialsImpl/id
+    value: ansible_vault
+
+- name: Set ansible vault file name
+  xml:
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.plaincredentials.impl.FileCredentialsImpl/fileName
+    value: ansible_vault    
+
+- name: Set ansible vault description
+  xml:
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.plaincredentials.impl.FileCredentialsImpl/description
+    value: "Ansible Vault"
