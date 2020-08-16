@@ -2,4 +2,5 @@
 - include_role: 
     name: _jenkins_plugin_upload
   vars:
-    plugins_path: "{{ roles }}/_jenkins_http_request_plugin/files"
+    jenkins_plugin_path: "{{ roles }}/_jenkins_http_request_plugin/files"
+    jenkins_plugin: http_request

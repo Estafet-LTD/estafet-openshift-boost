@@ -1,15 +1,18 @@
 ---
-- name: Check that the {{ plug_in }}.tgz exists
+- set_fact:
+    jenkins_plugin_archive: "{{ jenkins_plugin_path }}/{{ jenkins_plugin }}.tar.gz"
+
+- name: Check that the {{ jenkins_plugin_archive }} exists
   stat:
-    path: "{{ path }}/{{ plug_in }}.tar.gz"
+    path: "{{ jenkins_plugin_archive }}"
   register: stat_result
 
-- name: "Extract {{ plug_in }}.tgz into {{ plugins_path }}/files"
+- name: "Extract {{ plug_in }}.tar.gz into {{ jenkins_plugin_path }}"
   unarchive:
-    src: "{{ plugins_path }}/{{ plug_in }}.tar.gz"
-    dest: "{{ plugins_path }}"
+    src: "{{ jenkins_plugin_archive }}"
+    dest: "{{ jenkins_plugin_path }}"
   when: stat_result.stat.exists
 
 - name: remove the plugin archive
-  shell: "rm {{ plugins_path }}/{{ plug_in }}.tar.gz | true"
+  shell: "rm {{ jenkins_plugin_archive }} | true"
 
