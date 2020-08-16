@@ -1,7 +1,12 @@
 ---
 
+- include_role: _jenkins_prepare_plugin
+  vars:
+    jenkins_plugin_path: "{{ jenkins_plugin_path }}"
+    jenkins_plugin: "{{ jenkins_plugin }}"
+  
 - debug:
-    var: plugins_path
+    var: jenkins_plugin
     verbosity: 0
 
 - name: switch to the project {{ project }}

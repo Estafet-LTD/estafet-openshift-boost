@@ -1,4 +1,12 @@
 ---
+- debug:
+    var: jenkins_plugin
+    verbosity: 0
+
+- debug:
+    var: jenkins_plugin_path
+    verbosity: 0
+
 - set_fact:
     jenkins_plugin_archive: "{{ jenkins_plugin_path }}/{{ jenkins_plugin }}.tar.gz"
 
