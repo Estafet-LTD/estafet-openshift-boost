@@ -51,19 +51,19 @@
 
     - name: Updating boost extensions
       synchronize:
-        src: "{{ workdir }}/boostcd/src/boost/openshift/extensions/"
+        src: "{{ workdir }}/boostcd/src/boost/openshift/actions/"
         dest: "~/.ansible/roles/"    
         recursive: yes
         delete: no        
 
     - name: Check that the product extensions exist
       stat:
-        path: "{{ playbook_dir }}/../extensions"
+        path: "{{ playbook_dir }}/../actions"
       register: product_roles
 
     - name: Updating product extensions
       synchronize:
-        src: "{{ playbook_dir }}/../extensions/"
+        src: "{{ playbook_dir }}/../actions/"
         dest: "~/.ansible/roles"
         recursive: yes
         delete: no
