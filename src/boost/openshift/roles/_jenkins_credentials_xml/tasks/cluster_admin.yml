@@ -1,7 +1,7 @@
 ---
 - name: Set the cluster admin username
   xml:
-    path: "{{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
     xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl[2]/username
     value: "{{ openshift.username }}"
 
