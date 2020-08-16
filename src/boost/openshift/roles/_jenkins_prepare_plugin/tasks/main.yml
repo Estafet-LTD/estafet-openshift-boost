@@ -1,24 +1,24 @@
 ---
 - debug:
-    var: jenkins_plugin
+    var: plugin
     verbosity: 0
 
 - debug:
-    var: jenkins_plugin_path
+    var: plugin_path
     verbosity: 0
 
 - set_fact:
-    jenkins_plugin_archive: "{{ jenkins_plugin_path }}/{{ jenkins_plugin }}.tar.gz"
+    jenkins_plugin_archive: "{{ plugin_path }}/{{ plugin }}.tar.gz"
 
 - name: Check that the {{ jenkins_plugin_archive }} exists
   stat:
     path: "{{ jenkins_plugin_archive }}"
   register: stat_result
 
-- name: "Extract {{ plug_in }}.tar.gz into {{ jenkins_plugin_path }}"
+- name: "Extract {{ plug_in }}.tar.gz into {{ plugin_path }}"
   unarchive:
     src: "{{ jenkins_plugin_archive }}"
-    dest: "{{ jenkins_plugin_path }}"
+    dest: "{{ plugin_path }}"
   when: stat_result.stat.exists
 
 - name: remove the plugin archive
