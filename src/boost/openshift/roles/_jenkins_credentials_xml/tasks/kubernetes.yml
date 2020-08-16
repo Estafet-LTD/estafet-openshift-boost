@@ -56,7 +56,16 @@
     path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
     xpath: "{{ xml_node }}"
     attribute: plugin
-    value: "{{ credentials.matches[0].plugin }}"
+    value: "{{ credentials.matches[0].'org.csanchez.jenkins.plugins.kubernetes.ServiceAccountCredential'.plugin }}"
+  when: sa_credential.count > 0
+
+- name: Add the plugin attribute
+  xml:
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    xpath: "{{ xml_node }}"
+    attribute: plugin
+    value: "{{ credentials.matches[0].'org.jenkinsci.plugins.kubernetes.credentials.FileSystemServiceAccountCredential'.plugin }}"
+  when: file_sys_sa_credential.count > 0
 
 # set the scope
 - name: Retrieve the credentials scope
