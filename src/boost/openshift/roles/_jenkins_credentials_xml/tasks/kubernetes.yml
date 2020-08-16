@@ -2,12 +2,12 @@
 - name: Get count of service account nodes
   xml:
     path: "{{ roles }}/_jenkins_credentials_xml/downloads/credentials.xml"
-    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.csanchez.jenkins.plugins.kubernetes.ServiceAccountCredential/id
+    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.csanchez.jenkins.plugins.kubernetes.ServiceAccountCredential
     count: yes
   register: sa_credential
 
 - set_fact:
-    xml_node: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.csanchez.jenkins.plugins.kubernetes.ServiceAccountCredential/id
+    xml_node: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.csanchez.jenkins.plugins.kubernetes.ServiceAccountCredential
   when: sa_credential.count > 0
 
 - name: Get count of file system service account nodes
@@ -21,11 +21,10 @@
     xml_node: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.kubernetes.credentials.FileSystemServiceAccountCredential
   when: file_sys_sa_credential.count > 0  
 
-- name: Retrieve the kube from the downloaded credentials
+- name: Retrieve the credentials
   xml:
     path: "{{ roles }}/_jenkins_credentials_xml/downloads/credentials.xml"
     xpath: "{{ xml_node }}"
-    content: text
   register: credentials
 
 - debug:
