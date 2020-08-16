@@ -43,7 +43,7 @@
 - name: Retrieve the credentials plugin
   xml:
     path: "{{ roles }}/_jenkins_credentials_xml/downloads/credentials.xml"
-    xpath: "{{ xml_node }}/plugin"
+    xpath: "{{ xml_node }}"
     content: attribute
   register: credentials_plugin
 
