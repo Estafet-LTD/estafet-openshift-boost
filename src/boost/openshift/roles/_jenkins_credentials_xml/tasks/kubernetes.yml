@@ -43,7 +43,7 @@
 - name: Retrieve the credentials plugin
   xml:
     path: "{{ roles }}/_jenkins_credentials_xml/downloads/credentials.xml"
-    xpath: "{{ xml_node }}"
+    xpath: "{{ xml_node }}/@plugin"
     content: attribute
   register: credentials_plugin
 
@@ -56,7 +56,7 @@
     path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
     xpath: "{{ xml_node }}"
     attribute: plugin
-    value: "{{ credentials.matches[0].'org.csanchez.jenkins.plugins.kubernetes.ServiceAccountCredential'.plugin }}"
+    value: "{{ credentials_plugin.matches[0].plugin }}"
   when: sa_credential.count > 0
 
 - name: Add the plugin attribute
