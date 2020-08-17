@@ -80,22 +80,6 @@
         delete: no
       when: product_roles.stat.exists and product_roles.stat.isdir
 
-    - name: Install jmespath
-      shell: "pip install --user jmespath"
-      register: command_result
-      failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-      changed_when: "'exists' not in command_result.stderr"
-      tags:
-        - jmespath 
-
-    - name: Install lxml
-      shell: "pip install --user lxml"
-      register: command_result
-      failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-      changed_when: "'exists' not in command_result.stderr"
-      tags:
-        - jmespath 
-
     - debug:
         var: boost
         verbosity: 0
