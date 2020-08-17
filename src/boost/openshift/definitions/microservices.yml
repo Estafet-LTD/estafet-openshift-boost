@@ -58,7 +58,7 @@ boost_microservices:
       test: false
                            
     - name: trello-api
-      version: 0.0.7
+      version: 0.0.8
       repo: https://github.com/boostcd/trello-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
