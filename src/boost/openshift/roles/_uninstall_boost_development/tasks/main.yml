@@ -1,0 +1,10 @@
+---
+- include_role: 
+    name : _delete_namespace
+  vars:
+    project: boost-cicd
+
+- include_role: 
+    name : _delete_namespace
+  vars:
+    project: boost-test
