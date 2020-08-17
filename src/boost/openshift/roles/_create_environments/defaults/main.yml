@@ -1,0 +1,3 @@
+---
+console_project: "{{ product.name }}-console"
+
