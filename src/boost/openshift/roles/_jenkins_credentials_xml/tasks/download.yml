@@ -43,3 +43,7 @@
 - set_fact:
     security_node: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.kubernetes.credentials.FileSystemServiceAccountCredential
   when: file_sys_sa_credential.count > 0  
+
+- debug:
+    var: security_node
+    verbosity: 0  
