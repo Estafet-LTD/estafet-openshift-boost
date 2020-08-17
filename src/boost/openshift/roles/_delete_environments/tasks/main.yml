@@ -6,7 +6,7 @@
   with_items: "{{ environments.teardown | default([]) }}"
 
 - include_role: 
-  name : _webhook_teardown
+    name : _webhook_teardown
 
 - include_role: 
     name : _delete_namespace
