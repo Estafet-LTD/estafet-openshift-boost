@@ -36,3 +36,10 @@
     path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
     xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.plaincredentials.impl.FileCredentialsImpl/description
     value: "Ansible Vault"
+
+- name: Add the plugin attrribute
+  xml:
+    path: "{{ roles }}/_jenkins_credentials_xml/files/credentials.xml"
+    xpath: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.plaincredentials.impl.FileCredentialsImpl
+    attribute: plugin
+    value: "plain-credentials@1.6"
