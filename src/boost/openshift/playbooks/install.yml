@@ -58,7 +58,7 @@
         src: "{{ workdir }}/boostcd/src/boost/openshift/roles"
         dest: "~/.ansible"    
         recursive: yes
-        delete: no
+        delete: yes
 
     - name: Updating boost extensions
       synchronize:
