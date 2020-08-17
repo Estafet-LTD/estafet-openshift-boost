@@ -1,0 +1,6 @@
+---
+- include_role: 
+    name: _jenkins_plugin_upload
+  vars:
+    jenkins_plugin_path: "{{ roles }}/_jenkins_cucumber_reports_plugin/files"
+    jenkins_plugin: cucumber-reports

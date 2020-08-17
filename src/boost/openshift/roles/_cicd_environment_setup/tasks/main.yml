@@ -107,6 +107,21 @@
     project: "{{ cicd_project }}"
 
 - include_role: 
+    name: _jenkins_maven_pipeline_plugin
+  vars:
+    project: "{{ cicd_project }}"
+
+- include_role: 
+    name: _jenkins_http_request_plugin
+  vars:
+    project: "{{ cicd_project }}"
+
+- include_role: 
+    name: _jenkins_cucumber_reports_plugin
+  vars:
+    project: "{{ cicd_project }}"
+
+- include_role: 
     name: _jenkins_ansible_slave_setup
   vars:
     project: "{{ cicd_project }}"    
