@@ -42,6 +42,6 @@
   register: hits
 
 - include: ansible_vault.yml
-  when: hits.count > 0    
+  when: hits.count == 0    
 
 - include: upload.yml
