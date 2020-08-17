@@ -7,4 +7,4 @@
   register: hits
 
 - include: set_xml.yml
-  when: hits.count > 0  
+  when: hits.count == 0  
