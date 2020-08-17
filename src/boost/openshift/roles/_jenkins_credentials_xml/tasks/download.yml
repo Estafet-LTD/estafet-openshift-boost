@@ -30,7 +30,7 @@
   register: sa_credential
 
 - set_fact:
-  security_node: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.csanchez.jenkins.plugins.kubernetes.ServiceAccountCredential
+    security_node: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.csanchez.jenkins.plugins.kubernetes.ServiceAccountCredential
   when: sa_credential.count > 0
 
 - name: Get count of file system service account nodes
@@ -41,5 +41,5 @@
   register: file_sys_sa_credential
 
 - set_fact:
-  security_node: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.kubernetes.credentials.FileSystemServiceAccountCredential
+    security_node: /com.cloudbees.plugins.credentials.SystemCredentialsProvider/domainCredentialsMap/entry/java.util.concurrent.CopyOnWriteArrayList/org.jenkinsci.plugins.kubernetes.credentials.FileSystemServiceAccountCredential
   when: file_sys_sa_credential.count > 0  
