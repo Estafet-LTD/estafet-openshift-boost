@@ -38,6 +38,6 @@
 
 - name: Delete the product data from the boost services
   uri:
-    url: http://gateway-api-{{ project }}.{{ openshift.subdomain }}/product/{{ product.name }}
+    url: http://gateway-api-boost-services.{{ openshift.subdomain }}/product/{{ product.name }}
     method: POST
     status_code: 200
