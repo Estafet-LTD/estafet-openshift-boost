@@ -18,7 +18,7 @@ boost_microservices:
       test: false    
 
     - name: project-api
-      version: 0.0.10
+      version: 0.0.11
       repo: https://github.com/boostcd/project-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
@@ -34,7 +34,7 @@ boost_microservices:
       test: false        
             
     - name: environment-api
-      version: 0.1.13
+      version: 0.1.14
       repo: https://github.com/boostcd/environment-api.git
       build: build-environment-api.jenkinsFile
       release: release-boost-java.jenkinsFile
@@ -42,7 +42,7 @@ boost_microservices:
       test: false
                 
     - name: jenkins-api
-      version: 0.0.10
+      version: 0.0.11
       repo: https://github.com/boostcd/jenkins-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
@@ -74,7 +74,7 @@ boost_microservices:
       test: false  
           
     - name: feature-api
-      version: 0.0.10
+      version: 0.0.11
       repo: https://github.com/boostcd/feature-api.git
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile    
