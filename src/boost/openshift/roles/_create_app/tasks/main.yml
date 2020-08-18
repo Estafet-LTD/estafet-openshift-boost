@@ -47,7 +47,6 @@
   stat:
     path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/default-setup.yml"
   register: stat_result
-  when: setup_yml is undefined
 
 - name: define the setup file
   set_fact:
