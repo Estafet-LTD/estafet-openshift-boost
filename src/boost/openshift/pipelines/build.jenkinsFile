@@ -44,7 +44,7 @@ node("jenkins-slave-ansible") {
 
 	stage ("build the microservice") {
 		withCredentials([file(credentialsId: 'ansible_vault', variable: 'vault')]) {
-			sh "ansible-playbook -i src/boost/openshift/playbooks/hosts.ini --vault-password-file ${vault} src/boost/openshift/playbooks/build_microservice.yml -e env_project=${project} -e target_app=${microservice}"
+			sh "ansible-playbook -i src/boost/openshift/playbooks/hosts.ini --vault-password-file ${vault} src/boost/openshift/playbooks/_build_microservice.yml -e env_project=${project} -e target_app=${microservice}"
     	}
 	}	
 

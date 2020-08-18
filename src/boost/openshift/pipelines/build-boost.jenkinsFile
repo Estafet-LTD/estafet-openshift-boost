@@ -20,7 +20,7 @@ node("jenkins-slave-ansible") {
 	
 	stage ("build the console app") {
 		withCredentials([file(credentialsId: 'ansible_vault', variable: 'vault')]) {
-			sh "ansible-playbook -i src/boost/openshift/playbooks/hosts.ini --vault-password-file ${vault} src/boost/openshift/playbooks/build_boost_service.yml -e env_project=${project} -e target_app=${microservice}"
+			sh "ansible-playbook -i src/boost/openshift/playbooks/hosts.ini --vault-password-file ${vault} src/boost/openshift/playbooks/_build_boost_service.yml -e env_project=${project} -e target_app=${microservice}"
     	}
 	}	
 
