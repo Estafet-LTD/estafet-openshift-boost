@@ -17,6 +17,10 @@
   set_fact: environment_variables='-e {{ item.name }}="{{ item.value }}" {{ environment_variables }}'
   with_items: "{{ params.environment_variables| default([]) }}"
 
+- debug:
+    var: environment_variables
+    verbosity: 0
+
 - name: Install the PostgreSQL server
   shell : "oc new-app postgresql-persistent {{ environment_variables }} --name postgresql -p POSTGRESQL_USER=postgres -p POSTGRESQL_PASSWORD=welcome1 {{ template_variables }} -n {{ project }}"
   register: command_result
