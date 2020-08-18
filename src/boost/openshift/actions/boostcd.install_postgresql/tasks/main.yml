@@ -1,0 +1,36 @@
+---
+- debug:
+    var: params
+    verbosity: 0
+
+- name: Initialise template variables
+  set_fact: template_variables=""
+
+- name: format the environment environments
+  set_fact: template_variables='-p {{ item.name }}="{{ item.value }}" {{ template_variables }}'
+  with_items: "{{ params.template_variables| default([]) }}"
+
+- name: Initialise environment variables
+  set_fact: environment_variables=""
+
+- name: format the environment environments
+  set_fact: environment_variables='-e {{ item.name }}="{{ item.value }}" {{ environment_variables }}'
+  with_items: "{{ params.environment_variables| default([]) }}"
+
+- name: Install the PostgreSQL server
+  shell : "oc new-app {{ environment_variables }} postgresql-persistent --name postgresql -p POSTGRESQL_USER=postgres -p POSTGRESQL_PASSWORD=welcome1 {{ template_variables }} -n {{ project }}"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - postgres   
+
+- name: Wait for the postgresql server to become available
+  shell : "oc rollout status dc/postgresql -n {{ project }}"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - postgres   

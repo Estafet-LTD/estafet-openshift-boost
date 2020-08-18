@@ -12,7 +12,7 @@
     params: "{{ amq_params }}"
 
 - include_role: 
-    name: boostcd.postgresql_setup
+    name: boostcd.install_postgresql
   vars:
     project: boost-services
     environment_variables:
