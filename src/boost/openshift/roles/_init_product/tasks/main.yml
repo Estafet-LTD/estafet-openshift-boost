@@ -1,6 +1,6 @@
 ---
 - set_fact:
-    payload: "{ \"productId\" : \"{{ product.name }}\" , \"description\" : \"{{ product.description }}\", \"version\" : \"{{ boost.version }}\", \"repo\" : \"{{ boost.repo }}\"  }"
+    payload: "{ \"productId\" : \"{{ product.name }}\" , \"description\" : \"{{ product.description }}\", \"version\" : \"{{ boost.version }}\", \"repo\" : \"{{ product.repo }}\"  }"
 
 - name: Update the environments service with the
   uri:
