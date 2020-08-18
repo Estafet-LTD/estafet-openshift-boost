@@ -15,6 +15,12 @@
     name: boostcd.postgresql_setup
   vars:
     project: boost-services
+    environment_variables:
+      - name: POSTGRESQL_MAX_CONNECTIONS
+        value: 200
+    template_variables:
+      - name: VOLUME_CAPACITY
+        value: 3Gi    
 
 - include_role: 
     name: boostcd.jaeger_setup
