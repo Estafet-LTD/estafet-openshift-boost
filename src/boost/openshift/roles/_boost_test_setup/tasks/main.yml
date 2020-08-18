@@ -22,7 +22,7 @@
     project: "{{ boost_project }}"
     environment_variables:
       - name: POSTGRESQL_MAX_CONNECTIONS
-        value: 100
+        value: 200
     template_variables:
       - name: VOLUME_CAPACITY
         value: 2Gi    

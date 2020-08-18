@@ -17,7 +17,7 @@
     project: boost-services
     environment_variables:
       - name: POSTGRESQL_MAX_CONNECTIONS
-        value: 200
+        value: 500
     template_variables:
       - name: VOLUME_CAPACITY
         value: 3Gi    
