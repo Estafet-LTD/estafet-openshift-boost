@@ -3,6 +3,9 @@ boostcd:
   repo: https://github.com/boostcd/boostcd.git
   test_repo: https://github.com/Estafet-LTD/blockchain-demo.git
 
+boost_updates:
+  updates: true
+
 workdir: "{{ ansible_env.HOME }}/.boost"
 boost_ddl: "{{ workdir }}/boostcd/src/boost/openshift/ddl"
 templates: "{{ workdir }}/boostcd/src/boost/openshift/templates"

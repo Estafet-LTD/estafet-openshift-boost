@@ -17,6 +17,11 @@
     boost: "{{boost|combine(boostcd,recursive=True)}}"
   when: boost.repo is undefined
 
+- name: merge the default boost updates value
+  set_fact:
+    boost: "{{boost|combine(boost_updates,recursive=True)}}"
+  when: boost.updates is undefined
+
 - name: merge the default maven repo into the environments
   set_fact:
     environments: "{{environments|combine(console_environment,recursive=True)}}"

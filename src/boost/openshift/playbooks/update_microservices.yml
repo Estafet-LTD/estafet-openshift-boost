@@ -1,0 +1,8 @@
+---
+- name: Update the microservices
+  hosts: local
+  roles:
+    - _cicd_environment_setup
+    - _webhook_setup
+         
+  

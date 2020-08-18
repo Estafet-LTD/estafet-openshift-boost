@@ -23,4 +23,12 @@
 
 - include_role: 
     name: _prod_route_setup
+
+- name: initialise the product
+  include_role:
+    name: _init_product
+  vars:
+    project: boost-services
+  tags:
+    - openshift      
  

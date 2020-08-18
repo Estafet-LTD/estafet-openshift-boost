@@ -23,11 +23,4 @@
   with_items: "{{ boost_microservices }}"
   tags:
     - openshift
-
-- name: initialise the product
-  include_role:
-    name: _init_product
-  vars:
-    project: boost-services
-  tags:
-    - openshift    
+  
