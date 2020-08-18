@@ -18,7 +18,7 @@
   with_items: "{{ params.environment_variables| default([]) }}"
 
 - name: Install the PostgreSQL server
-  shell : "oc new-app {{ environment_variables }} postgresql-persistent --name postgresql -p POSTGRESQL_USER=postgres -p POSTGRESQL_PASSWORD=welcome1 {{ template_variables }} -n {{ project }}"
+  shell : "oc new-app postgresql-persistent {{ environment_variables }} --name postgresql -p POSTGRESQL_USER=postgres -p POSTGRESQL_PASSWORD=welcome1 {{ template_variables }} -n {{ project }}"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
