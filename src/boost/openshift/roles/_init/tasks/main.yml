@@ -22,6 +22,28 @@
     boost: "{{boost|combine(boost_updates,recursive=True)}}"
   when: boost.updates is undefined
 
+- name: define the default product repo value
+  set_fact:
+    product_default:
+      repo: "{{ lookup('ini', 'url section=git_config_section file=config') }}"
+  vars:
+    git_config: "{{ productdir }}/.git/config"
+    git_config_section: "'remote \"origin\"'"
+  when: product.repo is undefined
+
+- debug:
+    var: product_default
+    verbosity: 0
+
+- name: merge the default product repo value
+  set_fact:
+    product: "{{product|combine(product_default,recursive=True)}}"
+  when: product.repo is undefined
+
+- debug:
+    var: product
+    verbosity: 0
+
 - name: merge the default maven repo into the environments
   set_fact:
     environments: "{{environments|combine(console_environment,recursive=True)}}"
