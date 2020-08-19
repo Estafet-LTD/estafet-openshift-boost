@@ -25,12 +25,11 @@
 - name: set the config and section
   set_fact:
     git_config: "{{ productdir }}/.git/config"
-    git_config_section: '`remote "origin"`'
 
 - name: define the default product repo value
   set_fact:
     product_default:
-      repo: "{{ lookup('ini', 'url file=git_config') }}"
+      repo: "{{ git_config | get_repo_url }}"
 
 - debug:
     var: product_default
