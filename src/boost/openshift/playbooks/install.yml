@@ -30,6 +30,7 @@
       get_url:
         url: "https://github.com/boostcd/boostcd/archive/{{ boost.version }}.zip"
         dest: "{{ workdir }}/tmp"
+        force: yes
       
     - name: Unarchive the boost archive
       unarchive:
