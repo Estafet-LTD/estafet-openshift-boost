@@ -39,7 +39,7 @@ node("jenkins-slave-ansible") {
 	}
 
 	stage ("install boost") {
-		sh "ansible-playbook -i src/boost/openshift/playbooks/hosts.ini src/boost/openshift/playbooks/install_core.yml"
+		sh "ansible-playbook -i src/boost/openshift/playbooks/hosts.ini src/boost/openshift/playbooks/install.yml"
 	}		
 
 	stage ("build the microservice") {
