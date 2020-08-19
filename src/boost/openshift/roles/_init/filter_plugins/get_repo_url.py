@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import configparser
+import ConfigParser
 
 class FilterModule(object):
     def filters(self):
