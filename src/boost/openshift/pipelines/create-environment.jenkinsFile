@@ -56,10 +56,17 @@ node("jenkins-slave-ansible") {
 		git credentialsId: "git", branch: "master", url: params.REPO
 	}
 
-	stage ("update the roles") {
+	stage("retrieve the version") {
+		def yml = readYaml file: "src/boost/openshift/definitions/product.yml"
+		version = yml.boost.version
+	}
+
+	stage ("install boost core") {
+		sh "mkdir -p src/boost/openshift/playbooks"
+		sh "wget https://raw.githubusercontent.com/boostcd/boostcd/$boost_version/src/boost/openshift/playbooks/install.yml -q -P src/boost/openshift/playbooks"
 		sh "ansible-playbook -i src/boost/openshift/playbooks/hosts.ini src/boost/openshift/playbooks/install.yml"
 	}		
-	
+		
 	stage ("build the environment") {
 		withCredentials([file(credentialsId: 'ansible_vault', variable: 'vault')]) {
 			sh "ansible-playbook -i src/boost/openshift/playbooks/hosts.ini --vault-password-file ${vault} src/boost/openshift/playbooks/install_developer_environment.yml -e env_project=${project}"
