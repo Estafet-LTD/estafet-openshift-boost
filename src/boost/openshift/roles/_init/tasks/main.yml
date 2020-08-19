@@ -22,13 +22,14 @@
     boost: "{{boost|combine(boost_updates,recursive=True)}}"
   when: boost.updates is undefined
 
+- set_fact:
+    git_config: "{{ productdir }}/.git/config"
+    git_config_section: "remote \"origin\""
+
 - name: define the default product repo value
   set_fact:
     product_default:
       repo: "{{ lookup('ini', 'url section=git_config_section file=git_config') }}"
-  vars:
-    git_config: "{{ productdir }}/.git/config"
-    git_config_section: "remote \"origin\""
 
 - debug:
     var: product_default
