@@ -8,16 +8,6 @@
         dir: ../definitions
         extensions: [yml]  
    
-    - name: define the default boost repo value
-      set_fact:
-        boostcd:
-          repo: https://github.com/boostcd/boostcd.git
-
-    - name: merge the default boost repo value
-      set_fact:
-        boost: "{{boost|combine(boostcd,recursive=True)}}"
-      when: boost.repo is undefined
-
     - set_fact: 
         workdir: "{{ ansible_env.HOME }}/.boost"
 
@@ -25,11 +15,11 @@
       file:
         path: "{{ workdir }}"
         state: directory
-        
-    - name: Check that the boost directory exists
-      stat:
-        path: "{{ workdir }}/boostcd"
-      register: boost_dir
+
+    - name: Recursively remove tmp directory
+      file:
+        path: "{{ workdir }}/tmp"
+        state: absent
 
     - name: Recursively remove boost directory
       file:
@@ -37,15 +27,19 @@
         state: absent
       when: boost_dir.stat.exists
 
-    - name: Checkout the boost console dependencies from github
-      git:
-        repo: "{{ boost.repo }}"
-        dest: "{{ workdir }}/boostcd"
-        version: "{{ boost.version }}"
-        update: yes
-      tags:
-        - git  
+    - name: Download boost archive
+      get_url:
+        url: "https://github.com/boostcd/boostcd/archive/boostcd-{{ boost.version }}.zip"
+        dest: "{{ workdir }}/tmp"
+      
+    - name: Unarchive the boost archive
+      unarchive:
+        src: "{{ workdir }}/tmp/boostcd-{{ boost.version }}.zip"
+        dest: {{ workdir }}
 
+    - name: rename archive directory
+      shell: "mv {{ workdir }}/boostcd-{{ boost.version }} {{ workdir }}/boostcd"
+        
     - name: Updating boost playbooks and inventory
       synchronize:
         src: "{{ workdir }}/boostcd/src/boost/openshift/playbooks"
