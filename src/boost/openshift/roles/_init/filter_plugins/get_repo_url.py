@@ -8,6 +8,6 @@ class FilterModule(object):
         }
 
     def get_repo_url(self, path):
-        config = configparser.ConfigParser()
+        config = ConfigParser.ConfigParser()
         config.read(path)
         return config['remote "origin"']['url']
