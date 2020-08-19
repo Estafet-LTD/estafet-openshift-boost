@@ -56,15 +56,11 @@ node("jenkins-slave-ansible") {
 		git credentialsId: "git", branch: "master", url: params.REPO
 	}
 
-	stage("retrieve the version") {
-		def yml = readYaml file: "src/boost/openshift/definitions/product.yml"
-		version = yml.boost.version
-	}
-
 	stage ("install boost core") {
+		def yml = readYaml file: "src/boost/openshift/definitions/product.yml"
 		sh "mkdir -p src/boost/openshift/playbooks"
-		httpRequest url: "https://raw.githubusercontent.com/boostcd/boostcd/${version}/src/boost/openshift/playbooks/install.yml", outputFile: "src/boost/openshift/playbooks/install.yml"
-		httpRequest url: "https://raw.githubusercontent.com/boostcd/boostcd/${version}/src/boost/openshift/playbooks/hosts.ini", outputFile: "src/boost/openshift/playbooks/hosts.ini"
+		httpRequest url: "https://raw.githubusercontent.com/boostcd/boostcd/${yml.boost.version}/src/boost/openshift/playbooks/install.yml", outputFile: "src/boost/openshift/playbooks/install.yml"
+		httpRequest url: "https://raw.githubusercontent.com/boostcd/boostcd/${yml.boost.version}/src/boost/openshift/playbooks/hosts.ini", outputFile: "src/boost/openshift/playbooks/hosts.ini"
 		sh "ansible-playbook -i src/boost/openshift/playbooks/hosts.ini src/boost/openshift/playbooks/install.yml"
 	}		
 		
