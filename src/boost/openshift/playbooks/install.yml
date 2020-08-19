@@ -33,7 +33,7 @@
       
     - name: Unarchive the boost archive
       unarchive:
-        src: "{{ workdir }}/tmp/boostcd-{{ boost.version }}.zip"
+        src: "{{ workdir }}/tmp/{{ boost.version }}.zip"
         dest: "{{ workdir }}"
 
     - name: rename archive directory
