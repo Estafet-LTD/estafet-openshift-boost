@@ -27,7 +27,8 @@
     product_default:
       repo: "{{ lookup('ini', 'url section=git_config_section file=config') }}"
   vars:
-    git_config: "{{ productdir }}/.git/conf    git_config_section: "'remote \"origin\"'"
+    git_config: "{{ productdir }}/.git/config"
+    git_config_section: "'remote \"origin\"'"
 
 - debug:
     var: product_default
