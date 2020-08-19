@@ -25,7 +25,6 @@
       file:
         path: "{{ workdir }}/boostcd"
         state: absent
-      when: boost_dir.stat.exists
 
     - name: Download boost archive
       get_url:
@@ -35,7 +34,7 @@
     - name: Unarchive the boost archive
       unarchive:
         src: "{{ workdir }}/tmp/boostcd-{{ boost.version }}.zip"
-        dest: {{ workdir }}
+        dest: "{{ workdir }}"
 
     - name: rename archive directory
       shell: "mv {{ workdir }}/boostcd-{{ boost.version }} {{ workdir }}/boostcd"
