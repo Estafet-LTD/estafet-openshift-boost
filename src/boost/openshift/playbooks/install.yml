@@ -28,7 +28,7 @@
 
     - name: Download boost archive
       get_url:
-        url: "https://github.com/boostcd/boostcd/archive/boostcd-{{ boost.version }}.zip"
+        url: "https://github.com/boostcd/boostcd/archive/{{ boost.version }}.zip"
         dest: "{{ workdir }}/tmp"
       
     - name: Unarchive the boost archive
