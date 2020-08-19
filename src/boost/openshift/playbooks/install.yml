@@ -19,7 +19,7 @@
     - name: Recursively remove tmp directory
       file:
         path: "{{ workdir }}/tmp"
-        state: absent
+        state: directory
 
     - name: Recursively remove boost directory
       file:
