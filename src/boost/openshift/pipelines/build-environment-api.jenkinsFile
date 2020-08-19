@@ -22,7 +22,8 @@ node("jenkins-slave-ansible") {
 	stage ("install boost core") {
 		sh "mkdir -p src/boost/openshift/playbooks"
 		httpRequest url: "https://raw.githubusercontent.com/boostcd/boostcd/${version}/src/boost/openshift/playbooks/install.yml", outputFile: "src/boost/openshift/playbooks/install.yml"
-		sh "ansible-playbook src/boost/openshift/playbooks/install.yml"
+		httpRequest url: "https://raw.githubusercontent.com/boostcd/boostcd/${version}/src/boost/openshift/playbooks/hosts.ini", outputFile: "src/boost/openshift/playbooks/hosts.ini"
+		sh "ansible-playbook -i src/boost/openshift/playbooks/hosts.ini src/boost/openshift/playbooks/install.yml"
 	}		
 		
 	stage ("build the console app") {
