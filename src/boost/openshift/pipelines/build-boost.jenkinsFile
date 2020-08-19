@@ -22,7 +22,7 @@ node("jenkins-slave-ansible") {
 
 	stage ("install boost core") {
 		sh "mkdir -p src/boost/openshift/playbooks"
-		sh "wget https://raw.githubusercontent.com/boostcd/boostcd/${boost.version}/src/boost/openshift/playbooks/install.yml -q -P src/boost/openshift/playbooks"
+		sh "wget https://raw.githubusercontent.com/boostcd/boostcd/${version}/src/boost/openshift/playbooks/install.yml -q -P src/boost/openshift/playbooks"
 		sh "ansible-playbook -i src/boost/openshift/playbooks/hosts.ini src/boost/openshift/playbooks/install.yml"
 	}		
 	
