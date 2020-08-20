@@ -12,8 +12,8 @@ class FilterModule(object):
             line = fp.readline()
             while line:
                 regex = r"(url)(\s*\=\s*)(https:\/\/github.com\/[a-zA-Z0-9-_]+\/[a-zA-Z0-9-_]+(\.git)?)"
-                if re.search(regex, path):
-                    match = re.search(regex, path)
+                if re.search(regex, line):
+                    match = re.search(regex, line)
                     return match.group(3)
                 else:
                     line = fp.readline()
