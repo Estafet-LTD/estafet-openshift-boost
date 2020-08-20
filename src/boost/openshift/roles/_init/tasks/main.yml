@@ -22,6 +22,10 @@
     boost: "{{boost|combine(boost_updates,recursive=True)}}"
   when: boost.updates is undefined
 
+- debug:
+    var: boost
+    verbosity: 0
+
 - name: set the config and section
   set_fact:
     git_config: "{{ productdir }}/.git/config"
@@ -30,10 +34,6 @@
   set_fact:
     product_default:
       repo: "{{ git_config | get_repo_url }}"
-
-- debug:
-    var: product_default
-    verbosity: 0
 
 - name: merge the default product repo value
   set_fact:
