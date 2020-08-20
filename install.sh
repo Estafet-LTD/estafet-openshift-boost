@@ -19,6 +19,9 @@ function parse_yaml {
 
 BASEDIR=$(dirname "$0")
 eval $(parse_yaml $BASEDIR/src/boost/openshift/definitions/product.yml)
+rm $BASEDIR/makefile
+rm $BASEDIR/install.sh
+chmod +x $BASEDIR/install.sh
 wget https://raw.githubusercontent.com/boostcd/boostcd/$boost_version/install.sh -q -P $BASEDIR
 wget https://raw.githubusercontent.com/boostcd/boostcd/$boost_version/make -q -P $BASEDIR
 rm -rf $BASEDIR/src/boost/openshift/playbooks
