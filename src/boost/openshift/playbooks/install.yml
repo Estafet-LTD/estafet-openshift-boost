@@ -26,20 +26,43 @@
         path: "{{ workdir }}/boostcd"
         state: absent
 
+    # there are two paths that diverge and then later converge
+    # path 1: is where the boost files have always been downloaded and extracted
+    # path 2: is where the boost files need to be downloaded and then extracted
+
+    # path 1 - copy files from the download directory to the boost directory
+    - name: Check that the boost download directory exists
+      stat:
+        path: "/usr/local/download/boostcd"
+      register: download_dir    
+
+    - name: Update the boost installation from the download directory
+      synchronize:
+        src: "/usr/local/download/boostcd"
+        dest: "{{ workdir }}"
+        recursive: yes
+        delete: yes
+      when: download_dir.stat.exists
+
+    # path 2 - download and extract to the boost directory
     - name: Download boost archive
       get_url:
         url: "https://github.com/boostcd/boostcd/archive/{{ boost.version }}.zip"
         dest: "{{ workdir }}/tmp/{{ boost.version }}.zip"
         force: yes
+      when: not download_dir.stat.exists
       
     - name: Unarchive the boost archive
       unarchive:
         src: "{{ workdir }}/tmp/{{ boost.version }}.zip"
         dest: "{{ workdir }}"
+      when: not download_dir.stat.exists
 
     - name: rename archive directory
       shell: "mv {{ workdir }}/boostcd-{{ boost.version }} {{ workdir }}/boostcd"
-        
+      when: not download_dir.stat.exists
+      
+    #  this is where the paths meet again
     - name: Updating boost playbooks and inventory
       synchronize:
         src: "{{ workdir }}/boostcd/src/boost/openshift/playbooks"

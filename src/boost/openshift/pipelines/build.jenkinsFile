@@ -39,12 +39,11 @@ node("jenkins-slave-ansible") {
 	}
 
 	stage ("install boost core") {
-		def yml = readYaml file: "src/boost/openshift/definitions/product.yml"
 		sh "mkdir -p src/boost/openshift/playbooks"
-		httpRequest url: "https://raw.githubusercontent.com/boostcd/boostcd/${yml.boost.version}/src/boost/openshift/playbooks/install.yml", outputFile: "src/boost/openshift/playbooks/install.yml"
-		httpRequest url: "https://raw.githubusercontent.com/boostcd/boostcd/${yml.boost.version}/src/boost/openshift/playbooks/hosts.ini", outputFile: "src/boost/openshift/playbooks/hosts.ini"
+		sh "cp /usr/local/download/boostcd/src/boost/openshift/playbooks/install.yml src/boost/openshift/playbooks/install.yml"
+		sh "cp /usr/local/download/boostcd/src/boost/openshift/playbooks/hosts.ini src/boost/openshift/playbooks/hosts.ini"
 		sh "ansible-playbook -i src/boost/openshift/playbooks/hosts.ini src/boost/openshift/playbooks/install.yml"
-	}			
+	}	
 	
 	stage ("build the microservice") {
 		withCredentials([file(credentialsId: 'ansible_vault', variable: 'vault')]) {
