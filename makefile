@@ -54,9 +54,9 @@ update_product:
 update_users:
 	@ansible-playbook -i src/openshift/playbooks/hosts.ini src/openshift/playbooks/update_users.yml
 
-# Update Boost Version
-update_version:
-	@ansible-playbook -i src/openshift/playbooks/hosts.ini src/openshift/playbooks/update_version.yml
+# Update Boost and Services to the Stated Version
+update:
+	@ansible-playbook -i src/openshift/playbooks/hosts.ini src/openshift/playbooks/update.yml
 
 # Repair Product Jenkins
 repair_product_jenkins:
