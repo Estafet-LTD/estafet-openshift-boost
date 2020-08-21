@@ -34,7 +34,7 @@ boost_microservices:
       test: false        
             
     - name: environment-api
-      version: 0.1.16
+      version: 0.1.17
       repo: https://github.com/boostcd/environment-api.git
       build: build-environment-api.jenkinsFile
       release: release-boost-java.jenkinsFile
