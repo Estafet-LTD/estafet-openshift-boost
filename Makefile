@@ -2,9 +2,20 @@
 list:
 	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
 
+ubuntu_prepare:
+	sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CC86BB64
+	sudo add-apt-repository ppa:rmescandon/yq
+	sudo apt update
+	sudo apt install yq -y
+
 # Install Boost Core Locally
 install:
-	@./install.sh
+	$(eval  boost_version := $(shell yq r src/boost/openshift/definitions/product.yml boost.version))
+	@rm -rf src/boost/openshift/playbooks
+	@mkdir -p src/boost/openshift/playbooks 
+	@wget https://raw.githubusercontent.com/boostcd/boostcd/${boost_version}/src/boost/openshift/playbooks/install.yml -q -P src/boost/openshift/playbooks 
+	@wget https://raw.githubusercontent.com/boostcd/boostcd/${boost_version}/src/boost/openshift/playbooks/hosts.ini -q -P src/boost/openshift/playbooks 
+	@ansible-playbook -i src/boost/openshift/playbooks/hosts.ini src/boost/openshift/playbooks/install.yml
 
 # Installs Boost Development Environment
 install_boost_development:
@@ -55,9 +66,9 @@ update_users:
 	@ansible-playbook -i src/boost/openshift/playbooks/hosts.ini src/boost/openshift/playbooks/update_users.yml
 
 # Update Boost and Services to the Stated Version
-update:
+update: install
 	@ansible-playbook -i src/boost/openshift/playbooks/hosts.ini src/boost/openshift/playbooks/update.yml
 
 # Repair Product Jenkins
-repair_product_jenkins:
+repair_jenkins:
 	@ansible-playbook -i src/boost/openshift/playbooks/hosts.ini src/boost/openshift/playbooks/repair_product_jenkins.yml
