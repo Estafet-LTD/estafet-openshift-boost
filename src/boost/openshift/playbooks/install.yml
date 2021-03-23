@@ -37,7 +37,7 @@
       register: download_dir    
 
     - name: Update the boost installation from the download directory
-      synchronize:
+      ansible.posix.synchronize:
         src: "/usr/local/download/boostcd"
         dest: "{{ workdir }}"
         recursive: yes
@@ -64,21 +64,21 @@
       
     #  this is where the paths meet again
     - name: Updating boost playbooks and inventory
-      synchronize:
+      ansible.posix.synchronize:
         src: "{{ workdir }}/boostcd/src/boost/openshift/playbooks"
         dest: "{{ playbook_dir }}/.."
         recursive: yes
         delete: yes
 
     - name: Updating boost system roles
-      synchronize:
+      ansible.posix.synchronize:
         src: "{{ workdir }}/boostcd/src/boost/openshift/roles"
         dest: "~/.ansible"    
         recursive: yes
         delete: yes
 
     - name: Updating boost extensions
-      synchronize:
+      ansible.posix.synchronize:
         src: "{{ workdir }}/boostcd/src/boost/openshift/actions/"
         dest: "~/.ansible/roles/"    
         recursive: yes
@@ -90,7 +90,7 @@
       register: product_roles
 
     - name: Updating product extensions
-      synchronize:
+      ansible.posix.synchronize:
         src: "{{ playbook_dir }}/../actions/"
         dest: "~/.ansible/roles"
         recursive: yes

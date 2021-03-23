@@ -15,6 +15,7 @@ install:
 	@mkdir -p src/boost/openshift/playbooks 
 	@wget https://raw.githubusercontent.com/boostcd/boostcd/${boost_version}/src/boost/openshift/playbooks/install.yml -q -P src/boost/openshift/playbooks 
 	@wget https://raw.githubusercontent.com/boostcd/boostcd/${boost_version}/src/boost/openshift/playbooks/hosts.ini -q -P src/boost/openshift/playbooks 
+	@ansible-galaxy collection install ansible.posix
 	@ansible-playbook -i src/boost/openshift/playbooks/hosts.ini src/boost/openshift/playbooks/install.yml
 
 # Installs Boost Development Environment
