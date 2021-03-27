@@ -11,6 +11,7 @@ boost_ddl: "{{ workdir }}/boostcd/src/boost/openshift/ddl"
 templates: "{{ workdir }}/boostcd/src/boost/openshift/templates"
 objects: "{{ workdir }}/boostcd/src/boost/openshift/objects"
 roles: "{{ workdir }}/boostcd/src/boost/openshift/roles"
+actions: "{{ workdir }}/boostcd/src/boost/openshift/actions"
 productdir: "{{ playbook_dir }}/../../../.."
 
 console_environment:

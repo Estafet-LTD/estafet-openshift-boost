@@ -1,0 +1,3 @@
+---
+dependencies:
+  - role: _jaeger_operator_setup

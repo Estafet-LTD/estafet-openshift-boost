@@ -1,0 +1,58 @@
+---
+
+- include_role: 
+    name: _namespace_setup
+  vars:
+    project: "{{ observability }}"
+    project_description: "Jaeger Operator"
+
+- name: Install Jaeger Operator CRDs
+  shell: "oc create -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/master/deploy/crds/jaegertracing.io_jaegers_crd.yaml"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - opentracing
+    - jaeger             
+  
+- name: Install Jaeger Operator Service Account
+  shell: "oc create -n {{ observability }} -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/master/deploy/service_account.yaml"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - opentracing
+    - jaeger       
+
+- name: Install Jaeger Operator Role
+  shell: "oc create -n {{ observability }} -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/master/deploy/role.yaml"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - opentracing
+    - jaeger           
+
+- name: Install Jaeger Operator Role Binding
+  shell: "oc create -n {{ observability }} -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/master/deploy/role_binding.yaml"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - opentracing
+    - jaeger               
+
+- name: Install Jaeger Operator
+  shell: "oc create -n {{ observability }} -f {{ roles }}/_jaeger_operator_setup/files/operator.yaml"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - opentracing
+    - jaeger                   
+
