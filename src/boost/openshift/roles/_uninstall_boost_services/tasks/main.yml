@@ -38,14 +38,14 @@
 - include_role: 
     name : _uninstall_jaeger_component
   vars:
-    project: observability
-    component: boost-services
+    project: boost-services
+    component: role_binding
 
 - include_role: 
     name : _uninstall_jaeger_component
   vars:
-    project: observability
-    component: boost-services
+    project: boost-services
+    component: role_binding
 
 - include_role: 
     name : _delete_namespace
