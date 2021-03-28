@@ -9,9 +9,9 @@ ubuntu_prepare:
 	sudo apt install yq -y
 
 dependencies:
-	python3 -m pip install jmespath
-	python3 -m pip install lxml
-	python3 -m pip install pygithub
+	pip3 install jmespath
+	pip3 install lxml
+	pip3 install pygithub
 
 # Install Boost Core Locally
 install:
