@@ -9,7 +9,7 @@
     name : _uninstall_jaeger_component
   vars:
     project: boost-services
-    component: role_binding
+    component: role
 
 - include_role: 
     name : _uninstall_jaeger_component
