@@ -1,6 +1,26 @@
 ---
+- name: Install Jaeger Operator Role
+  shell: "oc create -n {{ project }} -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/master/deploy/role.yaml"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - opentracing
+    - jaeger           
+
+- name: Install Jaeger Operator Role Binding
+  shell: "oc create -n {{ project }} -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/master/deploy/role_binding.yaml"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - opentracing
+    - jaeger   
+
 - name: Install Jaeger
-  shell: "oc apply -f {{ actions }}/boostcd.jaeger_setup/files/opentracing.yml -n {{ project }}"
+  shell: "oc apply -f {{ actions }}/boostcd.jaeger_setup/files/jaeger-agent.yml -n {{ project }}"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
