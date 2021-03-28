@@ -8,6 +8,11 @@ ubuntu_prepare:
 	sudo apt update
 	sudo apt install yq -y
 
+dependencies:
+	python3 -m pip install jmespath
+	python3 -m pip install lxml
+	python3 -m pip install pygithub
+
 # Install Boost Core Locally
 install:
 	$(eval  boost_version := $(shell yq r src/boost/openshift/definitions/product.yml boost.version))
