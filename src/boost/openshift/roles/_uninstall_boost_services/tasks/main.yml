@@ -1,8 +1,51 @@
 ---
+
+- include_role: 
+    name : _uninstall_jaeger_component
+  vars:
+    project: observability
+    component: operator
+
+- include_role: 
+    name : _uninstall_jaeger_component
+  vars:
+    project: observability
+    component: role_binding
+
+- include_role: 
+    name : _uninstall_jaeger_component
+  vars:
+    project: observability
+    component: role
+
+- include_role: 
+    name : _uninstall_jaeger_component
+  vars:
+    project: observability
+    component: service_account
+
+- include_role: 
+    name : _uninstall_jaeger_component
+  vars:
+    project: observability
+    component: "crds/jaegertracing.io_jaegers_crd"
+
 - include_role: 
     name : _delete_namespace
   vars:
     project: observability
+
+- include_role: 
+    name : _uninstall_jaeger_component
+  vars:
+    project: observability
+    component: boost-services
+
+- include_role: 
+    name : _uninstall_jaeger_component
+  vars:
+    project: observability
+    component: boost-services
 
 - include_role: 
     name : _delete_namespace
