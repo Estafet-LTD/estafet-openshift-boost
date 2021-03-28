@@ -2,4 +2,9 @@
 - include_role: 
     name : _delete_namespace
   vars:
+    project: observability
+
+- include_role: 
+    name : _delete_namespace
+  vars:
     project: boost-services
