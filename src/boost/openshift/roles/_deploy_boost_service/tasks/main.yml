@@ -22,7 +22,7 @@
 
 - name: Get the image used by the dc
   set_fact: 
-    dc_image: "{{list_of_dcs.stdout|image')}}"
+    dc_image: "{{list_of_dcs.stdout|image}}"
 
 - set_fact:
     stage: live
