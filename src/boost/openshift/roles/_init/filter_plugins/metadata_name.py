@@ -13,4 +13,4 @@ class FilterModule(object):
         if not items:
             return ""
         else:
-            return items[0]["spec"]["metadata"]["name"]
+            return items[0]["metadata"]["name"]
