@@ -22,8 +22,7 @@
 
 - name: Get the image used by the dc
   set_fact: 
-    dc_image: "{{list_of_dcs.stdout|from_json|json_query('items[0].spec.template.spec.containers[0].image')}}"
-  ignore_errors: yes
+    dc_image: "{{list_of_dcs.stdout|image')}}"
 
 - set_fact:
     stage: live
