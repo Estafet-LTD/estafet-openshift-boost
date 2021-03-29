@@ -8,10 +8,11 @@ class FilterModule(object):
         }
 
     def image(self, json):
-        print json
+        print(json)
         dcs = json.loads(json)
         items = dcs["items"]
-        if not items:
-            return ""
-        else:
-            return items[0]["spec"]["template"]["spec"]["containers"][0]["image"]
+        img = ""
+        if items:
+            img = items[0]["spec"]["template"]["spec"]["containers"][0]["image"]
+        print(img)
+        return img
