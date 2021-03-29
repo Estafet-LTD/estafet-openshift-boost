@@ -29,17 +29,4 @@
     - opentracing
     - jaeger             
 
-- name: Sleep for 10 seconds and then check for deployment
-  wait_for:
-    delay: 10
-    timeout: 0
-
-- name: Wait for the jaeger operator to become available
-  shell : "oc rollout status deployment jaeger-agent -n {{ project }}"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"
-  tags:
-    - openshift  
-
     
