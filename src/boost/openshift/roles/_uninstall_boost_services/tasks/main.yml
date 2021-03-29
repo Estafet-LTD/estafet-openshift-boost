@@ -21,13 +21,13 @@
     name : _uninstall_jaeger_component
   vars:
     project: observability
-    component: role_binding
+    component: cluster_role_binding
 
 - include_role: 
     name : _uninstall_jaeger_component
   vars:
     project: observability
-    component: role
+    component: cluster_role
 
 - include_role: 
     name : _uninstall_jaeger_component
