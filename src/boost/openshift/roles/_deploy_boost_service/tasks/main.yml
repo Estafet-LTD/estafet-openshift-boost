@@ -211,7 +211,7 @@
     - openshift     
 
 - name: Wait for the microservice to become available {{ microservice.name }}
-  shell: "oc rollout status dc/{{ microservice.name }}"
+  shell: "oc rollout status dc/{{ microservice.name }} -n {{ project }}"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
@@ -220,7 +220,7 @@
     - openshift
 
 - name: Expose Service {{ microservice.name }}
-  shell: "oc expose service {{ microservice.name }}"
+  shell: "oc expose service {{ microservice.name }} -n {{ project }}"
   when: microservice.expose and image_deployed == false
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
