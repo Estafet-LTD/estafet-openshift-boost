@@ -20,7 +20,7 @@
     - jaeger   
 
 - name: Install Jaeger
-  shell: "oc apply -f {{ actions }}/boostcd.jaeger_setup/files/jaeger-agent.yml -n {{ project }}"
+  shell: "oc apply -f {{ actions }}/boostcd.jaeger_setup/files/jaeger.yml -n {{ project }}"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
