@@ -29,6 +29,11 @@
     - opentracing
     - jaeger             
 
+- name: Sleep for 3 seconds and then check for deployment
+  wait_for:
+    delay: 3
+    timeout: 0
+
 - name: Wait for the jaeger operator to become available
   shell : "oc rollout status deployment jaeger-agent -n {{ project }}"
   register: command_result
