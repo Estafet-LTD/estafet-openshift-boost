@@ -29,9 +29,9 @@
     - opentracing
     - jaeger             
 
-- name: Sleep for 3 seconds and then check for deployment
+- name: Sleep for 10 seconds and then check for deployment
   wait_for:
-    delay: 3
+    delay: 10
     timeout: 0
 
 - name: Wait for the jaeger operator to become available
