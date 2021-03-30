@@ -24,13 +24,13 @@
     - nexus  
     
 - name: Wait for the nexus server to become available
-  shell: "oc rollout status dc/nexus"
+  shell : "oc rollout status deployment nexus"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
   tags:
-    - openshift
-    - nexus  
+    - openshift  
+    - nexus
 
 - name: Expose the nexus service
   shell: "oc expose svc/nexus --path='/nexus'"
@@ -42,7 +42,7 @@
     - nexus  
 
 - name: Configure the liveness probe
-  shell: "oc set probe dc/nexus --liveness --failure-threshold 3 --initial-delay-seconds 30 -- echo ok"
+  shell: "oc set probe deployment/nexus --liveness --failure-threshold 3 --initial-delay-seconds 30 -- echo ok"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
@@ -51,7 +51,7 @@
     - nexus  
 
 - name: Configure the readiness probe
-  shell: "oc set probe dc/nexus --readiness --failure-threshold 3 --initial-delay-seconds 30 --get-url=http://:8081/nexus/content/groups/public"
+  shell: "oc set probe deployment/nexus --readiness --failure-threshold 3 --initial-delay-seconds 30 --get-url=http://:8081/nexus/content/groups/public"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
