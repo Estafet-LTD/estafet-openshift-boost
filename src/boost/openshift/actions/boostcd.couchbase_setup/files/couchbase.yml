@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: couchbase-cluster
+parameters:
+- description: Defines name of the couchbase username
+  name: COUCHBASE_USERNAME
+  required: true
+- description: Defines name of the couchbase password
+  name: COUCHBASE_PASSWORD
+  required: true    
+- description: Defines the product
+  name: PRODUCT
+  required: true     
+objects:
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: cb-${PRODUCT}-auth
+  type: Opaque
+  data:
+    username: ${COUCHBASE_USERNAME}
+    password: ${COUCHBASE_PASSWORD}
+- apiVersion: couchbase.com/v2
+  kind: CouchbaseBucket
+  metadata:
+    name: default  
+  spec:
+    memoryQuota: 128Mi    
+- apiVersion: couchbase.com/v2
+  kind: CouchbaseCluster
+  metadata:
+    name: cb-${PRODUCT}  
+  spec:
+    image: couchbase/server:6.6.0  
+    security:
+      adminSecret: cb-${PRODUCT}-auth
+    networking:
+      exposeAdminConsole: true
+      adminConsoleServices:
+      - data
+    buckets:
+      managed: true
+    servers:
+    - size: 3  
+      name: all_services
+      services:
+      - data
+      - index
+      - query
+      - search

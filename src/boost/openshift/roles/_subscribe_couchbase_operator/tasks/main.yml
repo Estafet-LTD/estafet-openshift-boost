@@ -1,0 +1,26 @@
+---
+- name: Install Jaeger Operator
+  shell: "oc apply -f {{ roles }}/_subscribe_couchbase_operator/files/couchbase-subscription.yaml -n openshift-operators"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+    - opentracing
+    - jaeger                   
+
+- name: Wait for the couchbase operator to become available
+  shell : "oc rollout status deployment couchbase-operator -n openshift-operators"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift  
+
+- name: Wait for the couchbase operator admission to become available
+  shell : "oc rollout status deployment couchbase-operator-admission -n openshift-operators"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift  
