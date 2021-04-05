@@ -10,9 +10,9 @@
     - jaeger                   
 
 - name: Wait for deployments to start
-  shell: "oc get deployment couchbase-operator -n openshift-operators -o json"
+  shell: "oc get deployments -n openshift-operators -o json"
   register: list_of_deployments
-  until: "{{ list_of_deployments.stdout | has_items }}"
+  until: "{{ list_of_deployments.stdout | has_item('couchbase-operator') }}"
   retries: 10
   delay: 5
 
