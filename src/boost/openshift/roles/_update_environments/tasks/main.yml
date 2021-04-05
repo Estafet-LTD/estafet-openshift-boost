@@ -18,7 +18,8 @@
 - include_role: 
     name: _environments_setup
   vars:
-    env: "{{ item }}"     
+    env: "{{ item }}"  
+    next_env: "{{ item.name | next_stage(environments.stages) }}"   
   with_items: "{{ environments.stages }}"
 
 - include_role: 

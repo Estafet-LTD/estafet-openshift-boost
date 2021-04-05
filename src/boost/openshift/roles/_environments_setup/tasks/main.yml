@@ -3,6 +3,10 @@
     var: env
     verbosity: 0
 
+- debug:
+    var: next_env
+    verbosity: 0
+
 - set_fact: stage_project="{{ product.name }}-{{ env.name }}"
 
 - include_role: 
@@ -10,7 +14,7 @@
   vars:
     project: "{{ stage_project }}"
     project_description: "{{ env.display }}: {{ product.description }}"
-    next: "{{ product.name }}-{{ env.next }}"
+    next: "{{ product.name }}-{{ next_env }}"
     display: "{{ env.display }}"
 
 - include_role: 
