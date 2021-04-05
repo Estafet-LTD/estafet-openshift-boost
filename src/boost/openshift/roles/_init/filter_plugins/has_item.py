@@ -11,6 +11,6 @@ class FilterModule(object):
         dcs = json.loads(stdout)
         items = dcs["items"]
         for item in items:
-            if items["metadata"]["name"] == deployment:
+            if item["metadata"]["name"] == deployment:
                 return True
         return False
