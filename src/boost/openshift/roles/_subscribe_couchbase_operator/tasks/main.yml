@@ -9,16 +9,15 @@
     - opentracing
     - jaeger                   
 
+- name: Wait for deployments to start
+  shell: "oc get deployment couchbase-operator -n openshift-operators -o json"
+  register: list_of_deployments
+  until: "{{ list_of_deployments.stdout | has_items }}"
+  retries: 10
+  delay: 5
+
 - name: Wait for the couchbase operator to become available
   shell : "oc rollout status deployment couchbase-operator -n openshift-operators"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"
-  tags:
-    - openshift  
-
-- name: Wait for the couchbase operator admission to become available
-  shell : "oc rollout status deployment couchbase-operator-admission -n openshift-operators"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
