@@ -26,6 +26,18 @@
     var: boost
     verbosity: 0
 
+- name: openshift default
+  set_fact:
+    openshift_default:
+      host: "api.{{ openshift.domain }}"
+      port: 6443
+      subdomain: "apps.{{ openshift.domain }}"
+      registry: image-registry.openshift-image-registry.svc:5000
+
+- name: merge the default openshift config
+  set_fact:
+    environments: "{{openshift|combine(openshift_default,recursive=True)}}"
+
 - name: set the config and section
   set_fact:
     git_config: "{{ productdir }}/.git/config"
