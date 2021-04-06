@@ -3,7 +3,6 @@
 class FilterModule(object):
     def filters(self):
         return {
-            'get_preprod' : self.get_preprod,
             'get_mid_stages' : self.get_mid_stages
         }
 
