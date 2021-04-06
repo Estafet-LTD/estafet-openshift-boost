@@ -35,12 +35,15 @@
   tags:
     - openshift       
 
+- set_fact: 
+    mid_stages: "{{ environments.stages | get_mid_stages }}"
+
 - name: Create promote pipelines for each microservice for each environment
-  shell: "oc process -f {{ templates }}/promote.yml -p BOOST_URL={{ boostcd.repo }} -p VERSION={{ boost.version }} -p MICROSERVICE_NAME={{ item[0].name }} -p MICROSERVICE_REPO_URI={{ item[0].repo }} -p PRODUCT={{ product.name }} -p ENVIRONMENTS_REPO_URI={{ product.repo }} -p ENV={{ item[1].name }} -p PROJECT={{ product.name }}-{{ item[1].next }} | oc create -f -"
+  shell: "oc process -f {{ templates }}/promote.yml -p BOOST_URL={{ boostcd.repo }} -p VERSION={{ boost.version }} -p MICROSERVICE_NAME={{ item[0].name }} -p MICROSERVICE_REPO_URI={{ item[0].repo }} -p PRODUCT={{ product.name }} -p ENVIRONMENTS_REPO_URI={{ product.repo }} -p ENV={{ item[1].name }} -p PROJECT={{ product.name }}-{{ item[1].name | next_stage(environments.stages) }} | oc create -f -"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
-  when: item[1].name != 'build' and item[1].name != 'prod' and item[1].next != 'end' 
+  when: item[1].name in mid_stages
   with_nested: 
     - "{{ microservices }}"
     - "{{ environments.stages }}"
@@ -52,7 +55,7 @@
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
-  when: item.name != 'build' and item.name != 'prod' and item.next != 'end' 
+  when: item.name in mid_stages
   with_items: "{{ environments.stages }}"
   tags:
     - openshift  
@@ -72,7 +75,7 @@
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"  
-  when: item.next == 'prod'
+  when: item.name == preprod
   with_items: "{{ environments.stages }}"
   tags:
     - openshift 
