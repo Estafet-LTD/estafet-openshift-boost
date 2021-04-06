@@ -8,6 +8,8 @@ class FilterModule(object):
         }
 
     def match_count(self, stdout, match):
+        print stdout
+        print match
         pods = json.loads(stdout)
         items = pods["items"]
         count = 0
