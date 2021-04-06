@@ -13,8 +13,8 @@
 
 - name: Wait for pods to start
   shell: "oc get pods -n {{ project }} -o json"
-  register: list_of_deployments
-  until: "{{ list_of_deployments.stdout | match_count(match_pod) }} == 3"
+  register: list_of_pods
+  until: "{{ list_of_pods.stdout | match_count(match_pod) }} == 3"
   retries: 10
   delay: 5
 
