@@ -36,7 +36,7 @@
 
 - name: merge the default openshift config
   set_fact:
-    environments: "{{openshift|combine(openshift_default,recursive=True)}}"
+    openshift: "{{openshift|combine(openshift_default,recursive=True)}}"
 
 - debug:
     var: openshift
