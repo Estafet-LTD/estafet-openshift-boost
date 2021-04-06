@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 class FilterModule(object):
     def filters(self):
         return {
@@ -12,7 +11,7 @@ class FilterModule(object):
                 return stages[i-1]["name"]
 
     def get_mid_stages(self, stages):
-        preprod = get_preprod(stages)
+        preprod = self.get_preprod(stages)
         mid_stages = []
         for stage in stages:
             if stage["name"] not in ['build', preprod, 'prod']:
