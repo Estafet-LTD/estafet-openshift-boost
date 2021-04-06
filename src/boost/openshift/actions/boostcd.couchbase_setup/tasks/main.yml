@@ -12,14 +12,11 @@
     match_pod: "cb-{{ product.name }}"
 
 - name: Wait for pods to start
-  shell: "oc get pods -o json"
+  shell: "oc get pods -n {{ project }} -o json"
   register: list_of_pods
-  failed_when: "'exists' not in list_of_pods.stderr and list_of_pods.rc != 0"
-  changed_when: "'exists' not in list_of_pods.stderr"
-  until: "{{ list_of_pods.stdout | match_count(match_pod) }} == 3"
+  until: "{{ list_of_pods.stdout | match_count(match_pod, 3) }}"
   retries: 10
   delay: 5
-
 
 - name: Expose Service cb-{{ product.name }}
   shell: "oc expose service cb-{{ product.name }}"
