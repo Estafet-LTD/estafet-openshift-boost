@@ -8,7 +8,7 @@ class FilterModule(object):
 
     def next_stage(self, stage, stages):
         if stage == "build":
-            return "next"
+            return "test"
         elif stage == "prod":
             return "end"        
         for i in range(len(stages)):      
