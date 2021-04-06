@@ -34,13 +34,13 @@
       subdomain: "apps.{{ openshift.domain }}"
       registry: image-registry.openshift-image-registry.svc:5000
 
-- debug:
-    var: openshift
-    verbosity: 0
-
 - name: merge the default openshift config
   set_fact:
     environments: "{{openshift|combine(openshift_default,recursive=True)}}"
+
+- debug:
+    var: openshift
+    verbosity: 0
 
 - name: set the config and section
   set_fact:
