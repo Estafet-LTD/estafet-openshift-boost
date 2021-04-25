@@ -1,5 +1,6 @@
 ---
-- set_fact:
+- name: define the working directory
+  set_fact:
     workdir: "{{ ansible_env.HOME }}/.boost"
     
 - name: load product variables
@@ -22,7 +23,8 @@
     boost: "{{boost|combine(boost_updates,recursive=True)}}"
   when: boost.updates is undefined
 
-- debug:
+- name: print the boost configuration information
+  debug:
     var: boost
     verbosity: 0
 
@@ -38,7 +40,8 @@
   set_fact:
     openshift: "{{openshift|combine(openshift_default,recursive=True)}}"
 
-- debug:
+- name: print out the openshift configuration details
+  debug:
     var: openshift
     verbosity: 0
 
@@ -56,7 +59,8 @@
     product: "{{product|combine(product_default,recursive=True)}}"
   when: product.repo is undefined
 
-- debug:
+- name: print out the product information
+  debug:
     var: product
     verbosity: 0
 
@@ -75,10 +79,14 @@
     qa_environment: "{{qa_environment|combine(console_environment,recursive=True)}}"
   when: qa_environment.maven_mirror_url is undefined
 
-- set_fact: openshift_host_port="{{ openshift.host }}:{{ openshift.port }}"
+- name: set the openshift host and port when port is defined
+  set_fact: 
+    openshift_host_port: "{{ openshift.host }}:{{ openshift.port }}"
   when: openshift.port is defined
 
-- set_fact: openshift_host_port="{{ openshift.host }}"
+- name: set the openshift host and port when port is not defined
+  set_fact: 
+    openshift_host_port: "{{ openshift.host }}"
   when: openshift.port is not defined
     
 - name: Verify if openshift is set

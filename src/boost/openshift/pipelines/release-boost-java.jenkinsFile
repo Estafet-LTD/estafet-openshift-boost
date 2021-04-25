@@ -31,7 +31,7 @@ node('maven') {
 
 	stage("checkout") {
 		withCredentials([usernamePassword(credentialsId: 'git', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-			git branch: "master", url: "https://$USERNAME:$PASSWORD@github.com/${org(params.REPO)}/${uri(params.REPO)}"			
+			git url: "https://$USERNAME:$PASSWORD@github.com/${org(params.REPO)}/${uri(params.REPO)}"			
 		}
 	}
 
@@ -47,7 +47,9 @@ node('maven') {
 		sh "git config --global user.name \"jenkins\""
 		withMaven(mavenSettingsConfig: 'maven') {
 			sh "mvn release:clean release:prepare release:perform -DreleaseVersion=${releaseVersion} -DdevelopmentVersion=${developmentVersion} -Darguments=\"-Dmaven.javadoc.skip=true\" -DpushChanges=false -DlocalCheckout=true -DpreparationGoals=initialize -B"
-			sh "git push origin master"
+			sh "git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@' > main.out"
+			def main = readFile('main.out')
+			sh "git push origin ${main}"
 			sh "git tag ${releaseVersion}"
 			sh "git push origin ${releaseVersion}"
 		} 

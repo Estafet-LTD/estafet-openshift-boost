@@ -31,7 +31,7 @@ node {
 
 	stage("checkout") {
 		withCredentials([usernamePassword(credentialsId: 'git', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-			git branch: "master", url: "https://$USERNAME:$PASSWORD@github.com/${org(params.REPO)}/${uri(params.REPO)}"			
+			git url: "https://$USERNAME:$PASSWORD@github.com/${org(params.REPO)}/${uri(params.REPO)}"			
 		}
 	}
 
@@ -53,7 +53,9 @@ node {
 		writeFile file: '.boost/application.properties', text: contents
 		sh "git add .boost/application.properties"
 		sh "git commit -m \"boost update version ${developmentVersion}\""
-		sh "git push origin master"			
+		sh "git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@' > main.out"
+		def main = readFile('main.out')
+		sh "git push origin ${main}"			
 		sh "git tag ${releaseVersion}"
 		sh "git push origin ${releaseVersion}"
 	}	

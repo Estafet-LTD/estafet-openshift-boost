@@ -26,7 +26,7 @@ node {
 	def env = params.ENV
 
 	stage("checkout") {
-		git branch: "master", credentialsId: 'git', url: params.PRODUCT_REPO
+		git credentialsId: 'git', url: params.PRODUCT_REPO
 	}
 
 	stage("reset test flags for ${project}") {

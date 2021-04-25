@@ -11,7 +11,7 @@ node("jenkins-slave-ansible") {
 	def microservice = params.MICROSERVICE	
 
 	stage("checkout") {
-		git credentialsId: "git", branch: "master", url: params.REPO
+		git credentialsId: "git", url: params.REPO
 	}
 	
 	stage ("install boost core") {
@@ -28,7 +28,7 @@ node("jenkins-slave-ansible") {
 	}	
 
 	stage ("activate the product") {
-		def json = "{ \"productId\" : \"blockchain-demo\", \"description\" : \"Block Chain Demo\", \"version\" : \"master\", \"repo\" : \"https://github.com/Estafet-LTD/blockchain-demo.git\" }"
+		def json = "{ \"productId\" : \"blockchain-demo\", \"description\" : \"Block Chain Demo\", \"version\" : \"main\", \"repo\" : \"https://github.com/Estafet-LTD/blockchain-demo.git\" }"
 		httpRequest url: "http://environment-api.${project}.svc:8080/product", contentType: 'APPLICATION_JSON', httpMode: 'POST', requestBody: json
 	}
 

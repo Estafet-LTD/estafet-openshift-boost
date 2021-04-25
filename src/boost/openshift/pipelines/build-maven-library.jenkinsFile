@@ -9,7 +9,7 @@ node("maven") {
 	])
 
 	stage("checkout") {
-		git credentialsId: "git", branch: "master", url: params.REPO
+		git credentialsId: "git", url: params.REPO
 	}
 
 	stage("deploy snapshots") {

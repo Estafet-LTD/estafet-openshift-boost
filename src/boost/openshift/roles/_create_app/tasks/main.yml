@@ -1,5 +1,10 @@
 ---
-- set_fact: branch="master"
+- name: determine the default branch
+  shell: "git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'"
+  register: command_result
+
+- set_fact: 
+    branch: "{{ command_result.stdout }}"
 
 - debug:
     var: microservice
