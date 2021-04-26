@@ -109,10 +109,10 @@
     msg: "[Environments Definitions] are not set. Please edit environments.yml"
   when: environments is undefined
 
-- name: Verify if the libraries have been defined
-  fail:
-    msg: "[Library Definitions] are not set. Please edit libraries.yml"
-  when: libraries is undefined
+#- name: Verify if the libraries have been defined
+#  fail:
+#    msg: "[Library Definitions] are not set. Please edit libraries.yml"
+#  when: libraries is undefined
 
 - name: Verify if the users have been defined
   fail:
