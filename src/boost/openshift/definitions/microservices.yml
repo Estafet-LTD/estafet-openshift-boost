@@ -63,7 +63,8 @@ boost_microservices:
       build: build-boost.jenkinsFile
       release: release-boost-java.jenkinsFile
       expose: false
-      test: false        
+      test: false      
+      check: trello  
 
     - name: jira-api
       version: 0.0.7
@@ -72,6 +73,7 @@ boost_microservices:
       release: release-boost-java.jenkinsFile      
       expose: false
       test: false  
+      check: jira  
           
     - name: feature-api
       version: 0.0.11
