@@ -1,0 +1,5 @@
+---
+# load resources        
+- name: Load the variables from default-resources.yml
+  include_vars:
+    file: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/default-resources.yml"

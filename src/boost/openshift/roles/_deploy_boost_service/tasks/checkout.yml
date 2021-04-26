@@ -1,0 +1,9 @@
+---
+- name: Checkout {{ microservice.name }} from github branch {{ microservice.version }}
+  git:
+    repo: "{{ microservice.repo }}"
+    dest: "{{ workdir }}/{{ microservice.name }}"
+    version: "{{ microservice.version }}"
+    update: yes
+  tags:
+    - git  

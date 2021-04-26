@@ -1,229 +1,25 @@
----
-- debug:
-    var: microservice
-    verbosity: 0
+---  
+- include_tasks: init.yml
 
-- set_fact:
-    image_deployed: false
-    image: "{{ dockerhub.url }}/{{ dockerhub.org }}/{{ microservice.name }}:{{ microservice.version }}"
-    dc_image: ""
+- include_tasks: checkout.yml
+  when: not image_deployed
 
-- debug:
-    var: image
-    verbosity: 0
+- include_tasks: setup.yml
 
-- name: Retrieve the deployment config descriptor
-  shell: "oc get dc --selector app={{ microservice.name }} -o json -n {{ project }}"
-  register: list_of_dcs
+- include_tasks: app_cleanup.yml
+  when: not image_deployed
 
-- debug:
-    var: list_of_dcs
-    verbosity: 0
+- include_tasks: maps_secrets_cleanup.yml
+  when: not image_deployed
 
-- name: Get the image used by the dc
-  set_fact: 
-    dc_image: "{{list_of_dcs.stdout|image}}"
+- include_tasks: create_config_maps.yml
+  when: not image_deployed
 
-- set_fact:
-    stage: live
+- include_tasks: create_secrets.yml
+  when: not image_deployed
 
-- debug:
-    var: dc_image
-    verbosity: 0
+- include_tasks: load_resources.yml
+  when: not image_deployed
 
-- set_fact:
-    image_deployed: true
-  when: image == dc_image
-
-- name: Checkout {{ microservice.name }} from github branch {{ microservice.version }}
-  git:
-    repo: "{{ microservice.repo }}"
-    dest: "{{ workdir }}/{{ microservice.name }}"
-    version: "{{ microservice.version }}"
-    update: yes
-  when: image_deployed == false
-  tags:
-    - git  
-
-# setup   
-- name: Check that the {{ stage }}-setup.yml exists
-  stat:
-    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/{{ stage }}-setup.yml"
-  register: stat_result
-
-- set_fact:
-    setup_yml: ""
-
-- name: define the setup file
-  set_fact:
-    setup_yml: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/{{ stage }}-setup.yml"
-  when: stat_result.stat.exists  
-
-- name: Check that the default-setup.yml exists
-  stat:
-    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/default-setup.yml"
-  register: stat_result
-
-- name: define the setup file
-  set_fact:
-    setup_yml: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/default-setup.yml"
-  when: setup_yml == "" and stat_result.stat.exists
-
-- name: load the settings
-  include_vars:
-    file: "{{ setup_yml }}"
-  when: setup_yml != ""
-
-- include_role: 
-    name: "{{ item.name }}"
-  vars:
-    params: "{{ item }}"
-  with_items: "{{ setup | default([]) }}"
-  when: setup_yml != "" and not image_deployed
-
-# app cleanup    
-- name: Remove all aspects of the application so that we can rebuild from scratch
-  shell: "oc delete all -l app={{ microservice.name }} -n {{ project }} || true"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"
-  when: image_deployed == false
-  tags:
-    - openshift  
-
-# cleanup config maps and secrets     
-- name: Delete the {{ microservice.name }} configmap
-  shell: 'oc delete configmap {{ microservice.name }} -n {{ project }} || true'
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"
-  when: image_deployed == false
-  tags:
-    - openshift
-
-- name: Delete the {{ microservice.name }} secret
-  shell: 'oc delete secret {{ microservice.name }} -n {{ project }} || true'
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"
-  when: image_deployed == false
-  tags:
-    - openshift
-
-# create config maps    
-- name: Check that the {{ stage }}-config.yml exists
-  stat:
-    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/{{ stage }}-config.yml"
-  register: stat_result
-  
-- set_fact:
-    config: ""
-
-- name: define the {{ stage }}-config.yml file
-  set_fact:
-    config: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/{{ stage }}-config.yml"
-  when: stat_result.stat.exists
-
-- name: define the default config file
-  set_fact:
-    config: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/default-config.yml"
-  when: config == ""
-
-- name: Load the variables from {{ config }}
-  include_vars:
-    file: "{{ config }}"
-
-- name: Initialise config map variables
-  set_fact: mapStr=""
-
-- name: format the configmap variables
-  set_fact: mapStr="{{ mapStr }} --from-literal={{ item.name }}='{{ item.value }}'"
-  with_items: "{{ config_map }}"
-
-- name: Create the {{ microservice.name }} configmap
-  shell: 'oc create configmap {{ microservice.name }} {{ mapStr }} -n {{ project }}'
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"
-  tags:
-    - openshift
-
-# create secrets
-- name: Check that the {{ stage }}-secret.yml exists
-  stat:
-    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/{{ stage }}-secret.yml"
-  register: stat_result
-
-- set_fact:
-    secret: ""
-
-- name: define the secret file
-  set_fact:
-    secret: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/{{ stage }}-secret.yml"
-  when: stat_result.stat.exists  
-
-- name: Check that the default-secret.yml exists
-  stat:
-    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/default-secret.yml"
-  register: stat_result
-
-- name: define the default secret file
-  set_fact:
-    secret: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/default-secret.yml"
-  when: stat_result.stat.exists and secret == ""
-
-- name: Load the variables from {{ secret }}
-  include_vars:
-    file: "{{ secret }}"
-  when: secret != ""
-
-- name: Initialise secret variables
-  set_fact: secretStr=""
-  when: secret != ""
-
-- name: format the secrets variables
-  set_fact: secretStr="{{ secretStr }} --from-literal={{ item.name }}='{{ item.value }}'"
-  with_items: "{{ secrets }}"
-  when: secret != ""
-
-- name: Create the {{ microservice.name }} secrets
-  shell: 'oc create secret generic {{ microservice.name }} {{ secretStr }} -n {{ project }}'
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"
-  when: secret != ""
-  tags:
-    - openshift
-
-# load resources        
-- name: Load the variables from default-resources.yml
-  include_vars:
-    file: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/configuration/default-resources.yml"
-
-# deploy app     
-- name: Create the deployment config
-  shell: "oc process -n {{ project }} -f {{ workdir }}/{{ microservice.name }}/src/boost/openshift/templates/deploy-config.yml -p MICROSERVICE={{ microservice.name }} -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ dockerhub.org }} -p DOCKER_IMAGE_LABEL={{ microservice.version }} -p DOCKER_REGISTRY={{ dockerhub.url }} -p MAX_MEMORY={{ resources.max_memory }} -p MIN_MEMORY={{ resources.min_memory }} -p MAX_CPU={{ resources.max_cpu }} -p MIN_CPU={{ resources.min_cpu }} -p REPLICAS={{ resources.replicas }} | oc apply -f -"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"
-  when: image_deployed == false
-  tags:
-    - openshift     
-
-- name: Wait for the microservice to become available {{ microservice.name }}
-  shell: "oc rollout status dc/{{ microservice.name }} -n {{ project }}"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"
-  when: image_deployed == false
-  tags:
-    - openshift
-
-- name: Expose Service {{ microservice.name }}
-  shell: "oc expose service {{ microservice.name }} -n {{ project }}"
-  when: microservice.expose and image_deployed == false
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"
-  tags:
-    - openshift
+- include_tasks: deploy_app.yml
+  when: not image_deployed

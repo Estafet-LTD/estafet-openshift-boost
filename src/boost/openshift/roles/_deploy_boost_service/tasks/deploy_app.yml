@@ -1,0 +1,26 @@
+---
+# deploy app     
+- name: Create the deployment config
+  shell: "oc process -n {{ project }} -f {{ workdir }}/{{ microservice.name }}/src/boost/openshift/templates/deploy-config.yml -p MICROSERVICE={{ microservice.name }} -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ dockerhub.org }} -p DOCKER_IMAGE_LABEL={{ microservice.version }} -p DOCKER_REGISTRY={{ dockerhub.url }} -p MAX_MEMORY={{ resources.max_memory }} -p MIN_MEMORY={{ resources.min_memory }} -p MAX_CPU={{ resources.max_cpu }} -p MIN_CPU={{ resources.min_cpu }} -p REPLICAS={{ resources.replicas }} | oc apply -f -"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift     
+
+- name: Wait for the microservice to become available {{ microservice.name }}
+  shell: "oc rollout status dc/{{ microservice.name }} -n {{ project }}"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
+
+- name: Expose Service {{ microservice.name }}
+  shell: "oc expose service {{ microservice.name }} -n {{ project }}"
+  when: microservice.expose
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  tags:
+    - openshift
