@@ -7,19 +7,19 @@
 - include_tasks: setup.yml
 
 - include_tasks: app_cleanup.yml
-  when: not image_deployed
+  when: not ignore_deploy and not image_deployed
 
 - include_tasks: maps_secrets_cleanup.yml
-  when: not image_deployed
+  when: not ignore_deploy and not image_deployed
 
 - include_tasks: create_config_maps.yml
-  when: not image_deployed
+  when: not ignore_deploy and not image_deployed
 
 - include_tasks: create_secrets.yml
-  when: not image_deployed
+  when: not ignore_deploy and not image_deployed
 
 - include_tasks: load_resources.yml
-  when: not image_deployed
+  when: not ignore_deploy and not image_deployed
 
 - include_tasks: deploy_app.yml
-  when: not image_deployed
+  when: not ignore_deploy and not image_deployed
