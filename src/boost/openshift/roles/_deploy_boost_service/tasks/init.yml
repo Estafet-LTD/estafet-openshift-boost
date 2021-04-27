@@ -49,12 +49,12 @@
 
 - name: initialise ignore_deploy
   set_fact: 
-    ignore_deploy: false
+    ignore_deploy: true
 
 - name: define ignore_deploy
   set_fact: 
-    ignore_deploy: true
-  when: "microservice.check is defined and check_config != ''"
+    ignore_deploy: false
+  when: "microservice.check is undefined or (microservice.check is defined and check_config != '')"
 
 
 
