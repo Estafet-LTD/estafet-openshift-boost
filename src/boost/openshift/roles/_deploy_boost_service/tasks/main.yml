@@ -2,9 +2,10 @@
 - include_tasks: init.yml
 
 - include_tasks: checkout.yml
-  when: not image_deployed
+  when: not ignore_deploy and not image_deployed
 
 - include_tasks: setup.yml
+  when: not ignore_deploy and not image_deployed
 
 - include_tasks: app_cleanup.yml
   when: not ignore_deploy and not image_deployed

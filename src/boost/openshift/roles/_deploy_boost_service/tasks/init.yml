@@ -37,6 +37,11 @@
     var: dc_image
     verbosity: 0
 
+- name: determine is the image needs to be deployed
+  set_fact:
+    image_deployed: true
+  when: image == dc_image
+
 - name: initialise the check_config
   set_fact:
     check_config: "{{ lookup('vars', microservice.check, default='')}}"
