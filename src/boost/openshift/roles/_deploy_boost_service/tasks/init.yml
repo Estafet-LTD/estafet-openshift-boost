@@ -42,6 +42,10 @@
     check_config: "{{ lookup('vars', microservice.check, default='')}}"
   when: microservice.check is defined
 
+- name: initialise ignore_deploy
+  set_fact: 
+    ignore_deploy: false
+
 - name: define ignore_deploy
   set_fact: 
     ignore_deploy: true
