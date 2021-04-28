@@ -3,6 +3,7 @@
 - name: check that the smoke tests repo exist
   shell: "git ls-remote -h {{ environments.smoke_test_repo }}"
   register: command_result
+  ignore_errors: yes
 
 - name: print the command_result details
   debug:
