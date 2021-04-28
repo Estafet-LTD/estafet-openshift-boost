@@ -13,7 +13,7 @@
   shell: "oc get deployments -n openshift-operators -o json"
   register: list_of_deployments
   until: "{{ list_of_deployments.stdout | has_item('couchbase-operator') }}"
-  retries: 10
+  retries: 50
   delay: 5
 
 - name: Wait for the couchbase operator to become available
