@@ -10,4 +10,8 @@
     var: command_result
     verbosity: 0
 
+#- name: create the smoke test repo
+#  shell: "git init --bare {{ environments.smoke_test_repo }}"
+#  when: "'Repository not found' not in command_result.stderr"
+
 
