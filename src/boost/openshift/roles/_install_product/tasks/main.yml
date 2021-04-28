@@ -1,11 +1,18 @@
 ---
-- include_role: 
+- name: create git repostories if required
+  include_role: 
+    name: _git_repo_setup
+
+- name: create the webhooks for git repostories
+  include_role: 
     name: _webhook_setup
 
-- include_role: 
+- name: deploy the environments
+  include_role: 
     name: _update_environments
 
-- include_role: 
+- name: create the console namespace
+  include_role: 
     name: _namespace_setup
   vars:
     project: "{{ console_project }}"
