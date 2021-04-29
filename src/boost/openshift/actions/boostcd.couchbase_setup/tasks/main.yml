@@ -15,7 +15,7 @@
   shell: "oc get pods -n {{ project }} -o json"
   register: list_of_pods
   until: "{{ list_of_pods.stdout | match_count(match_pod) }} == 3"
-  retries: 20
+  retries: 30
   delay: 5
 
 - name: Expose Service cb-{{ product.name }}
