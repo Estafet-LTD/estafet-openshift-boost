@@ -7,8 +7,8 @@
     content_type: json
     events:
       - push
-    user: "{{ github.user }}"
-    password: "{{ github.password }}"
+    user: "{{ git.user }}"
+    password: "{{ git.password }}"
     state: present
   with_items: "{{ microservices }}"
 
@@ -19,8 +19,8 @@
     content_type: json
     events:
       - push
-    user: "{{ github.user }}"
-    password: "{{ github.password }}"
+    user: "{{ git.user }}"
+    password: "{{ git.password }}"
     state: present
   when: item.test_repo is defined
   with_items: "{{ environments.stages }}"        

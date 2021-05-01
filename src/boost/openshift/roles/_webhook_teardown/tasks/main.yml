@@ -3,6 +3,6 @@
     name: "{{ item.name }}"
   vars:
     params: "{{ item }}"
-  with_items: "{{ webhooks.teardown | default([]) }}"
+  with_items: "{{ git.webhooks.teardown | default([]) }}"
 
  

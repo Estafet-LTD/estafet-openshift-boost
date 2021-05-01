@@ -3,8 +3,8 @@
   github_webhook:
     repository: "{{ item.repo | github_repo }}"
     url: "http://gateway-api-boost-services.{{ openshift.subdomain }}/github/hooks/"
-    user: "{{ github.user }}"
-    password: "{{ github.password }}"
+    user: "{{ git.user }}"
+    password: "{{ git.password }}"
     state: absent
   with_items: "{{ microservices }}"
 
@@ -12,8 +12,8 @@
   github_webhook:
     repository: "{{ item.test_repo | github_repo }}"
     url: "http://gateway-api-boost-services.{{ openshift.subdomain }}/github/hooks/"
-    user: "{{ github.user }}"
-    password: "{{ github.password }}"
+    user: "{{ git.user }}"
+    password: "{{ git.password }}"
     state: absent
   when: item.test_repo is defined
   with_items: "{{ environments.stages }}"  

@@ -5,8 +5,8 @@
     name: _jenkins_add_xml_credential
   vars:
     credential_id: git
-    credential_user: "{{ github.user }}"
-    credential_password: "{{ github.password }}"
+    credential_user: "{{ git.user }}"
+    credential_password: "{{ git.password }}"
     credential_description: "Git Credentials"
 
 - include_role: 
