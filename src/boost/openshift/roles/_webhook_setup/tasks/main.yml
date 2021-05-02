@@ -1,8 +1,7 @@
 ---
-- include_role: 
-    name: "{{ item.name }}"
-  vars:
-    params: "{{ item }}"
-  with_items: "{{ git.webhooks.setup | default([]) }}"
+- name: invoke the git webhook plugin
+  include_role: 
+    name: "{{ git.webhooks.setup }}"
+  when: git.webhooks.setup is defined
 
  

@@ -1,8 +1,5 @@
 ---
-- include_role: 
-    name: "{{ item.name }}"
-  vars:
-    params: "{{ item }}"
-  with_items: "{{ git.webhooks.teardown | default([]) }}"
-
- 
+- name: remove the git webhook plugin
+  include_role: 
+    name: "{{ git.webhooks.teardown }}"
+  when: git.webhooks.teardown is defined
