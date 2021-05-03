@@ -1,5 +1,7 @@
 ---
-- set_fact: branch="master"
+- name: set the branch to master
+  set_fact: 
+    branch: "master"
 
 - name: Checkout redhat quickstarts
   git:
@@ -10,4 +12,6 @@
   tags:
     - git  
 
-- set_fact: quickstarts="{{ workdir }}/containers-quickstarts"
+- name: define the quickstarts location
+  set_fact: 
+    quickstarts: "{{ workdir }}/containers-quickstarts"
