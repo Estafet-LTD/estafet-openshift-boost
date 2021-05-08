@@ -1,18 +1,21 @@
 ---
-- include_role: 
+- name: create the boost cicd project
+  include_role: 
     name: _namespace_setup
   vars:
     project: "{{ boost_project }}"
     project_description: "Boost CI/CD"
 
-- include_role: 
+- name: setup jenkins within cicd project
+  include_role: 
     name: _jenkins_setup
   vars:
     project: "{{ boost_project }}"
     volume_capacity: 10Gi
     memory_limit: 2Gi
 
-- include_role: 
+- name: setup the boost libraries
+  include_role: 
     name: _boost_libraries_setup
   vars:
     project: "{{ boost_project }}"
@@ -42,43 +45,51 @@
   tags:
     - openshift    
 
-- include_role: 
+- name: configure script approval
+  include_role: 
     name: _jenkins_script_approval
   vars:
     project: "{{ boost_project }}"
 
-- include_role: 
+- name: jenkins configuration
+  include_role: 
     name: _jenkins_config_xml
   vars:
     project: "{{ boost_project }}"
 
-- include_role: 
+- name: configure jenkins credentials
+  include_role: 
     name: _jenkins_credentials_xml
   vars:
     project: "{{ boost_project }}"
     boostcd_dev: true
 
-- include_role: 
+- name: configure the maven pipeline plugin
+  include_role: 
     name: _jenkins_maven_pipeline_plugin
   vars:
     project: "{{ boost_project }}"
 
-- include_role: 
+- name: configure the http request plugin
+  include_role: 
     name: _jenkins_http_request_plugin
   vars:
     project: "{{ boost_project }}"
 
-- include_role: 
-    name: _jenkins_ansible_slave_setup
+- name: setup the ansible agent
+  include_role: 
+    name: _jenkins_ansible_agent_setup
   vars:
     project: "{{ boost_project }}"     
 
-- include_role: 
+- name: setup the image management agent
+  include_role: 
     name: _jenkins_image_mgmt_slave_setup
   vars:
     project: "{{ boost_project }}"     
 
-- include_role: 
+- name: restart jenkins
+  include_role: 
     name: _jenkins_restart
   vars:
     project: "{{ boost_project }}"
