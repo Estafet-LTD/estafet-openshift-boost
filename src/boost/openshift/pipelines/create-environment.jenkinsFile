@@ -21,7 +21,7 @@ def getNextProjectName(product) {
 	}
 }
 
-node("jenkins-slave-ansible") {
+node("jenkins-agent-ansible") {
 	
 	def project
 	

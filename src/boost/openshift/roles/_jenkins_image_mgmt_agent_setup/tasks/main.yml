@@ -1,0 +1,8 @@
+---
+- name: Create the jenkins image management agent
+  shell: "oc process -f {{ quickstarts }}/.openshift/templates/jenkins-agent-generic-template.yml -p NAME=jenkins-agent-image-mgmt -p SOURCE_CONTEXT_DIR=jenkins-agents/jenkins-agent-image-mgmt | oc create -f -"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"  
+  tags:
+    - openshift       

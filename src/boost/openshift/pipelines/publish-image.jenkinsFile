@@ -9,7 +9,7 @@ def getImageRepo(project, microservice) {
 	return getDockerImageRepo(image)
 }
 
-node('jenkins-slave-image-mgmt') { 
+node('jenkins-agent-image-mgmt') { 
 
 	properties([
 	  parameters([

@@ -1,4 +1,4 @@
-node("jenkins-slave-ansible") {
+node("jenkins-agent-ansible") {
 
 	properties([
 	  parameters([

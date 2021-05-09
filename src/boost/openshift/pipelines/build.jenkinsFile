@@ -4,7 +4,7 @@ def getVersion(pom) {
 	return "${matcher[0][1]}${matcher[0][2].toInteger()}-SNAPSHOT"
 }
 
-node("jenkins-slave-ansible") {
+node("jenkins-agent-ansible") {
 
 	properties([
 	  parameters([ 
