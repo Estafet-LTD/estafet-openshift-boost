@@ -141,7 +141,7 @@
 
 - name: ansible agent setup
   include_role: 
-    name: _jenkins_ansible_agent_setup
+    name: _jenkins_ansible_slave_setup
   vars:
     project: "{{ cicd_project }}"    
 

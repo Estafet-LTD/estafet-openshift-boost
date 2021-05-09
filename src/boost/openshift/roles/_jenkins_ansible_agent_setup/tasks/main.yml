@@ -1,8 +1,0 @@
----
-- name: Create the jenkins ansible agent
-  shell: "oc process -f {{ quickstarts }}/.openshift/templates/jenkins-agent-generic-template.yml -p NAME=jenkins-agent-ansible -p SOURCE_CONTEXT_DIR=jenkins-agents/jenkins-agent-ansible | oc create -f -"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"  
-  tags:
-    - openshift       
