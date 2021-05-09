@@ -1,28 +1,33 @@
 ---
-- include_role: 
+- name: create the cicd project for {{ cicd_project }}
+  include_role: 
     name: _namespace_setup
   vars:
     project: "{{ cicd_project }}"
     project_description: "CI/CD: {{ product.description }}"
 
-- include_role: 
+- name: create the roles for {{ cicd_project }}
+  include_role: 
     name: _namespace_role_setup
   vars:
     project: "{{ cicd_project }}"
     role: edit
 
-- include_role: 
+- name: jenkins setup
+  include_role: 
     name: _jenkins_setup
   vars:
     project: "{{ cicd_project }}"
     volume_capacity: 30Gi
     memory_limit: 3Gi
 
-- set_fact: 
+- name: environments setup
+  set_fact: 
     preprod: "{{ environments.stages | get_preprod }}"
 
 - name: set_fact when for preprod
-  set_fact: preprod_project="{{ product.name }}-{{ item.name }}"
+  set_fact: 
+    preprod_project: "{{ product.name }}-{{ item.name }}"
   with_items: "{{ environments.stages }}"
   when: item.name == preprod
 
@@ -35,7 +40,8 @@
   tags:
     - openshift       
 
-- set_fact: 
+- name: define mid stages
+  set_fact: 
     mid_stages: "{{ environments.stages | get_mid_stages }}"
 
 - name: Create promote pipelines for each microservice for each environment
@@ -48,7 +54,7 @@
     - "{{ microservices }}"
     - "{{ environments.stages }}"
   tags:
-    - openshift  
+    - openshift   
 
 - name: Create promote all pipelines for each environment
   shell: "oc process -f {{ templates }}/promote-all.yml -p BOOST_URL={{ boostcd.repo }} -p VERSION={{ boost.version }} -p PRODUCT={{ product.name }} -p ENV={{ item.name }} | oc create -f -"
@@ -97,42 +103,50 @@
   tags:
     - openshift      
 
-- include_role: 
+- name: script approval
+  include_role: 
     name: _jenkins_script_approval
   vars:
     project: "{{ cicd_project }}"
     
-- include_role: 
+- name: jenkins configuration xml
+  include_role: 
     name: _jenkins_config_xml
   vars:
     project: "{{ cicd_project }}"
     
-- include_role: 
+- name: jenkins credentials
+  include_role: 
     name: _jenkins_credentials_xml
   vars:
     project: "{{ cicd_project }}"
 
-- include_role: 
+- name: maven pipeline plugin
+  include_role: 
     name: _jenkins_maven_pipeline_plugin
   vars:
     project: "{{ cicd_project }}"
 
-- include_role: 
+- name: jenkins http request plugin
+  include_role: 
     name: _jenkins_http_request_plugin
   vars:
     project: "{{ cicd_project }}"
 
-- include_role: 
+- name: cucumber reports plugin
+  include_role: 
     name: _jenkins_cucumber_reports_plugin
   vars:
     project: "{{ cicd_project }}"
 
-- include_role: 
-    name: _jenkins_ansible_slave_setup
+- name: ansible agent setup
+  include_role: 
+    name: _jenkins_ansible_agent_setup
   vars:
     project: "{{ cicd_project }}"    
 
-- include_role: 
+- name: restart jenkins
+  include_role: 
     name: _jenkins_restart
   vars:
     project: "{{ cicd_project }}"    
