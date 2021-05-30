@@ -1,17 +1,20 @@
 ---
-- include_role: 
+- name: create boost services namespace
+  include_role: 
     name: _namespace_setup
   vars:
     project: boost-services
     project_description: "Boost Services"
 
-- include_role: 
+- name: setup amq
+  include_role: 
     name: boostcd.amq_setup
   vars:
     project: boost-services
     params: "{{ amq_params }}"
 
-- include_role: 
+- name: install postgresql
+  include_role: 
     name: boostcd.install_postgresql
   vars:
     project: boost-services
@@ -23,7 +26,8 @@
         - name: VOLUME_CAPACITY
           value: 3Gi    
 
-- include_role: 
+- name: setup jaeger tracing
+  include_role: 
     name: boostcd.jaeger_setup
   vars:
     project: boost-services
