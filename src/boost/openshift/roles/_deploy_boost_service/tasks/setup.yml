@@ -29,7 +29,8 @@
     file: "{{ setup_yml }}"
   when: setup_yml != ""
 
-- include_role: 
+- name: invoke dynamic role
+  include_role: 
     name: "{{ item.name }}"
   vars:
     params: "{{ item }}"
