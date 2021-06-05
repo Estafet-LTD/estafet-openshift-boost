@@ -17,10 +17,7 @@
   when: not ignore_deploy and not image_deployed
 
 - include_tasks: create_secrets.yml
-  when: not ignore_deploy and not image_deployed
-
-- include_tasks: load_resources.yml
-  when: not ignore_deploy and not image_deployed
+  when: secret_yml != "" and not ignore_deploy and not image_deployed
 
 - include_tasks: deploy_app.yml
   when: not ignore_deploy and not image_deployed

@@ -1,30 +1,6 @@
 ---
 # setup   
-- name: Check that the {{ stage }}-setup.yml exists
-  stat:
-    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/{{ stage }}-setup.yml"
-  register: stat_result
-
-- name: initialise setup yml
-  set_fact:
-    setup_yml: ""
-
-- name: define the setup file
-  set_fact:
-    setup_yml: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/{{ stage }}-setup.yml"
-  when: stat_result.stat.exists  
-
-- name: Check that the default-setup.yml exists
-  stat:
-    path: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/default-setup.yml"
-  register: stat_result
-
-- name: define the setup file
-  set_fact:
-    setup_yml: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift/setup/default-setup.yml"
-  when: setup_yml == "" and stat_result.stat.exists
-
-- name: load the settings
+- name: load the settings from {{ setup_yml }}
   include_vars:
     file: "{{ setup_yml }}"
   when: setup_yml != ""
@@ -35,4 +11,4 @@
   vars:
     params: "{{ item }}"
   with_items: "{{ setup | default([]) }}"
-  when: setup_yml != "" and not image_deployed
+  when: not image_deployed

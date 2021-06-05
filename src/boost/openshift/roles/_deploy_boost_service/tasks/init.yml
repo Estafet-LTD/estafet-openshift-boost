@@ -28,10 +28,6 @@
   set_fact: 
     dc_image: "{{list_of_dcs.stdout|image}}"
 
-- name: define default stage
-  set_fact:
-    stage: default
-
 - name: print the deployment config image
   debug:
     var: dc_image

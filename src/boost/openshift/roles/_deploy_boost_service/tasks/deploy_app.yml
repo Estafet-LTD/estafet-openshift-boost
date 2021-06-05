@@ -1,5 +1,8 @@
 ---
-# deploy app     
+- name: Load the resources from {{ resources_yml }}
+  include_vars:
+    file: "{{ resources_yml }}"
+
 - name: Create the deployment config
   shell: "oc process -n {{ project }} -f {{ workdir }}/{{ microservice.name }}/src/boost/openshift/templates/deploy-config.yml -p MICROSERVICE={{ microservice.name }} -p NAMESPACE={{ project }} -p DOCKER_NAMESPACE={{ dockerhub.org }} -p DOCKER_IMAGE_LABEL={{ microservice.version }} -p DOCKER_REGISTRY={{ dockerhub.url }} -p MAX_MEMORY={{ resources.max_memory }} -p MIN_MEMORY={{ resources.min_memory }} -p MAX_CPU={{ resources.max_cpu }} -p MIN_CPU={{ resources.min_cpu }} -p REPLICAS={{ resources.replicas }} | oc apply -f -"
   register: command_result
