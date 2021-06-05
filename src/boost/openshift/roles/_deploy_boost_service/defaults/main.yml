@@ -3,9 +3,9 @@
 openshift_dir: "{{ workdir }}/{{ microservice.name }}/src/boost/openshift"
 # setup directory variables
 setup_dir: "{{ openshift_dir }}/setup"
-setup_yml: "{ 'setup.yml' | stage_file(stage, setup_dir) }"
-resources_yml: "{ 'resources.yml' | stage_file(stage, setup_dir) }"
+setup_yml: "{{ 'setup.yml' | stage_file(stage, setup_dir) }}"
+resources_yml: "{{ 'resources.yml' | stage_file(stage, setup_dir) }}"
 # configuration directory varaibles
 config_dir: "{{ openshift_dir }}/configuration"
-config_yml: "{ 'config.yml' | stage_file(stage, config_dir) }"
-secret_yml: "{ 'secret.yml' | stage_file(stage, config_dir) }"
+config_yml: "{{ 'config.yml' | stage_file(stage, config_dir) }}"
+secret_yml: "{{ 'secret.yml' | stage_file(stage, config_dir) }}"
