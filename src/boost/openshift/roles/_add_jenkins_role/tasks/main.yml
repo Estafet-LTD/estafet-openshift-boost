@@ -8,7 +8,8 @@
     - openshift
     - jenkins   
 
-- include_role: 
+- name: admin annotator
+  include_role: 
     name : _admin_annotator
 
 - name: Allows jenkins to modify the labels for the {{ project }} namespace
